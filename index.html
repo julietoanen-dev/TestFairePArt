@@ -49,13 +49,17 @@
     .reveal,.reveal-left,.reveal-right { opacity:1; transform:none; transition:none; }
   }
 
-  /* PANORAMA */
   #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
   #page-wrapper { position: relative; min-height: 100vh; }
 
   /* LANTERNES */
-  #lanterns-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; }
-  .lantern { position: absolute; transform-origin: center center; }
+  #lanterns-layer {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100vh;
+    z-index: 1; pointer-events: none; will-change: transform;
+  }
+  #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
+  .lantern { transform-origin: center center; }
 
   @keyframes float-a { 0%,100%{transform:translateY(0) rotate(-8deg)}  50%{transform:translateY(-18px) rotate(8deg)} }
   @keyframes float-b { 0%,100%{transform:translateY(0) rotate(6deg)}   50%{transform:translateY(-24px) rotate(-6deg)} }
@@ -70,48 +74,12 @@
   .hero-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.92); max-width: 480px; text-shadow: 0 2px 16px rgba(0,0,0,0.12); }
   .hero-scroll-hint { margin-top: 50px; color: rgba(255,255,255,0.55); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; }
 
-  /* =============================================
-     COUNTDOWN
-     Mobile : boîtes plus petites, tout sur une ligne
-  ============================================= */
+  /* COUNTDOWN */
   #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
-
-  .countdown-grid {
-    display: flex;
-    justify-content: center;
-    gap: clamp(6px, 2vw, 18px);
-    flex-wrap: nowrap; /* jamais de retour à la ligne */
-    margin-bottom: 20px;
-  }
-
-  .countdown-unit {
-    background: rgba(255,255,255,0.78);
-    border: 1.5px solid rgba(181,52,26,0.28);
-    border-radius: 10px;
-    /* Taille fixe desktop */
-    width: 90px; height: 90px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    flex-shrink: 1; /* peut rétrécir sur mobile */
-    backdrop-filter: blur(8px);
-    min-width: 0;
-  }
-
-  .countdown-number {
-    font-family: var(--font-titre);
-    font-size: clamp(1.4rem, 5vw, 2.4rem); /* réduit sur mobile */
-    color: var(--rouge); line-height: 1; display: block;
-    width: 2.2ch; text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .countdown-label {
-    font-size: clamp(0.5rem, 1.5vw, 0.6rem);
-    color: var(--texte-soft); text-transform: uppercase;
-    letter-spacing: 0.1em; margin-top: 5px; display: block;
-    white-space: nowrap;
-  }
-
+  .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
+  .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(181,52,26,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
+  .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--rouge); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
+  .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
   .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--rouge); margin-top: 16px; display: block; opacity: 0.75; }
   .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--rouge); margin-top: 20px; }
 
@@ -150,63 +118,49 @@
   .event-img-placeholder small { font-size: 0.68rem; color: rgba(255,255,255,0.7); margin-top: 2px; display: block; text-align: center; }
   .img-todo-note { position: absolute; top: 8px; right: 8px; background: rgba(255,107,53,0.88); color: white; font-size: 0.6rem; font-weight: 600; padding: 3px 7px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  /* =============================================
-     TIMELINE MOBILE
-  ============================================= */
+  /* TIMELINE MOBILE */
   #timeline-mobile { display: none; position: relative; z-index: 2; }
-
-  /* Titre en BLANC pour être lisible sur le fond coloré */
-  #timeline-mobile h2 {
-    text-align: center; padding: 60px 20px 40px;
-    font-family: var(--font-texte); font-style: normal; font-weight: 600;
-    font-size: 1.5rem;
-    color: var(--blanc); /* blanc au lieu d'orange */
-    letter-spacing: 0.04em; text-transform: uppercase;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  }
-
+  #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
   .tl-mobile-wrapper { position: relative; }
   #tl-mobile-line-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; pointer-events: none; z-index: 0; overflow: visible; }
   #tl-mobile-path-bg   { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
   #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 5000; stroke-dashoffset: 5000; }
-
   .tl-step { position: relative; height: 200vh; }
   .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
 
-  /* Label du jour en blanc */
+  /*
+    Label jour — fond blanc transparent, texte corail chaud
+    Harmonieux avec la palette rose/corail/ambre
+  */
   .tl-step-day {
     font-family: var(--font-texte); font-size: 0.7rem; font-weight: 600;
-    color: var(--blanc);
+    color: var(--corail);
     letter-spacing: 0.15em; text-transform: uppercase;
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.22);
     padding: 5px 16px; border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.4);
-    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(8px);
     margin-bottom: 16px;
     opacity: 0; transform: translateY(-10px);
     transition: opacity 0.5s ease, transform 0.5s ease;
     position: relative; z-index: 3;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
   }
   .tl-step-day.show { opacity: 1; transform: translateY(0); }
 
   .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
   .tl-step-dot.show { opacity: 1; transform: scale(1); }
-
-  .tl-step-card { background: rgba(255,255,255,0.88); border-radius: var(--radius); padding: 20px 22px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.1); backdrop-filter: blur(10px); width: 100%; max-width: 360px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s; position: relative; z-index: 3; }
+  .tl-step-card { background: rgba(255,255,255,0.92); border-radius: var(--radius); padding: 20px 22px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.12); backdrop-filter: blur(10px); width: 100%; max-width: 360px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s; position: relative; z-index: 3; }
   .tl-step-card.show { opacity: 1; transform: translateY(0); }
-
   .tl-step-img { width: 100%; max-width: 360px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 16/9; position: relative; margin-top: 14px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s; z-index: 3; }
   .tl-step-img.show { opacity: 1; transform: translateY(0); }
   .tl-step-img svg { width: 100%; height: 100%; display: block; }
-
   .tl-step-time { font-size: 0.7rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 5px; }
   .tl-step-title { font-family: var(--font-titre); font-size: 1.2rem; color: var(--texte); margin-bottom: 6px; }
   .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
   .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
 
-  /* =============================================
-     RSVP
-  ============================================= */
+  /* RSVP */
   #rsvp { text-align: center; padding: 80px 20px 100px; position: relative; z-index: 2; }
   #rsvp h2 { font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
   .rsvp-subtitle { color: var(--texte-soft); margin-bottom: 50px; font-size: 0.9rem; }
@@ -216,59 +170,22 @@
   .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color 0.3s, box-shadow 0.3s; resize: none; }
   .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
   .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
-
-  /* Boutons radio — même largeur, texte qui ne déborde pas */
-  .radio-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .radio-btn {
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    padding: 12px 8px;
-    border: 1.5px solid rgba(181,52,26,0.22);
-    border-radius: 12px;
-    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-    background: rgba(255,255,255,0.85);
-    user-select: none;
-    min-width: 0; /* permet au texte de se réduire */
-  }
-
+  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; background: rgba(255,255,255,0.85); user-select: none; min-width: 0; }
   .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
   .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
   .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
-
-  .radio-btn-text {
-    font-family: var(--font-texte);
-    font-size: clamp(0.75rem, 2.5vw, 0.9rem); /* réduit sur mobile */
-    color: var(--texte);
-    text-align: center;
-    line-height: 1.3;
-    word-break: break-word;
-  }
-
+  .radio-btn-text { font-family: var(--font-texte); font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
   .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
   .field-error.visible { display: block; }
-
   .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; }
   .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
   .btn-submit:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; }
   .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
   .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
   .rsvp-success.visible { display: block; }
   .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
-
-  /* Mention optionnel — plus petite et italique */
-  .optional-hint {
-    font-size: 0.72rem;
-    font-style: italic;
-    color: rgba(46,18,0,0.38);
-    margin-top: 4px;
-    display: block;
-  }
+  .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
 
   /* SCÈNE FINALE */
   #final-scene { position: relative; height: 300vh; z-index: 2; }
@@ -304,46 +221,148 @@
 
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
-  <!-- LANTERNES — v17 + lanternes supplémentaires pour densifier le hero mobile -->
+  <!--
+    LANTERNES — 14 lanternes (juste milieu entre 12 et 22)
+    Réparties sur les 4 quadrants du viewport
+    Couleurs inchangées : l-hot, l-mag, l-amb uniquement
+    Pas de blanc nacré (supprimé sur demande)
+  -->
   <div id="lanterns-layer" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
-         viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice"
-         style="position:absolute;inset:0;width:100%;height:100%">
+    <svg id="lanterns-svg" xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 414 900" preserveAspectRatio="xMidYMid slice">
       <defs>
-        <radialGradient id="l-hot" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFD166"/><stop offset="50%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FF3CAC"/></radialGradient>
-        <radialGradient id="l-mag" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FF6B35"/><stop offset="60%" stop-color="#FF3CAC"/><stop offset="100%" stop-color="#c0392b"/></radialGradient>
-        <radialGradient id="l-amb" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFD166"/><stop offset="60%" stop-color="#FFB347"/><stop offset="100%" stop-color="#FF6B35"/></radialGradient>
-        <filter id="glow-l"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <filter id="glow-s"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="l-hot" cx="50%" cy="35%" r="65%">
+          <stop offset="0%"   stop-color="#FFD166"/>
+          <stop offset="50%"  stop-color="#FF6B35"/>
+          <stop offset="100%" stop-color="#FF3CAC"/>
+        </radialGradient>
+        <radialGradient id="l-mag" cx="50%" cy="35%" r="65%">
+          <stop offset="0%"   stop-color="#FF6B35"/>
+          <stop offset="60%"  stop-color="#FF3CAC"/>
+          <stop offset="100%" stop-color="#c0392b"/>
+        </radialGradient>
+        <radialGradient id="l-amb" cx="50%" cy="35%" r="65%">
+          <stop offset="0%"   stop-color="#FFD166"/>
+          <stop offset="60%"  stop-color="#FFB347"/>
+          <stop offset="100%" stop-color="#FF6B35"/>
+        </radialGradient>
+        <filter id="glow-l">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-s">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
       </defs>
 
-      <!-- Lanternes v17 originales -->
-      <g class="lantern" style="animation:float-a 4s ease-in-out infinite;transform-origin:160px 80px"><rect x="120" y="80" width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.95"/><rect x="130" y="72" width="60" height="14" rx="5" fill="#FF6B35" opacity="0.9"/><rect x="130" y="190" width="60" height="10" rx="4" fill="#FF3CAC" opacity="0.7"/><ellipse cx="160" cy="130" rx="22" ry="30" fill="white" opacity="0.18"/></g>
-      <g class="lantern" style="animation:float-b 5s ease-in-out infinite;transform-origin:1280px 60px"><rect x="1240" y="60" width="80" height="110" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.95"/><rect x="1250" y="52" width="60" height="14" rx="5" fill="#FF3CAC" opacity="0.9"/><rect x="1250" y="170" width="60" height="10" rx="4" fill="#c0392b" opacity="0.7"/><ellipse cx="1280" cy="110" rx="22" ry="30" fill="white" opacity="0.18"/></g>
-      <g class="lantern" style="animation:float-c 3.5s ease-in-out infinite;transform-origin:720px 30px"><rect x="688" y="30" width="64" height="88" rx="14" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.9"/><rect x="696" y="22" width="48" height="12" rx="4" fill="#FFD166" opacity="0.85"/><rect x="696" y="118" width="48" height="8" rx="3" fill="#FF6B35" opacity="0.65"/><ellipse cx="720" cy="70" rx="18" ry="24" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-d 4.5s ease-in-out infinite;transform-origin:80px 280px"><rect x="52" y="280" width="56" height="76" rx="12" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.9"/><rect x="60" y="273" width="40" height="10" rx="3" fill="#FFB347" opacity="0.8"/><rect x="60" y="356" width="40" height="7" rx="3" fill="#FF6B35" opacity="0.6"/><ellipse cx="80" cy="316" rx="14" ry="20" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-a 6s ease-in-out infinite 1s;transform-origin:1380px 250px"><rect x="1340" y="250" width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.88"/><rect x="1350" y="242" width="60" height="14" rx="5" fill="#FFD166" opacity="0.85"/><rect x="1350" y="360" width="60" height="10" rx="4" fill="#FF6B35" opacity="0.65"/><ellipse cx="1380" cy="300" rx="22" ry="30" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-e 3.8s ease-in-out infinite 0.5s;transform-origin:320px 180px"><rect x="296" y="180" width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/><rect x="303" y="173" width="34" height="9" rx="3" fill="#FF3CAC" opacity="0.8"/><rect x="303" y="246" width="34" height="7" rx="3" fill="#c0392b" opacity="0.6"/><ellipse cx="320" cy="212" rx="12" ry="17" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-b 5.5s ease-in-out infinite 2s;transform-origin:200px 420px"><rect x="150" y="420" width="100" height="140" rx="22" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.92"/><rect x="162" y="410" width="76" height="16" rx="6" fill="#FFD166" opacity="0.9"/><rect x="162" y="560" width="76" height="12" rx="5" fill="#FF6B35" opacity="0.7"/><ellipse cx="200" cy="488" rx="28" ry="38" fill="white" opacity="0.2"/></g>
-      <g class="lantern" style="animation:float-c 4.2s ease-in-out infinite 1.5s;transform-origin:1200px 400px"><rect x="1158" y="400" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.9"/><rect x="1168" y="392" width="64" height="14" rx="5" fill="#FF3CAC" opacity="0.85"/><rect x="1168" y="516" width="64" height="10" rx="4" fill="#c0392b" opacity="0.65"/><ellipse cx="1200" cy="454" rx="24" ry="32" fill="white" opacity="0.18"/></g>
-      <g class="lantern" style="animation:float-d 3.2s ease-in-out infinite 0.8s;transform-origin:1000px 120px"><rect x="976" y="120" width="48" height="66" rx="10" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.88"/><rect x="983" y="113" width="34" height="9" rx="3" fill="#FF6B35" opacity="0.8"/><rect x="983" y="186" width="34" height="7" rx="3" fill="#FF3CAC" opacity="0.6"/><ellipse cx="1000" cy="152" rx="12" ry="17" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-e 4.8s ease-in-out infinite 2.5s;transform-origin:450px 500px"><rect x="418" y="500" width="64" height="88" rx="14" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.85"/><rect x="426" y="492" width="48" height="12" rx="4" fill="#FFD166" opacity="0.8"/><rect x="426" y="588" width="48" height="8" rx="3" fill="#FFB347" opacity="0.6"/><ellipse cx="450" cy="542" rx="18" ry="24" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-a 3.6s ease-in-out infinite 1.2s;transform-origin:1100px 320px"><rect x="1078" y="320" width="44" height="60" rx="9" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.82"/><rect x="1085" y="313" width="30" height="9" rx="3" fill="#FFD166" opacity="0.75"/><rect x="1085" y="380" width="30" height="7" rx="3" fill="#FF6B35" opacity="0.55"/><ellipse cx="1100" cy="349" rx="11" ry="15" fill="white" opacity="0.15"/></g>
-      <g class="lantern" style="animation:float-b 5.2s ease-in-out infinite 3s;transform-origin:900px 380px"><rect x="858" y="380" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.88"/><rect x="868" y="372" width="64" height="14" rx="5" fill="#FF3CAC" opacity="0.85"/><rect x="868" y="496" width="64" height="10" rx="4" fill="#c0392b" opacity="0.65"/><ellipse cx="900" cy="434" rx="24" ry="32" fill="white" opacity="0.18"/></g>
+      <!-- QUADRANT HAUT-GAUCHE -->
+      <!-- Grande hot, bord gauche haut -->
+      <g class="lantern" style="animation:float-a 4s ease-in-out infinite;transform-origin:46px 60px">
+        <rect x="6"   y="60"  width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.93"/>
+        <rect x="16"  y="52"  width="60" height="14"  rx="5"  fill="#FF6B35" opacity="0.9"/>
+        <rect x="16"  y="170" width="60" height="10"  rx="4"  fill="#FF3CAC" opacity="0.7"/>
+        <ellipse cx="46" cy="112" rx="22" ry="30" fill="white" opacity="0.18"/>
+      </g>
+      <!-- Petite mag, centre-gauche haut -->
+      <g class="lantern" style="animation:float-c 3.8s ease-in-out infinite 0.5s;transform-origin:120px 30px">
+        <rect x="96"  y="30"  width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="103" y="23"  width="34" height="9"  rx="3"  fill="#FF3CAC" opacity="0.8"/>
+        <rect x="103" y="96"  width="34" height="7"  rx="3"  fill="#c0392b" opacity="0.6"/>
+        <ellipse cx="120" cy="62" rx="12" ry="17" fill="white" opacity="0.15"/>
+      </g>
 
-      <!-- Lanternes supplémentaires pour densifier le hero (zone 0-500px) -->
-      <!-- Petite gauche haute -->
-      <g class="lantern" style="animation:float-c 3.8s ease-in-out infinite 0.3s;transform-origin:50px 50px"><rect x="30" y="50" width="40" height="56" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.82"/><rect x="36" y="44" width="28" height="8" rx="3" fill="#FF3CAC" opacity="0.8"/><rect x="36" y="106" width="28" height="6" rx="2" fill="#c0392b" opacity="0.6"/><ellipse cx="50" cy="76" rx="10" ry="14" fill="white" opacity="0.15"/></g>
-      <!-- Petite droite haute -->
-      <g class="lantern" style="animation:float-d 4.2s ease-in-out infinite 1.8s;transform-origin:1400px 100px"><rect x="1374" y="100" width="40" height="56" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.82"/><rect x="1380" y="94" width="28" height="8" rx="3" fill="#FFD166" opacity="0.8"/><rect x="1380" y="156" width="28" height="6" rx="2" fill="#FF6B35" opacity="0.6"/><ellipse cx="1394" cy="126" rx="10" ry="14" fill="white" opacity="0.15"/></g>
-      <!-- Moyenne centre-gauche haute -->
-      <g class="lantern" style="animation:float-e 4.6s ease-in-out infinite 0.9s;transform-origin:380px 60px"><rect x="352" y="60" width="56" height="78" rx="13" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.85"/><rect x="359" y="53" width="42" height="10" rx="4" fill="#FFD166" opacity="0.85"/><rect x="359" y="138" width="42" height="7" rx="3" fill="#FF6B35" opacity="0.65"/><ellipse cx="380" cy="96" rx="14" ry="20" fill="white" opacity="0.16"/></g>
-      <!-- Moyenne centre-droite haute -->
-      <g class="lantern" style="animation:float-a 5.1s ease-in-out infinite 2.2s;transform-origin:1060px 50px"><rect x="1032" y="50" width="56" height="78" rx="13" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/><rect x="1039" y="43" width="42" height="10" rx="4" fill="#FF3CAC" opacity="0.85"/><rect x="1039" y="128" width="42" height="7" rx="3" fill="#c0392b" opacity="0.65"/><ellipse cx="1060" cy="86" rx="14" ry="20" fill="white" opacity="0.16"/></g>
-      <!-- Petite milieu haut -->
-      <g class="lantern" style="animation:float-b 3.4s ease-in-out infinite 1.4s;transform-origin:560px 20px"><rect x="540" y="20" width="40" height="56" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.78"/><rect x="546" y="14" width="28" height="8" rx="3" fill="#FFB347" opacity="0.8"/><rect x="546" y="76" width="28" height="6" rx="2" fill="#FF6B35" opacity="0.6"/><ellipse cx="560" cy="46" rx="10" ry="14" fill="white" opacity="0.14"/></g>
-      <!-- Petite milieu-droite haut -->
-      <g class="lantern" style="animation:float-c 4.9s ease-in-out infinite 3.1s;transform-origin:880px 40px"><rect x="860" y="40" width="40" height="56" rx="10" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.78"/><rect x="866" y="34" width="28" height="8" rx="3" fill="#FFD166" opacity="0.8"/><rect x="866" y="96" width="28" height="6" rx="2" fill="#FF3CAC" opacity="0.6"/><ellipse cx="880" cy="66" rx="10" ry="14" fill="white" opacity="0.14"/></g>
+      <!-- QUADRANT HAUT-DROITE -->
+      <!-- Grande mag, bord droit haut -->
+      <g class="lantern" style="animation:float-b 5s ease-in-out infinite;transform-origin:378px 50px">
+        <rect x="338" y="50"  width="80" height="110" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.95"/>
+        <rect x="348" y="42"  width="60" height="14"  rx="5"  fill="#FF3CAC" opacity="0.9"/>
+        <rect x="348" y="160" width="60" height="10"  rx="4"  fill="#c0392b" opacity="0.7"/>
+        <ellipse cx="378" cy="102" rx="22" ry="30" fill="white" opacity="0.18"/>
+      </g>
+      <!-- Petite amb, centre-droite haut -->
+      <g class="lantern" style="animation:float-d 4.5s ease-in-out infinite 1.2s;transform-origin:300px 80px">
+        <rect x="276" y="80"  width="48" height="66" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.82"/>
+        <rect x="283" y="73"  width="34" height="9"  rx="3"  fill="#FFB347" opacity="0.8"/>
+        <rect x="283" y="146" width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.6"/>
+        <ellipse cx="300" cy="112" rx="12" ry="17" fill="white" opacity="0.15"/>
+      </g>
+
+      <!-- CENTRE HAUT -->
+      <!-- Moyenne hot, centre haut -->
+      <g class="lantern" style="animation:float-e 3.5s ease-in-out infinite 0.8s;transform-origin:207px 20px">
+        <rect x="183" y="20"  width="48" height="66" rx="12" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.88"/>
+        <rect x="190" y="13"  width="34" height="10" rx="4"  fill="#FFD166" opacity="0.85"/>
+        <rect x="190" y="86"  width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.65"/>
+        <ellipse cx="207" cy="52" rx="13" ry="18" fill="white" opacity="0.15"/>
+      </g>
+
+      <!-- QUADRANT MILIEU-GAUCHE -->
+      <!-- Très grande hot, gauche milieu -->
+      <g class="lantern" style="animation:float-b 5.5s ease-in-out infinite 2s;transform-origin:55px 380px">
+        <rect x="5"   y="380" width="100" height="140" rx="22" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.92"/>
+        <rect x="17"  y="370" width="76"  height="16"  rx="6"  fill="#FFD166" opacity="0.9"/>
+        <rect x="17"  y="520" width="76"  height="12"  rx="5"  fill="#FF6B35" opacity="0.7"/>
+        <ellipse cx="55" cy="448" rx="28" ry="38" fill="white" opacity="0.2"/>
+      </g>
+      <!-- Petite mag, centre-gauche milieu -->
+      <g class="lantern" style="animation:float-e 3.8s ease-in-out infinite 0.5s;transform-origin:160px 280px">
+        <rect x="136" y="280" width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="143" y="273" width="34" height="9"  rx="3"  fill="#FF3CAC" opacity="0.8"/>
+        <rect x="143" y="346" width="34" height="7"  rx="3"  fill="#c0392b" opacity="0.6"/>
+        <ellipse cx="160" cy="312" rx="12" ry="17" fill="white" opacity="0.15"/>
+      </g>
+
+      <!-- QUADRANT MILIEU-DROITE -->
+      <!-- Grande mag, droite milieu -->
+      <g class="lantern" style="animation:float-c 4.2s ease-in-out infinite 1.5s;transform-origin:360px 340px">
+        <rect x="318" y="340" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.9"/>
+        <rect x="328" y="330" width="64" height="14"  rx="5"  fill="#FF3CAC" opacity="0.85"/>
+        <rect x="328" y="456" width="64" height="10"  rx="4"  fill="#c0392b" opacity="0.65"/>
+        <ellipse cx="360" cy="394" rx="24" ry="32" fill="white" opacity="0.18"/>
+      </g>
+      <!-- Petite amb, centre-droite milieu -->
+      <g class="lantern" style="animation:float-a 3.6s ease-in-out infinite 1.2s;transform-origin:260px 460px">
+        <rect x="236" y="460" width="48" height="66" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.82"/>
+        <rect x="243" y="453" width="34" height="9"  rx="3"  fill="#FFD166" opacity="0.75"/>
+        <rect x="243" y="526" width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.55"/>
+        <ellipse cx="260" cy="492" rx="12" ry="17" fill="white" opacity="0.15"/>
+      </g>
+
+      <!-- QUADRANT BAS-GAUCHE -->
+      <!-- Moyenne amb, bas gauche -->
+      <g class="lantern" style="animation:float-d 4.8s ease-in-out infinite 2.5s;transform-origin:80px 650px">
+        <rect x="48"  y="650" width="64" height="88" rx="14" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="56"  y="642" width="48" height="12" rx="4"  fill="#FFD166" opacity="0.8"/>
+        <rect x="56"  y="738" width="48" height="8"  rx="3"  fill="#FFB347" opacity="0.6"/>
+        <ellipse cx="80" cy="692" rx="18" ry="24" fill="white" opacity="0.15"/>
+      </g>
+
+      <!-- QUADRANT BAS-DROITE -->
+      <!-- Grande hot, bas droite -->
+      <g class="lantern" style="animation:float-e 5.2s ease-in-out infinite 3s;transform-origin:360px 620px">
+        <rect x="318" y="620" width="84" height="116" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.88"/>
+        <rect x="328" y="610" width="64" height="14"  rx="5"  fill="#FF3CAC" opacity="0.85"/>
+        <rect x="328" y="736" width="64" height="10"  rx="4"  fill="#c0392b" opacity="0.65"/>
+        <ellipse cx="360" cy="674" rx="24" ry="32" fill="white" opacity="0.18"/>
+      </g>
+
+      <!-- CENTRE BAS -->
+      <!-- Moyenne mag, centre bas -->
+      <g class="lantern" style="animation:float-b 4.0s ease-in-out infinite 1.8s;transform-origin:207px 760px">
+        <rect x="175" y="760" width="64" height="88" rx="14" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.82"/>
+        <rect x="183" y="752" width="48" height="12" rx="4"  fill="#FF3CAC" opacity="0.82"/>
+        <rect x="183" y="848" width="48" height="8"  rx="3"  fill="#c0392b" opacity="0.62"/>
+        <ellipse cx="207" cy="802" rx="18" ry="24" fill="white" opacity="0.16"/>
+      </g>
+
+      <!-- Petite hot, bas gauche-centre -->
+      <g class="lantern" style="animation:float-c 3.4s ease-in-out infinite 4s;transform-origin:140px 820px">
+        <rect x="116" y="820" width="48" height="66" rx="10" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.78"/>
+        <rect x="123" y="813" width="34" height="9"  rx="3"  fill="#FFD166" opacity="0.75"/>
+        <rect x="123" y="886" width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.55"/>
+        <ellipse cx="140" cy="852" rx="12" ry="17" fill="white" opacity="0.14"/>
+      </g>
     </svg>
   </div>
 
@@ -466,7 +485,6 @@
   <div id="timeline-mobile" aria-label="Programme">
     <h2>Le programme</h2>
     <div class="tl-mobile-wrapper" id="tl-mobile-wrapper">
-
       <svg id="tl-mobile-line-svg" aria-hidden="true">
         <defs>
           <linearGradient id="pathGradMobile" x1="0" y1="0" x2="0" y2="1">
@@ -479,7 +497,6 @@
         <path id="tl-mobile-path-draw" d="M20 0"/>
       </svg>
 
-      <!-- ÉTAPE 1 -->
       <div class="tl-step" id="tl-step-0">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-0">Samedi 24 juillet 2027</div>
@@ -499,7 +516,6 @@
         </div>
       </div>
 
-      <!-- ÉTAPE 2 -->
       <div class="tl-step" id="tl-step-1">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-1">Samedi 24 juillet 2027</div>
@@ -519,7 +535,6 @@
         </div>
       </div>
 
-      <!-- ÉTAPE 3 -->
       <div class="tl-step" id="tl-step-2">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-2">Dimanche 25 juillet 2027</div>
@@ -538,7 +553,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -577,7 +591,6 @@
           <div class="form-group">
             <label for="rsvp-message">Un mot pour les mariés</label>
             <textarea id="rsvp-message" name="ENTRY_MESSAGE_TODO" placeholder="Écrivez-nous quelques mots..."></textarea>
-            <!-- Optionnel en petit italique -->
             <span class="optional-hint">Optionnel</span>
           </div>
           <button type="submit" class="btn-submit" id="btn-submit">
@@ -594,7 +607,7 @@
 
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
 
-  <!-- SCÈNE FINALE — contact supprimé -->
+  <!-- SCÈNE FINALE -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
     <div class="final-sticky">
       <svg class="final-bg-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -625,7 +638,6 @@
 
       <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
 
-      <!-- Contact supprimé de la scène finale -->
       <div class="final-text">
         <div class="final-title">Julie &amp; Thomas</div>
         <div class="final-date">24 juillet 2027</div>
@@ -715,14 +727,20 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   window.addEventListener('resize', draw);
 })();
 
-/* LANTERNES — parallaxe 0.6x */
+/* LANTERNES — fixed, 0.45x, RAF */
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const layer = document.getElementById('lanterns-layer');
   if (!layer) return;
-  function onScroll() { layer.style.transform = 'translateY(' + (window.scrollY * 0.6) + 'px)'; }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  let rafId = null;
+  layer.style.transform = 'translateY(0)';
+  window.addEventListener('scroll', () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      layer.style.transform = 'translateY(-' + (window.scrollY * 0.45) + 'px)';
+    });
+  }, { passive: true });
 })();
 
 /* COUNTDOWN */
@@ -894,6 +912,8 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
+  car.style.transform = 'translateX(' + (-carW - 20) + 'px)';
+
   const particles = [];
   let fwActive = false, fwRafId = null;
   const FW_COLORS = ['#FF3CAC','#FF6B35','#FFB347','#FFD166','#ffffff','#FF8C42','#ffaacc','#ffe0a0'];
@@ -939,19 +959,26 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   function startFW() { if(fwActive) return; fwActive=true; canvas.classList.add('visible'); launchFW(); animateFW(); }
   function stopFW()  { if(!fwActive) return; fwActive=false; canvas.classList.remove('visible'); burstTOs.forEach(clearTimeout); burstTOs=[]; if(fwRafId) cancelAnimationFrame(fwRafId); ctx.clearRect(0,0,canvas.width,canvas.height); particles.length=0; }
 
-  function onScroll() {
+  let rafCar = null, lastProgress = -1;
+
+  function updateCar() {
     const rect     = section.getBoundingClientRect();
     const total    = section.offsetHeight - window.innerHeight;
+    if (rect.bottom < 0 || rect.top > window.innerHeight) {
+      if (lastProgress !== -2) { car.style.transform = 'translateX(' + (-carW - 20) + 'px)'; stopFW(); lastProgress = -2; }
+      return;
+    }
     const progress = Math.min(1, Math.max(0, -rect.top / total));
-    const startX   = -carW - 20;
-    const endX     = window.innerWidth + 20;
-    car.style.transform = 'translateX(' + (startX + (endX-startX)*progress) + 'px)';
+    if (Math.abs(progress - lastProgress) < 0.001) return;
+    lastProgress = progress;
+    const startX = -carW - 20, endX = window.innerWidth + 20;
+    car.style.transform = 'translateX(' + (startX + (endX - startX) * progress) + 'px)';
     if (progress >= 0.85) startFW(); else stopFW();
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { resizeCanvas(); onScroll(); });
-  onScroll();
+  window.addEventListener('scroll', () => { if (rafCar) cancelAnimationFrame(rafCar); rafCar = requestAnimationFrame(updateCar); }, { passive: true });
+  window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; updateCar(); });
+  updateCar();
 })();
 
 /* RADIO */
