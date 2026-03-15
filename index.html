@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Julie & Thomas — 24 juillet 2027</title>
-  <meta name="description" content="Julie & Thomas se disent oui le 24 juillet 2027 à Toulouse. Venez célébrer avec nous !" />
+  <meta name="description" content="Julie & Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -49,40 +49,28 @@
     .reveal,.reveal-left,.reveal-right { opacity:1; transform:none; transition:none; }
   }
 
-  /* PANORAMA */
   #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
   #page-wrapper { position: relative; min-height: 100vh; }
 
-  /* =============================================
-     LANTERNES
-     - Position fixed : elles restent dans le viewport
-     - Déplacement JS à 0.45x du scroll → plus lentes que la page
-     - Elles "montent" hors écran naturellement quand on scrolle
-     - Contenues dans la zone hero→programme (disparaissent avant le RSVP)
-  ============================================= */
+  /* LANTERNES — fixed, parallaxe 0.45x */
   #lanterns-layer {
-    position: fixed;
-    top: 0; left: 0;
+    position: fixed; top: 0; left: 0;
     width: 100%; height: 100vh;
-    z-index: 1;
-    pointer-events: none;
+    z-index: 1; pointer-events: none;
     will-change: transform;
   }
-
   #lanterns-layer svg {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     overflow: visible;
   }
-
   .lantern { transform-origin: center center; }
 
   @keyframes float-a { 0%,100%{transform:translateY(0) rotate(-8deg)}  50%{transform:translateY(-18px) rotate(8deg)} }
   @keyframes float-b { 0%,100%{transform:translateY(0) rotate(6deg)}   50%{transform:translateY(-24px) rotate(-6deg)} }
   @keyframes float-c { 0%,100%{transform:translateY(0) rotate(-4deg)}  50%{transform:translateY(-12px) rotate(10deg)} }
   @keyframes float-d { 0%,100%{transform:translateY(0) rotate(10deg)}  50%{transform:translateY(-20px) rotate(-4deg)} }
-  @keyterns float-e { 0%,100%{transform:translateY(0) rotate(-12deg)} 50%{transform:translateY(-16px) rotate(5deg)} }
+  @keyframes float-e { 0%,100%{transform:translateY(0) rotate(-12deg)} 50%{transform:translateY(-16px) rotate(5deg)} }
 
   /* HERO */
   #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
@@ -106,7 +94,7 @@
   .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
   .timeline-line-svg { position: absolute; top: 0; pointer-events: none; z-index: 0; overflow: visible; }
   #timeline-path-bg  { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
-  #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 3000; stroke-dashoffset: 3000; transition: stroke-dashoffset 0.12s ease-out; }
+  #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
   .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
   .timeline-day-label { text-align: center; font-family: var(--font-texte); font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.75); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
   .timeline-events { display: flex; flex-direction: column; gap: 28px; }
@@ -141,10 +129,22 @@
   .tl-mobile-wrapper { position: relative; }
   #tl-mobile-line-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; pointer-events: none; z-index: 0; overflow: visible; }
   #tl-mobile-path-bg   { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
-  #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 5000; stroke-dashoffset: 5000; }
+  #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
   .tl-step { position: relative; height: 200vh; }
   .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
-  .tl-step-day { font-family: var(--font-texte); font-size: 0.7rem; font-weight: 600; color: var(--blanc); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(46,18,0,0.55); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(6px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; }
+  /* Label jour — v23 : fond blanc transparent, texte corail */
+  .tl-step-day {
+    font-family: var(--font-texte); font-size: 0.7rem; font-weight: 600;
+    color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase;
+    background: rgba(255,255,255,0.22);
+    padding: 5px 16px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.45);
+    backdrop-filter: blur(8px); margin-bottom: 16px;
+    opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative; z-index: 3;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
   .tl-step-day.show { opacity: 1; transform: translateY(0); }
   .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
   .tl-step-dot.show { opacity: 1; transform: scale(1); }
@@ -220,14 +220,13 @@
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
   <!--
-    LANTERNES — position:fixed, déplacement JS à 0.45x du scroll
-    Elles montent plus lentement que la page → disparaissent naturellement
-    vers le haut avant d'atteindre le RSVP
-    Blanc nacré semi-transparent pour éviter les traces de carré
+    LANTERNES — v23 + 3 lanternes supplémentaires sous "Défiler" (y 620–820)
+    Couleurs inchangées : l-hot, l-mag, l-amb
+    Blanc nacré semi-transparent conservé de la v23
   -->
   <div id="lanterns-layer" aria-hidden="true">
     <svg id="lanterns-svg" xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+         viewBox="0 0 414 900" preserveAspectRatio="xMidYMid slice">
       <defs>
         <radialGradient id="l-hot" cx="50%" cy="35%" r="65%">
           <stop offset="0%"   stop-color="#FFD166"/>
@@ -244,14 +243,11 @@
           <stop offset="60%"  stop-color="#FFB347"/>
           <stop offset="100%" stop-color="#FF6B35"/>
         </radialGradient>
-        <!--
-          Blanc nacré semi-transparent : opacité réduite + couleurs douces
-          pour éviter les traces de rectangle visible
-        -->
+        <!-- Blanc nacré semi-transparent — v23 -->
         <radialGradient id="l-wht" cx="50%" cy="35%" r="65%">
-          <stop offset="0%"   stop-color="#fff8f0" stop-opacity="0.85"/>
-          <stop offset="40%"  stop-color="#ffe4c8" stop-opacity="0.65"/>
-          <stop offset="100%" stop-color="#FFB347"  stop-opacity="0.35"/>
+          <stop offset="0%"   stop-color="#fff8f0" stop-opacity="0.80"/>
+          <stop offset="45%"  stop-color="#ffe4c8" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#FFB347"  stop-opacity="0.20"/>
         </radialGradient>
         <filter id="glow-l">
           <feGaussianBlur stdDeviation="6" result="blur"/>
@@ -261,123 +257,128 @@
           <feGaussianBlur stdDeviation="3" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <!-- Glow plus doux pour le blanc nacré -->
         <filter id="glow-w">
-          <feGaussianBlur stdDeviation="10" result="blur"/>
+          <feGaussianBlur stdDeviation="12" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
 
-      <!-- 12 lanternes dans la zone visible du hero (viewBox 1440×900) -->
-      <!-- Gauche haute — grande -->
-      <g class="lantern" style="animation:float-a 4s ease-in-out infinite;transform-origin:160px 80px">
-        <rect x="120" y="80"  width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.95"/>
-        <rect x="130" y="72"  width="60" height="14"  rx="5"  fill="#FF6B35" opacity="0.9"/>
-        <rect x="130" y="190" width="60" height="10"  rx="4"  fill="#FF3CAC" opacity="0.7"/>
-        <ellipse cx="160" cy="130" rx="22" ry="30" fill="white" opacity="0.18"/>
+      <!-- ===== LANTERNES V23 ORIGINALES ===== -->
+
+      <!-- Gauche haute — grande hot -->
+      <g class="lantern" style="animation:float-a 4s ease-in-out infinite;transform-origin:46px 55px">
+        <rect x="14"  y="55"  width="64" height="88" rx="14" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.92"/>
+        <rect x="22"  y="47"  width="48" height="12" rx="4"  fill="#FF6B35" opacity="0.9"/>
+        <rect x="22"  y="143" width="48" height="8"  rx="3"  fill="#FF3CAC" opacity="0.7"/>
+        <ellipse cx="46" cy="95" rx="18" ry="24" fill="white" opacity="0.18"/>
       </g>
-      <!-- Droite haute — grande -->
-      <g class="lantern" style="animation:float-b 5s ease-in-out infinite;transform-origin:1280px 60px">
-        <rect x="1240" y="60"  width="80" height="110" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.95"/>
-        <rect x="1250" y="52"  width="60" height="14"  rx="5"  fill="#FF3CAC" opacity="0.9"/>
-        <rect x="1250" y="170" width="60" height="10"  rx="4"  fill="#c0392b" opacity="0.7"/>
-        <ellipse cx="1280" cy="110" rx="22" ry="30" fill="white" opacity="0.18"/>
+      <!-- Droite haute — grande mag -->
+      <g class="lantern" style="animation:float-b 5s ease-in-out infinite;transform-origin:378px 40px">
+        <rect x="338" y="40"  width="72" height="100" rx="16" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.95"/>
+        <rect x="347" y="32"  width="54" height="13"  rx="5"  fill="#FF3CAC" opacity="0.9"/>
+        <rect x="347" y="140" width="54" height="9"   rx="3"  fill="#c0392b" opacity="0.7"/>
+        <ellipse cx="374" cy="88" rx="20" ry="27" fill="white" opacity="0.18"/>
       </g>
-      <!-- Centre haut — moyenne -->
-      <g class="lantern" style="animation:float-c 3.5s ease-in-out infinite;transform-origin:720px 30px">
-        <rect x="688" y="30"  width="64" height="88" rx="14" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.9"/>
-        <rect x="696" y="22"  width="48" height="12" rx="4"  fill="#FFD166" opacity="0.85"/>
-        <rect x="696" y="118" width="48" height="8"  rx="3"  fill="#FF6B35" opacity="0.65"/>
-        <ellipse cx="720" cy="70" rx="18" ry="24" fill="white" opacity="0.15"/>
+      <!-- Centre haut — moyenne hot -->
+      <g class="lantern" style="animation:float-c 3.5s ease-in-out infinite;transform-origin:207px 20px">
+        <rect x="183" y="20"  width="48" height="66" rx="12" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.88"/>
+        <rect x="190" y="13"  width="34" height="10" rx="4"  fill="#FFD166" opacity="0.85"/>
+        <rect x="190" y="86"  width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.65"/>
+        <ellipse cx="207" cy="50" rx="13" ry="18" fill="white" opacity="0.15"/>
       </g>
-      <!-- Gauche milieu — petite ambre -->
-      <g class="lantern" style="animation:float-d 4.5s ease-in-out infinite;transform-origin:80px 280px">
-        <rect x="52"  y="280" width="56" height="76" rx="12" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.9"/>
-        <rect x="60"  y="273" width="40" height="10" rx="3"  fill="#FFB347" opacity="0.8"/>
-        <rect x="60"  y="356" width="40" height="7"  rx="3"  fill="#FF6B35" opacity="0.6"/>
-        <ellipse cx="80" cy="316" rx="14" ry="20" fill="white" opacity="0.15"/>
+      <!-- Blanc nacré gauche haut -->
+      <g class="lantern" style="animation:float-d 4.8s ease-in-out infinite 0.3s;transform-origin:110px 80px" opacity="0.52">
+        <rect x="82"  y="80"  width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
+        <rect x="89"  y="73"  width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.45"/>
+        <rect x="89"  y="158" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.30"/>
+        <ellipse cx="110" cy="117" rx="14" ry="20" fill="white" opacity="0.22"/>
       </g>
-      <!-- Droite milieu — grande -->
-      <g class="lantern" style="animation:float-a 6s ease-in-out infinite 1s;transform-origin:1380px 250px">
-        <rect x="1340" y="250" width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.88"/>
-        <rect x="1350" y="242" width="60" height="14"  rx="5"  fill="#FFD166" opacity="0.85"/>
-        <rect x="1350" y="360" width="60" height="10"  rx="4"  fill="#FF6B35" opacity="0.65"/>
-        <ellipse cx="1380" cy="300" rx="22" ry="30" fill="white" opacity="0.15"/>
+      <!-- Droite milieu-haut — petite amb -->
+      <g class="lantern" style="animation:float-e 3.8s ease-in-out infinite 0.5s;transform-origin:360px 150px">
+        <rect x="336" y="150" width="48" height="66" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="343" y="143" width="34" height="9"  rx="3"  fill="#FFB347" opacity="0.8"/>
+        <rect x="343" y="216" width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.6"/>
+        <ellipse cx="360" cy="182" rx="12" ry="17" fill="white" opacity="0.15"/>
       </g>
-      <!-- Centre gauche — petite mag -->
-      <g class="lantern" style="animation:float-e 3.8s ease-in-out infinite 0.5s;transform-origin:320px 180px">
-        <rect x="296" y="180" width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/>
-        <rect x="303" y="173" width="34" height="9"  rx="3"  fill="#FF3CAC" opacity="0.8"/>
-        <rect x="303" y="246" width="34" height="7"  rx="3"  fill="#c0392b" opacity="0.6"/>
-        <ellipse cx="320" cy="212" rx="12" ry="17" fill="white" opacity="0.15"/>
+      <!-- Gauche milieu — petite mag -->
+      <g class="lantern" style="animation:float-a 4.2s ease-in-out infinite 1s;transform-origin:30px 260px">
+        <rect x="6"   y="260" width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="13"  y="253" width="34" height="9"  rx="3"  fill="#FF3CAC" opacity="0.8"/>
+        <rect x="13"  y="326" width="34" height="7"  rx="3"  fill="#c0392b" opacity="0.6"/>
+        <ellipse cx="30" cy="292" rx="12" ry="17" fill="white" opacity="0.15"/>
       </g>
-      <!-- Gauche bas — très grande -->
-      <g class="lantern" style="animation:float-b 5.5s ease-in-out infinite 2s;transform-origin:200px 420px">
-        <rect x="150" y="420" width="100" height="140" rx="22" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.92"/>
-        <rect x="162" y="410" width="76"  height="16"  rx="6"  fill="#FFD166" opacity="0.9"/>
-        <rect x="162" y="560" width="76"  height="12"  rx="5"  fill="#FF6B35" opacity="0.7"/>
-        <ellipse cx="200" cy="488" rx="28" ry="38" fill="white" opacity="0.2"/>
+      <!-- Centre gauche — grande hot -->
+      <g class="lantern" style="animation:float-b 5.5s ease-in-out infinite 2s;transform-origin:130px 310px">
+        <rect x="90"  y="310" width="80" height="110" rx="18" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.92"/>
+        <rect x="102" y="300" width="56" height="14"  rx="5"  fill="#FFD166" opacity="0.9"/>
+        <rect x="102" y="420" width="56" height="10"  rx="4"  fill="#FF6B35" opacity="0.7"/>
+        <ellipse cx="130" cy="363" rx="22" ry="30" fill="white" opacity="0.2"/>
       </g>
-      <!-- Droite bas — grande mag -->
-      <g class="lantern" style="animation:float-c 4.2s ease-in-out infinite 1.5s;transform-origin:1200px 400px">
-        <rect x="1158" y="400" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.9"/>
-        <rect x="1168" y="392" width="64" height="14"  rx="5"  fill="#FF3CAC" opacity="0.85"/>
-        <rect x="1168" y="516" width="64" height="10"  rx="4"  fill="#c0392b" opacity="0.65"/>
-        <ellipse cx="1200" cy="454" rx="24" ry="32" fill="white" opacity="0.18"/>
+      <!-- Droite milieu — grande mag -->
+      <g class="lantern" style="animation:float-c 4.2s ease-in-out infinite 1.5s;transform-origin:310px 280px">
+        <rect x="268" y="280" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.9"/>
+        <rect x="278" y="270" width="64" height="14"  rx="5"  fill="#FF3CAC" opacity="0.85"/>
+        <rect x="278" y="396" width="64" height="10"  rx="4"  fill="#c0392b" opacity="0.65"/>
+        <ellipse cx="310" cy="334" rx="24" ry="32" fill="white" opacity="0.18"/>
       </g>
-      <!-- Centre droite haut — petite -->
-      <g class="lantern" style="animation:float-d 3.2s ease-in-out infinite 0.8s;transform-origin:1000px 120px">
-        <rect x="976" y="120" width="48" height="66" rx="10" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.88"/>
-        <rect x="983" y="113" width="34" height="9"  rx="3"  fill="#FF6B35" opacity="0.8"/>
-        <rect x="983" y="186" width="34" height="7"  rx="3"  fill="#FF3CAC" opacity="0.6"/>
-        <ellipse cx="1000" cy="152" rx="12" ry="17" fill="white" opacity="0.15"/>
+      <!-- Blanc nacré centre -->
+      <g class="lantern" style="animation:float-e 5.1s ease-in-out infinite 2.2s;transform-origin:207px 370px" opacity="0.48">
+        <rect x="179" y="370" width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
+        <rect x="186" y="363" width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.45"/>
+        <rect x="186" y="448" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.30"/>
+        <ellipse cx="207" cy="408" rx="14" ry="20" fill="white" opacity="0.22"/>
       </g>
-      <!-- Gauche bas ambre -->
-      <g class="lantern" style="animation:float-e 4.8s ease-in-out infinite 2.5s;transform-origin:450px 500px">
-        <rect x="418" y="500" width="64" height="88" rx="14" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.85"/>
-        <rect x="426" y="492" width="48" height="12" rx="4"  fill="#FFD166" opacity="0.8"/>
-        <rect x="426" y="588" width="48" height="8"  rx="3"  fill="#FFB347" opacity="0.6"/>
-        <ellipse cx="450" cy="542" rx="18" ry="24" fill="white" opacity="0.15"/>
+      <!-- Droite haute-milieu — petite hot -->
+      <g class="lantern" style="animation:float-d 3.2s ease-in-out infinite 0.8s;transform-origin:390px 220px">
+        <rect x="366" y="220" width="44" height="60" rx="9" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.82"/>
+        <rect x="373" y="213" width="30" height="9"  rx="3" fill="#FFD166" opacity="0.75"/>
+        <rect x="373" y="280" width="30" height="7"  rx="3" fill="#FF6B35" opacity="0.55"/>
+        <ellipse cx="388" cy="249" rx="11" ry="15" fill="white" opacity="0.15"/>
       </g>
-      <!-- Centre droite — petite hot -->
-      <g class="lantern" style="animation:float-a 3.6s ease-in-out infinite 1.2s;transform-origin:1100px 320px">
-        <rect x="1078" y="320" width="44" height="60" rx="9" fill="url(#l-hot)" filter="url(#glow-s)" opacity="0.82"/>
-        <rect x="1085" y="313" width="30" height="9"  rx="3" fill="#FFD166" opacity="0.75"/>
-        <rect x="1085" y="380" width="30" height="7"  rx="3" fill="#FF6B35" opacity="0.55"/>
-        <ellipse cx="1100" cy="349" rx="11" ry="15" fill="white" opacity="0.15"/>
+      <!-- Gauche bas — grande amb -->
+      <g class="lantern" style="animation:float-a 4.8s ease-in-out infinite 2.5s;transform-origin:55px 470px">
+        <rect x="18"  y="470" width="74" height="102" rx="16" fill="url(#l-amb)" filter="url(#glow-l)" opacity="0.88"/>
+        <rect x="28"  y="460" width="54" height="13"  rx="5"  fill="#FFD166" opacity="0.88"/>
+        <rect x="28"  y="572" width="54" height="9"   rx="3"  fill="#FFB347" opacity="0.68"/>
+        <ellipse cx="55" cy="518" rx="20" ry="27" fill="white" opacity="0.18"/>
       </g>
-      <!-- Centre bas — grande mag -->
-      <g class="lantern" style="animation:float-b 5.2s ease-in-out infinite 3s;transform-origin:900px 380px">
-        <rect x="858" y="380" width="84" height="116" rx="18" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.88"/>
-        <rect x="868" y="372" width="64" height="14"  rx="5"  fill="#FF3CAC" opacity="0.85"/>
-        <rect x="868" y="496" width="64" height="10"  rx="4"  fill="#c0392b" opacity="0.65"/>
-        <ellipse cx="900" cy="434" rx="24" ry="32" fill="white" opacity="0.18"/>
+      <!-- Centre droite — petite mag -->
+      <g class="lantern" style="animation:float-b 3.6s ease-in-out infinite 1.2s;transform-origin:300px 450px">
+        <rect x="276" y="450" width="48" height="66" rx="10" fill="url(#l-mag)" filter="url(#glow-s)" opacity="0.82"/>
+        <rect x="283" y="443" width="34" height="9"  rx="3"  fill="#FF3CAC" opacity="0.78"/>
+        <rect x="283" y="516" width="34" height="7"  rx="3"  fill="#c0392b" opacity="0.58"/>
+        <ellipse cx="300" cy="482" rx="12" ry="17" fill="white" opacity="0.15"/>
+      </g>
+      <!-- Blanc nacré droite bas -->
+      <g class="lantern" style="animation:float-a 4.2s ease-in-out infinite 1.6s;transform-origin:370px 560px" opacity="0.45">
+        <rect x="342" y="560" width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
+        <rect x="349" y="553" width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.45"/>
+        <rect x="349" y="638" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.30"/>
+        <ellipse cx="370" cy="598" rx="14" ry="20" fill="white" opacity="0.22"/>
       </g>
 
-      <!--
-        Lanternes blanches nacrées — semi-transparentes, sans bords visibles
-        Opacité globale réduite + gradient très doux
-      -->
-      <!-- Blanc nacré gauche haut -->
-      <g class="lantern" style="animation:float-c 4.8s ease-in-out infinite 0.3s;transform-origin:380px 60px" opacity="0.55">
-        <rect x="352" y="60"  width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
-        <rect x="359" y="53"  width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.5"/>
-        <rect x="359" y="138" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.35"/>
-        <ellipse cx="380" cy="96" rx="14" ry="20" fill="white" opacity="0.25"/>
+      <!-- ===== 3 LANTERNES SUPPLÉMENTAIRES sous "Défiler" (y 620–820) ===== -->
+
+      <!-- Grande hot, gauche bas — grande taille -->
+      <g class="lantern" style="animation:float-c 5.2s ease-in-out infinite 3s;transform-origin:55px 660px">
+        <rect x="8"   y="660" width="94" height="130" rx="20" fill="url(#l-hot)" filter="url(#glow-l)" opacity="0.90"/>
+        <rect x="20"  y="649" width="70" height="16"  rx="6"  fill="#FFD166" opacity="0.9"/>
+        <rect x="20"  y="790" width="70" height="12"  rx="5"  fill="#FF3CAC" opacity="0.7"/>
+        <ellipse cx="55" cy="722" rx="26" ry="36" fill="white" opacity="0.2"/>
       </g>
-      <!-- Blanc nacré droite haut -->
-      <g class="lantern" style="animation:float-d 5.1s ease-in-out infinite 2.2s;transform-origin:1060px 50px" opacity="0.5">
-        <rect x="1032" y="50"  width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
-        <rect x="1039" y="43"  width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.5"/>
-        <rect x="1039" y="128" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.35"/>
-        <ellipse cx="1060" cy="86" rx="14" ry="20" fill="white" opacity="0.25"/>
+      <!-- Petite amb, droite bas — petite taille -->
+      <g class="lantern" style="animation:float-d 3.8s ease-in-out infinite 1.8s;transform-origin:370px 720px">
+        <rect x="346" y="720" width="48" height="66" rx="10" fill="url(#l-amb)" filter="url(#glow-s)" opacity="0.85"/>
+        <rect x="353" y="713" width="34" height="9"  rx="3"  fill="#FFB347" opacity="0.8"/>
+        <rect x="353" y="786" width="34" height="7"  rx="3"  fill="#FF6B35" opacity="0.6"/>
+        <ellipse cx="370" cy="752" rx="12" ry="17" fill="white" opacity="0.15"/>
       </g>
-      <!-- Blanc nacré centre milieu -->
-      <g class="lantern" style="animation:float-a 4.2s ease-in-out infinite 1.6s;transform-origin:560px 300px" opacity="0.45">
-        <rect x="532" y="300" width="56" height="78" rx="13" fill="url(#l-wht)" filter="url(#glow-w)"/>
-        <rect x="539" y="293" width="42" height="10" rx="4"  fill="#fff8f0" opacity="0.5"/>
-        <rect x="539" y="378" width="42" height="7"  rx="3"  fill="#ffe4c8" opacity="0.35"/>
-        <ellipse cx="560" cy="336" rx="14" ry="20" fill="white" opacity="0.25"/>
+      <!-- Moyenne mag, centre bas — taille moyenne -->
+      <g class="lantern" style="animation:float-e 4.5s ease-in-out infinite 4s;transform-origin:207px 790px">
+        <rect x="175" y="790" width="64" height="88" rx="14" fill="url(#l-mag)" filter="url(#glow-l)" opacity="0.85"/>
+        <rect x="183" y="782" width="48" height="12" rx="4"  fill="#FF3CAC" opacity="0.82"/>
+        <rect x="183" y="878" width="48" height="8"  rx="3"  fill="#c0392b" opacity="0.62"/>
+        <ellipse cx="207" cy="832" rx="18" ry="24" fill="white" opacity="0.16"/>
       </g>
     </svg>
   </div>
@@ -743,34 +744,21 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   window.addEventListener('resize', draw);
 })();
 
-/* =============================================
-   LANTERNES — position:fixed, déplacement à 0.45x
-   Plus lentes que le scroll → montent hors écran
-   naturellement avant d'atteindre le RSVP
-   Pas de ping car on ne remet jamais à 0
-============================================= */
+/* LANTERNES — fixed, 0.45x, RAF, pas de ping */
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const layer = document.getElementById('lanterns-layer');
   if (!layer) return;
-
   let rafId = null;
-  let lastY = 0;
-
-  function onScroll() {
+  /* Initialisation sans transform pour éviter le flash */
+  layer.style.transform = 'translateY(0px)';
+  window.addEventListener('scroll', () => {
     if (rafId) return;
     rafId = requestAnimationFrame(() => {
       rafId = null;
-      const y = window.scrollY;
-      /* Déplacement à 0.45x : les lanternes montent moins vite que la page */
-      layer.style.transform = 'translateY(-' + (y * 0.45) + 'px)';
-      lastY = y;
+      layer.style.transform = 'translateY(-' + (window.scrollY * 0.45) + 'px)';
     });
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  /* Initialisation : pas de transform au départ */
-  layer.style.transform = 'translateY(0)';
+  }, { passive: true });
 })();
 
 /* COUNTDOWN */
@@ -801,7 +789,12 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
 })();
 
-/* TIMELINE DESKTOP */
+/* =============================================
+   TIMELINE DESKTOP
+   Fix ligne blanche : on initialise strokeDashoffset
+   correctement AVANT que la section soit visible,
+   et on ne l'anime que quand elle entre dans le viewport
+============================================= */
 (function() {
   if (window.innerWidth <= 700) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -823,6 +816,8 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
     return d;
   }
 
+  let isSetup = false;
+
   function setup() {
     const firstDot = wrapper.querySelector('.event-dot');
     if (!firstDot) return;
@@ -839,18 +834,27 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
     pathBg.setAttribute('d', d);
     pathDraw.setAttribute('d', d);
     const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
+    /* Transition désactivée pendant le setup pour éviter l'animation blanche */
+    pathDraw.style.transition = 'none';
     pathDraw.style.strokeDasharray  = len;
-    pathDraw.style.strokeDashoffset = prefersReduced ? 0 : len;
+    pathDraw.style.strokeDashoffset = len; /* Toujours invisible au départ */
     pathDraw._len = len;
+    /* Réactiver la transition après un frame */
+    requestAnimationFrame(() => {
+      pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out';
+    });
+    isSetup = true;
   }
 
   setTimeout(setup, 200);
-  window.addEventListener('resize', setup);
-  if (prefersReduced) return;
+  window.addEventListener('resize', () => { isSetup = false; setup(); });
+  if (prefersReduced) { setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300); return; }
 
   window.addEventListener('scroll', () => {
-    if (window.innerWidth <= 700) return;
+    if (window.innerWidth <= 700 || !isSetup) return;
     const rect     = section.getBoundingClientRect();
+    /* Ne commencer à remplir que quand la section est visible */
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
     const total    = section.offsetHeight - window.innerHeight;
     const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
     pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
@@ -887,9 +891,14 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
     pathBg.setAttribute('d', d);
     pathDraw.setAttribute('d', d);
     const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
+    /* Pas de transition pendant le setup */
+    pathDraw.style.transition = 'none';
     pathDraw.style.strokeDasharray  = len;
     pathDraw.style.strokeDashoffset = prefersReduced ? 0 : len;
     pathDraw._len = len;
+    requestAnimationFrame(() => {
+      pathDraw.style.transition = 'stroke-dashoffset 0.1s linear';
+    });
   }
 
   setTimeout(setupLine, 300);
@@ -927,7 +936,12 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   onScroll();
 })();
 
-/* VOITURE + FEUX D'ARTIFICE */
+/* =============================================
+   VOITURE + FEUX D'ARTIFICE
+   Fix ping : position initiale définie immédiatement,
+   mise à jour uniquement quand la section est dans le viewport,
+   RAF pour lisser sans saut
+============================================= */
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const section = document.getElementById('final-scene');
@@ -942,6 +956,7 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
+  /* Position initiale : hors écran gauche, définie sans transition */
   car.style.transform = 'translateX(' + (-carW - 20) + 'px)';
 
   const particles = [];
@@ -993,20 +1008,24 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
   let lastProgress = -1;
 
   function updateCar() {
-    const rect     = section.getBoundingClientRect();
-    const total    = section.offsetHeight - window.innerHeight;
+    const rect  = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
 
-    if (rect.bottom < 0 || rect.top > window.innerHeight) {
-      if (lastProgress !== -2) {
+    /* Section complètement hors vue : voiture hors écran, pas de feux */
+    if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+      /* Remettre hors écran seulement si on était en train d'animer */
+      if (lastProgress > 0 && lastProgress < 1) {
         car.style.transform = 'translateX(' + (-carW - 20) + 'px)';
         stopFW();
-        lastProgress = -2;
       }
+      lastProgress = -1;
       return;
     }
 
     const progress = Math.min(1, Math.max(0, -rect.top / total));
-    if (Math.abs(progress - lastProgress) < 0.001) return;
+
+    /* Éviter les mises à jour inutiles */
+    if (Math.abs(progress - lastProgress) < 0.0005) return;
     lastProgress = progress;
 
     const startX = -carW - 20;
@@ -1021,7 +1040,13 @@ const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
     rafCar = requestAnimationFrame(updateCar);
   }, { passive: true });
 
-  window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; updateCar(); });
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    lastProgress = -1;
+    updateCar();
+  });
+
+  /* Appel initial */
   updateCar();
 })();
 
