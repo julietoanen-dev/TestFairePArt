@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Julie & Thomas — 24 juillet 2027</title>
@@ -26,7 +26,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; -webkit-touch-callout: none; }
+  html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
   body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; -webkit-user-select: none; user-select: none; }
   img, svg { display: block; max-width: 100%; }
   a { color: var(--corail); text-decoration: none; -webkit-user-select: text; user-select: text; }
@@ -183,6 +183,7 @@
   @media (max-width: 700px) {
     #timeline-desktop { display: none; }
     #timeline-mobile { display: block; }
+    #lanterns-layer { display: none !important; }
   }
   @media (min-width: 701px) {
     #timeline-desktop { display: block; }
@@ -538,16 +539,10 @@
 <script>
 const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
-// ============================================
-// DEVICE DETECTION
-// ============================================
 const Device = {
   isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
   isAndroid: /Android/.test(navigator.userAgent),
-  isMobile: /iPad|iPhone|iPod|Android/.test(navigator.userAgent),
-  getScrollThrottle: function() {
-    return this.isIOS ? 50 : 16;
-  }
+  isMobile: /iPad|iPhone|iPod|Android/.test(navigator.userAgent)
 };
 
 // ============================================
@@ -579,32 +574,22 @@ const Device = {
 })();
 
 // ============================================
-// LANTERNES - Optimisé pour iOS et Android
+// LANTERNES - DÉSACTIVÉES SUR MOBILE
 // ============================================
 (function() {
+  if (Device.isMobile) return; // Pas d'animation sur mobile
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  
   const layer = document.getElementById('lanterns-layer');
   if (!layer) return;
   
-  let lastUpdate = 0;
-  let rafId = null;
   let lastScrollY = 0;
-  const throttleDelay = Device.getScrollThrottle();
   
   layer.style.transform = 'translateY(0px)';
   
   window.addEventListener('scroll', () => {
     lastScrollY = window.scrollY;
-    
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      const now = Date.now();
-      if (now - lastUpdate >= throttleDelay) {
-        lastUpdate = now;
-        layer.style.transform = `translateY(-${lastScrollY * 0.45}px)`;
-      }
-      rafId = null;
-    });
+    layer.style.transform = `translateY(-${lastScrollY * 0.45}px)`;
   }, { passive: true });
 })();
 
@@ -661,10 +646,10 @@ const Device = {
 })();
 
 // ============================================
-// TIMELINE DESKTOP
+// TIMELINE DESKTOP - DÉSACTIVÉE SUR MOBILE
 // ============================================
 (function() {
-  if (window.innerWidth <= 700) return;
+  if (window.innerWidth <= 700 || Device.isMobile) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const section = document.getElementById('timeline-desktop');
   const wrapper = document.getElementById('timeline-wrapper');
@@ -821,10 +806,12 @@ const Device = {
 })();
 
 // ============================================
-// VOITURE + FEUX D'ARTIFICE - Optimisé iOS/Android
+// VOITURE + FEUX D'ARTIFICE - DÉSACTIVÉS SUR MOBILE
 // ============================================
 (function() {
+  if (Device.isMobile) return; // Pas d'animation sur mobile
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  
   const section = document.getElementById('final-scene');
   const car = document.getElementById('car-el');
   const canvas = document.getElementById('fireworks-canvas');
@@ -848,7 +835,7 @@ const Device = {
   const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
   
   function burst(x, y) {
-    const count = Device.isIOS ? Math.floor(30 + Math.random() * 20) : Math.floor(60 + Math.random() * 40);
+    const count = Math.floor(60 + Math.random() * 40);
     const c1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
     const c2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
     
@@ -865,7 +852,7 @@ const Device = {
         maxLife: life,
         radius: 1.5 + Math.random() * 2,
         color: Math.random() > 0.5 ? c1 : c2,
-        trail: Device.isIOS ? [] : [],
+        trail: [],
         gravity: 0.06 + Math.random() * 0.06
       });
     }
@@ -879,17 +866,15 @@ const Device = {
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       
-      if (!Device.isIOS && p.trail) {
-        p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
-        if (p.trail.length > 6) p.trail.shift();
-        p.trail.forEach((tp, t) => {
-          ctx.beginPath();
-          ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
-          ctx.fill();
-        });
-      }
+      p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
+      if (p.trail.length > 6) p.trail.shift();
+      p.trail.forEach((tp, t) => {
+        ctx.beginPath();
+        ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
+        ctx.fill();
+      });
       
       p.x += p.vx;
       p.y += p.vy;
