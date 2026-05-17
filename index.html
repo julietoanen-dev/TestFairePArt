@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Julie &amp; Thomas — 24 juillet 2027</title>
-  <meta name="description" content="Julie &amp; Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
+  <title>Julie & Thomas — 24 juillet 2027</title>
+  <meta name="description" content="Julie & Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
 
-  <!-- ✅ Précharge l'image des lanternes (supprime le “clac” au chargement) -->
+  <!-- ✅ Précharge l'image des lanternes (supprime le "clac" au chargement) -->
   <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
 
 <style>
@@ -65,7 +65,7 @@
   }
   #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
 
-  /* ✅ Anti-“clac” : on applique le 0% avant la 1ère frame + GPU stable */
+  /* ✅ Anti-"clac" : on applique le 0% avant la 1ère frame + GPU stable */
   .lantern {
     animation-fill-mode: both;
     will-change: transform;
@@ -212,7 +212,26 @@
 
   #final-scene { position: relative; height: 300vh; z-index: 2; }
   .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-  .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  
+  /* ✅ NOUVEAU : Fondu overlay en haut de la scène voiture */
+  .final-sticky::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22vh;
+    pointer-events: none;
+    z-index: 3;
+    background: linear-gradient(
+      to bottom,
+      rgba(51, 102, 102, 0.45) 0%,
+      rgba(51, 102, 102, 0.20) 45%,
+      rgba(51, 102, 102, 0) 100%
+    );
+  }
+  
+  .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
   #fireworks-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.6s ease; }
   #fireworks-canvas.visible { opacity: 1; }
   .final-text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; pointer-events: none; width: 90%; max-width: 700px; }
@@ -286,7 +305,7 @@
 
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
-  <!-- ✅ LANTERNES : repositionnées + moins sur le titre, plus sous “Défiler” + anti clac -->
+  <!-- ✅ LANTERNES : repositionnées + moins sur le titre, plus sous "Défiler" + anti clac -->
   <div id="lanterns-layer" aria-hidden="true">
     <svg id="lanterns-svg"
          xmlns="http://www.w3.org/2000/svg"
@@ -330,7 +349,7 @@
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- ✅ Zone sous “Défiler” : on remplit le “trou” -->
+      <!-- ✅ Zone sous "Défiler" : on remplit le "trou" -->
       <g class="lantern" style="animation:float-c 5.0s ease-in-out infinite; animation-delay:-2.0s; transform-origin:197px 435px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="420" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -375,7 +394,7 @@
   <section id="hero" aria-label="Accueil">
     <div class="hero-content">
       <p class="hero-date reveal">24 juillet 2027</p>
-      <h1 class="reveal">Julie &amp; Thomas</h1>
+      <h1 class="reveal">Julie & Thomas</h1>
       <p class="hero-tagline reveal">On se dit oui ! Venez célébrer avec nous à Verfeil.</p>
 
       <!-- ✅ Défiler + double chevrons -->
@@ -431,7 +450,7 @@
                   <div class="event-time">16h30</div>
                   <div class="event-title">Cérémonie civile</div>
                   <div class="event-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
               <div class="event-dot"><div class="event-dot-inner"></div></div>
@@ -456,9 +475,9 @@
               <div class="event-side reveal-right">
                 <div class="event-card">
                   <div class="event-time" style="color:#FF6B35">18h00</div>
-                  <div class="event-title">Cocktail &amp; Repas &amp; Soirée</div>
+                  <div class="event-title">Cocktail & Repas & Soirée</div>
                   <div class="event-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
             </div>
@@ -475,7 +494,7 @@
                   <div class="event-time">À partir de 12h00</div>
                   <div class="event-title">Brunch</div>
                   <div class="event-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
               <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 4px rgba(255,179,71,0.2),0 0 14px rgba(255,179,71,0.4)"></div></div>
@@ -518,7 +537,7 @@
             <div class="tl-step-time">16h30</div>
             <div class="tl-step-title">Cérémonie civile</div>
             <div class="tl-step-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-0">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Mairie de Pin-Balma"><defs><filter id="wc1m"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl1m"><feGaussianBlur stdDeviation="8"/></filter><linearGradient id="sky1m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky1m)"/><ellipse cx="200" cy="160" rx="280" ry="90" fill="#c8e6a0" opacity="0.4" filter="url(#bl1m)"/><rect x="100" y="90" width="200" height="100" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1m)"/><polygon points="90,90 200,45 310,90" fill="#FF6B35" opacity="0.8" filter="url(#wc1m)"/><rect x="170" y="135" width="40" height="55" rx="3" fill="#AEE1F9" opacity="0.75"/><rect x="115" y="105" width="35" height="22" rx="3" fill="#AEE1F9" opacity="0.65"/><rect x="250" y="105" width="35" height="22" rx="3" fill="#AEE1F9" opacity="0.65"/><path d="M0 195 Q200 180 400 195 L400 225 L0 225 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1m)"/></svg>
@@ -534,9 +553,9 @@
           <div class="tl-step-dot" id="tl-dot-1" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 5px rgba(255,107,53,0.2),0 0 18px rgba(255,107,53,0.4)"></div>
           <div class="tl-step-card" id="tl-card-1">
             <div class="tl-step-time" style="color:#FF6B35">18h00</div>
-            <div class="tl-step-title">Cocktail &amp; Repas &amp; Soirée</div>
+            <div class="tl-step-title">Cocktail & Repas & Soirée</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-1">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Domaine de Gailhaguet"><defs><filter id="wc2m"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl2m"><feGaussianBlur stdDeviation="10"/></filter><linearGradient id="sky2m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/><stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/><stop offset="100%" stop-color="#AEE1F9"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky2m)"/><ellipse cx="200" cy="140" rx="300" ry="100" fill="#c8e6a0" opacity="0.4" filter="url(#bl2m)"/><rect x="80" y="82" width="240" height="105" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2m)"/><polygon points="70,82 200,38 330,82" fill="#FF6B35" opacity="0.75" filter="url(#wc2m)"/><rect x="30" y="105" width="60" height="82" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2m)"/><rect x="310" y="105" width="60" height="82" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2m)"/><rect x="100" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="185" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="270" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="175" y="148" width="50" height="40" rx="4" fill="#AEE1F9" opacity="0.65"/><ellipse cx="50" cy="152" rx="30" ry="38" fill="#7ab840" opacity="0.6" filter="url(#wc2m)"/><ellipse cx="350" cy="148" rx="28" ry="35" fill="#7ab840" opacity="0.6" filter="url(#wc2m)"/><path d="M0 195 Q200 180 400 195 L400 225 L0 225 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2m)"/></svg>
@@ -554,7 +573,7 @@
             <div class="tl-step-time" style="color:#FFB347">À partir de 12h00</div>
             <div class="tl-step-title">Brunch</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Brunch Domaine de Gailhaguet"><defs><filter id="wc3m"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl3m"><feGaussianBlur stdDeviation="9"/></filter><linearGradient id="sky3m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/><stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky3m)"/><ellipse cx="200" cy="165" rx="280" ry="75" fill="#c8e6a0" opacity="0.45" filter="url(#bl3m)"/><ellipse cx="120" cy="150" rx="40" ry="15" fill="#F6E7D7" opacity="0.85" filter="url(#wc3m)"/><ellipse cx="240" cy="143" rx="40" ry="15" fill="#F6E7D7" opacity="0.85" filter="url(#wc3m)"/><ellipse cx="340" cy="154" rx="35" ry="14" fill="#F6E7D7" opacity="0.8" filter="url(#wc3m)"/><ellipse cx="120" cy="116" rx="50" ry="14" fill="#FF6B35" opacity="0.7" filter="url(#wc3m)"/><line x1="120" y1="116" x2="120" y2="150" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="240" cy="109" rx="50" ry="14" fill="#FF3CAC" opacity="0.65" filter="url(#wc3m)"/><line x1="240" y1="109" x2="240" y2="143" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="50" cy="120" rx="35" ry="42" fill="#7ab840" opacity="0.65" filter="url(#wc3m)"/><ellipse cx="370" cy="116" rx="32" ry="38" fill="#7ab840" opacity="0.6" filter="url(#wc3m)"/><path d="M0 191 Q200 178 400 191 L400 225 L0 225 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3m)"/></svg>
@@ -618,32 +637,42 @@
         <defs>
           <filter id="wc-final"><feTurbulence type="fractalNoise" baseFrequency="0.015 0.02" numOctaves="3" seed="11" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter>
           <filter id="blur-final"><feGaussianBlur stdDeviation="10"/></filter>
-          <linearGradient id="sky-final" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.6"/><stop offset="20%" stop-color="#FF6B35"/><stop offset="45%" stop-color="#FFB347"/><stop offset="70%" stop-color="#FF9A5C"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0.8"/></linearGradient>
-          <radialGradient id="sun-final" cx="50%" cy="35%" r="30%"><stop offset="0%" stop-color="#FFD166" stop-opacity="0.9"/><stop offset="55%" stop-color="#FFB347" stop-opacity="0.4"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></radialGradient>
+          <linearGradient id="sky-final" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFE8D6" stop-opacity="0.8"/>
+            <stop offset="25%" stop-color="#FFD4B8" stop-opacity="0.9"/>
+            <stop offset="50%" stop-color="#B8E0F0" stop-opacity="0.95"/>
+            <stop offset="75%" stop-color="#A8D8E8"/>
+            <stop offset="100%" stop-color="#336666"/>
+          </linearGradient>
+          <radialGradient id="sun-final" cx="50%" cy="25%" r="25%">
+            <stop offset="0%" stop-color="#FFE8D6" stop-opacity="0.7"/>
+            <stop offset="60%" stop-color="#FFD4B8" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#B8E0F0" stop-opacity="0"/>
+          </radialGradient>
         </defs>
         <rect width="1440" height="600" fill="url(#sky-final)"/>
-        <ellipse cx="720" cy="210" rx="320" ry="170" fill="url(#sun-final)"/>
-        <ellipse cx="260" cy="90" rx="190" ry="48" fill="white" opacity="0.14" filter="url(#blur-final)"/>
-        <ellipse cx="1150" cy="110" rx="170" ry="42" fill="white" opacity="0.12" filter="url(#blur-final)"/>
-        <path d="M0 330 Q360 278 720 302 Q1080 326 1440 290 L1440 600 L0 600 Z" fill="#c8dfa0" opacity="0.42" filter="url(#blur-final)"/>
-        <path d="M0 375 Q200 348 400 362 Q600 376 720 355 Q860 334 1060 360 Q1260 382 1440 362 L1440 600 L0 600 Z" fill="#9aca60" opacity="0.58" filter="url(#wc-final)"/>
-        <path d="M0 428 Q720 415 1440 428 L1440 600 L0 600 Z" fill="#6a9a38" opacity="0.72"/>
-        <rect x="0" y="448" width="1440" height="82" fill="#c8b89a" opacity="0.88"/>
-        <rect x="0" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="170" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="340" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="510" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="680" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="850" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1020" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1190" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1360" y="485" width="80" height="8" rx="4" fill="white" opacity="0.55"/>
-        <rect x="0" y="446" width="1440" height="4" fill="#a89878" opacity="0.5"/>
-        <rect x="0" y="526" width="1440" height="4" fill="#a89878" opacity="0.5"/>
-        <g transform="translate(78,278)"><rect x="-3" y="100" width="6" height="62" rx="2" fill="#5a3a10"/><path d="M0,100 C-18,80 -22,55 -16,30 C-10,5 -5,-10 0,-20 C5,-10 10,5 16,30 C22,55 18,80 0,100 Z" fill="#2d5a0e"/><path d="M0,84 C-14,66 -17,44 -12,23 C-7,3 -3,-8 0,-16 C3,-8 7,3 12,23 C17,44 14,66 0,84 Z" fill="#3d7018"/><path d="M0,68 C-10,53 -12,34 -8,17 C-4,2 -2,-6 0,-12 C2,-6 4,2 8,17 C12,34 10,53 0,68 Z" fill="#4a8020"/></g>
-        <g transform="translate(116,296)"><rect x="-2" y="72" width="5" height="52" rx="2" fill="#5a3a10"/><path d="M0,72 C-13,57 -15,38 -11,20 C-6,3 -3,-7 0,-13 C3,-7 6,3 11,20 C15,38 13,57 0,72 Z" fill="#2d5a0e"/><path d="M0,60 C-10,47 -12,30 -8,15 C-4,1 -2,-5 0,-10 C2,-5 4,1 8,15 C12,30 10,47 0,60 Z" fill="#3d7018"/></g>
-        <g transform="translate(196,272)"><rect x="-3" y="106" width="6" height="66" rx="2" fill="#5a3a10"/><path d="M0,106 C-20,84 -24,58 -17,32 C-10,6 -5,-12 0,-22 C5,-12 10,6 17,32 C24,58 20,84 0,106 Z" fill="#2d5a0e"/><path d="M0,88 C-15,70 -18,48 -13,26 C-8,4 -4,-9 0,-18 C4,-9 8,4 13,26 C18,48 15,70 0,88 Z" fill="#3d7018"/><path d="M0,72 C-11,56 -13,38 -9,20 C-5,3 -2,-7 0,-14 C2,-7 5,3 9,20 C13,38 11,56 0,72 Z" fill="#4a8020"/></g>
-        <g transform="translate(1244,276)"><rect x="-3" y="104" width="6" height="64" rx="2" fill="#5a3a10"/><path d="M0,104 C-19,83 -23,57 -16,31 C-10,5 -5,-11 0,-21 C5,-11 10,5 16,31 C23,57 19,83 0,104 Z" fill="#2d5a0e"/><path d="M0,87 C-14,69 -17,47 -12,25 C-7,4 -3,-8 0,-17 C3,-8 7,4 12,25 C17,47 14,69 0,87 Z" fill="#3d7018"/><path d="M0,71 C-10,56 -12,37 -8,19 C-4,2 -2,-6 0,-13 C2,-6 4,2 8,19 C12,37 10,56 0,71 Z" fill="#4a8020"/></g>
-        <g transform="translate(1318,282)"><rect x="-3" y="92" width="6" height="60" rx="2" fill="#5a3a10"/><path d="M0,92 C-17,73 -20,51 -14,28 C-8,5 -4,-9 0,-17 C4,-9 8,5 14,28 C20,51 17,73 0,92 Z" fill="#2d5a0e"/><path d="M0,77 C-13,61 -15,41 -10,22 C-6,4 -3,-7 0,-14 C3,-7 6,4 10,22 C15,41 13,61 0,77 Z" fill="#3d7018"/></g>
-        <g transform="translate(1362,270)"><rect x="-3" y="110" width="6" height="70" rx="2" fill="#5a3a10"/><path d="M0,110 C-21,87 -25,60 -18,33 C-11,7 -5,-13 0,-24 C5,-13 11,7 18,33 C25,60 21,87 0,110 Z" fill="#2d5a0e"/><path d="M0,92 C-16,73 -19,51 -13,28 C-8,6 -4,-9 0,-18 C4,-9 8,6 13,28 C19,51 16,73 0,92 Z" fill="#3d7018"/><path d="M0,75 C-12,59 -14,41 -9,22 C-5,5 -2,-7 0,-14 C2,-7 5,5 9,22 C14,41 12,59 0,75 Z" fill="#4a8020"/></g>
+        <ellipse cx="720" cy="120" rx="280" ry="140" fill="url(#sun-final)"/>
+        <ellipse cx="280" cy="80" rx="160" ry="50" fill="white" opacity="0.12" filter="url(#blur-final)"/>
+        <ellipse cx="1180" cy="100" rx="140" ry="45" fill="white" opacity="0.1" filter="url(#blur-final)"/>
+        <path d="M-100 280 Q360 240 720 260 Q1080 280 1540 250 L1540 600 L-100 600 Z" fill="#5a8a8a" opacity="0.22" filter="url(#blur-final)"/>
+        <path d="M-100 340 Q200 310 400 330 Q600 350 720 320 Q860 290 1060 330 Q1260 360 1540 330 L1540 600 L-100 600 Z" fill="#4a7a7a" opacity="0.32" filter="url(#wc-final)"/>
+        <path d="M-100 400 Q720 380 1440 400 L1440 600 L-100 600 Z" fill="#336666" opacity="0.85"/>
+        <rect x="0" y="420" width="1440" height="80" fill="#2d5a5a" opacity="0.9"/>
+        <rect x="0" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="170" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="340" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="510" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="680" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="850" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="1020" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="1190" y="465" width="110" height="8" rx="4" fill="white" opacity="0.5"/><rect x="1360" y="465" width="80" height="8" rx="4" fill="white" opacity="0.5"/>
+        <rect x="0" y="418" width="1440" height="4" fill="#1f4040" opacity="0.6"/>
+        <rect x="0" y="500" width="1440" height="4" fill="#1f4040" opacity="0.6"/>
+        <g transform="translate(78,240)"><rect x="-3" y="100" width="6" height="62" rx="2" fill="#5a3a10"/><path d="M0,100 C-18,80 -22,55 -16,30 C-10,5 -5,-10 0,-20 C5,-10 10,5 16,30 C22,55 18,80 0,100 Z" fill="#2d5a0e"/><path d="M0,84 C-14,66 -17,44 -12,23 C-7,3 -3,-8 0,-16 C3,-8 7,3 12,23 C17,44 14,66 0,84 Z" fill="#3d7018"/><path d="M0,68 C-10,53 -12,34 -8,17 C-4,2 -2,-6 0,-12 C2,-6 4,2 8,17 C12,34 10,53 0,68 Z" fill="#4a8020"/></g>
+        <g transform="translate(116,258)"><rect x="-2" y="72" width="5" height="52" rx="2" fill="#5a3a10"/><path d="M0,72 C-13,57 -15,38 -11,20 C-6,3 -3,-7 0,-13 C3,-7 6,3 11,20 C15,38 13,57 0,72 Z" fill="#2d5a0e"/><path d="M0,60 C-10,47 -12,30 -8,15 C-4,1 -2,-5 0,-10 C2,-5 4,1 8,15 C12,30 10,47 0,60 Z" fill="#3d7018"/></g>
+        <g transform="translate(196,234)"><rect x="-3" y="106" width="6" height="66" rx="2" fill="#5a3a10"/><path d="M0,106 C-20,84 -24,58 -17,32 C-10,6 -5,-12 0,-22 C5,-12 10,6 17,32 C24,58 20,84 0,106 Z" fill="#2d5a0e"/><path d="M0,88 C-15,70 -18,48 -13,26 C-8,4 -4,-9 0,-18 C4,-9 8,4 13,26 C18,48 15,70 0,88 Z" fill="#3d7018"/><path d="M0,72 C-11,56 -13,38 -9,20 C-5,3 -2,-7 0,-14 C2,-7 5,3 9,20 C13,38 11,56 0,72 Z" fill="#4a8020"/></g>
+        <g transform="translate(1244,238)"><rect x="-3" y="104" width="6" height="64" rx="2" fill="#5a3a10"/><path d="M0,104 C-19,83 -23,57 -16,31 C-10,5 -5,-11 0,-21 C5,-11 10,5 16,31 C23,57 19,83 0,104 Z" fill="#2d5a0e"/><path d="M0,87 C-14,69 -17,47 -12,25 C-7,4 -3,-8 0,-17 C3,-8 7,4 12,25 C17,47 14,69 0,87 Z" fill="#3d7018"/><path d="M0,71 C-10,56 -12,37 -8,19 C-4,2 -2,-6 0,-13 C2,-6 4,2 8,19 C12,37 10,56 0,71 Z" fill="#4a8020"/></g>
+        <g transform="translate(1318,244)"><rect x="-3" y="92" width="6" height="60" rx="2" fill="#5a3a10"/><path d="M0,92 C-17,73 -20,51 -14,28 C-8,5 -4,-9 0,-17 C4,-9 8,5 14,28 C20,51 17,73 0,92 Z" fill="#2d5a0e"/><path d="M0,77 C-13,61 -15,41 -10,22 C-6,4 -3,-7 0,-14 C3,-7 6,4 10,22 C15,41 13,61 0,77 Z" fill="#3d7018"/></g>
+        <g transform="translate(1362,232)"><rect x="-3" y="110" width="6" height="70" rx="2" fill="#5a3a10"/><path d="M0,110 C-21,87 -25,60 -18,33 C-11,7 -5,-13 0,-24 C5,-13 11,7 18,33 C25,60 21,87 0,110 Z" fill="#2d5a0e"/><path d="M0,92 C-16,73 -19,51 -13,28 C-8,6 -4,-9 0,-18 C4,-9 8,6 13,28 C19,51 16,73 0,92 Z" fill="#3d7018"/><path d="M0,75 C-12,59 -14,41 -9,22 C-5,5 -2,-7 0,-14 C2,-7 5,5 9,22 C14,41 12,59 0,75 Z" fill="#4a8020"/></g>
       </svg>
 
       <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
 
       <div class="final-text">
-        <div class="final-title">Julie &amp; Thomas</div>
+        <div class="final-title">Julie & Thomas</div>
         <div class="final-date">24 juillet 2027</div>
         <div class="final-tagline">En route pour Verfeil</div>
       </div>
@@ -703,7 +732,7 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 if (isIOS) document.documentElement.classList.add('ios-perf');
 
-// PANORAMA
+// ✅ PANORAMA RÉVISÉ : Ciel rose/orange/violet → bleu + Pyrénées + forêt + finisher #336666
 (function buildPanorama() {
   if (document.documentElement.classList.contains('ios-perf')) return;
   const svg = document.getElementById('panorama');
@@ -713,10 +742,38 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', H);
     svg.style.height = H + 'px';
-    const sunsetH = H * 0.32;
-    const collineY = H * 0.88;
-    const footerY = H * 0.93;
-    svg.innerHTML = `<defs><filter id="wc-bg"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.01" numOctaves="4" seed="5" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="28" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="blur-bg"><feGaussianBlur stdDeviation="20"/></filter><filter id="blur-col"><feGaussianBlur stdDeviation="6"/></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC"/><stop offset="${(sunsetH*.35/H*100).toFixed(1)}%" stop-color="#FF6B35"/><stop offset="${(sunsetH*.65/H*100).toFixed(1)}%" stop-color="#FFCBA4"/><stop offset="${(sunsetH/H*100).toFixed(1)}%" stop-color="#FFE8D6"/><stop offset="${(H*.48/H*100).toFixed(1)}%" stop-color="#fff5f0"/><stop offset="${(H*.62/H*100).toFixed(1)}%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient><radialGradient id="halo" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="#FFD166" stop-opacity="0.45"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></radialGradient></defs><rect width="1440" height="${H}" fill="url(#bg-grad)"/><ellipse cx="720" cy="${sunsetH*.5}" rx="700" ry="${sunsetH*.7}" fill="url(#halo)" opacity="0.6" filter="url(#blur-bg)"/><ellipse cx="300" cy="${sunsetH*.25}" rx="350" ry="180" fill="#FF3CAC" opacity="0.08" filter="url(#blur-bg)"/><ellipse cx="1150" cy="${sunsetH*.35}" rx="300" ry="160" fill="#FF6B35" opacity="0.07" filter="url(#blur-bg)"/><path d="M-100 ${collineY+(footerY-collineY)*.3} Q360 ${collineY-(footerY-collineY)*.15} 720 ${collineY+(footerY-collineY)*.05} Q1080 ${collineY+(footerY-collineY)*.25} 1540 ${collineY+(footerY-collineY)*.1} L1540 ${H} L-100 ${H} Z" fill="#c8dfa0" opacity="0.28" filter="url(#blur-col)"/><path d="M-100 ${collineY+(footerY-collineY)*.55} Q200 ${collineY+(footerY-collineY)*.2} 500 ${collineY+(footerY-collineY)*.45} Q720 ${collineY+(footerY-collineY)*.65} 950 ${collineY+(footerY-collineY)*.38} Q1200 ${collineY+(footerY-collineY)*.15} 1540 ${collineY+(footerY-collineY)*.5} L1540 ${H} L-100 ${H} Z" fill="#b0d080" opacity="0.38" filter="url(#wc-bg)"/><path d="M-100 ${footerY*.985} Q360 ${collineY+(footerY-collineY)*.72} 720 ${footerY*.978} Q1080 ${collineY+(footerY-collineY)*.68} 1540 ${footerY*.982} L1540 ${H} L-100 ${H} Z" fill="#90c060" opacity="0.32" filter="url(#wc-bg)"/>`;
+    
+    const skyH = H * 0.35;
+    const pyreneeH = H * 0.50;
+    const forestH = H * 0.75;
+    const finisherH = H * 0.95;
+    
+    svg.innerHTML = `<defs>
+      <filter id="wc-bg"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.01" numOctaves="4" seed="5" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="28" xChannelSelector="R" yChannelSelector="G"/></filter>
+      <filter id="blur-bg"><feGaussianBlur stdDeviation="20"/></filter>
+      <filter id="blur-col"><feGaussianBlur stdDeviation="6"/></filter>
+      <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FF3CAC"/>
+        <stop offset="${(skyH*0.25/H*100).toFixed(1)}%" stop-color="#FF6B35"/>
+        <stop offset="${(skyH*0.50/H*100).toFixed(1)}%" stop-color="#FFB347"/>
+        <stop offset="${(skyH*0.75/H*100).toFixed(1)}%" stop-color="#FFCBA4"/>
+        <stop offset="${(skyH/H*100).toFixed(1)}%" stop-color="#B8E0F0"/>
+        <stop offset="${(H*0.55/H*100).toFixed(1)}%" stop-color="#A8D8E8"/>
+        <stop offset="100%" stop-color="#336666"/>
+      </linearGradient>
+      <radialGradient id="halo" cx="50%" cy="0%" r="60%">
+        <stop offset="0%" stop-color="#FFD166" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1440" height="${H}" fill="url(#bg-grad)"/>
+    <ellipse cx="720" cy="${skyH*0.5}" rx="700" ry="${skyH*0.7}" fill="url(#halo)" opacity="0.6" filter="url(#blur-bg)"/>
+    <ellipse cx="300" cy="${skyH*0.25}" rx="350" ry="180" fill="#FF3CAC" opacity="0.08" filter="url(#blur-bg)"/>
+    <ellipse cx="1150" cy="${skyH*0.35}" rx="300" ry="160" fill="#FF6B35" opacity="0.07" filter="url(#blur-bg)"/>
+    <path d="M-100 ${pyreneeH*0.6} Q360 ${pyreneeH*0.35} 720 ${pyreneeH*0.5} Q1080 ${pyreneeH*0.65} 1540 ${pyreneeH*0.45} L1540 ${forestH} L-100 ${forestH} Z" fill="#5a8a8a" opacity="0.25" filter="url(#blur-col)"/>
+    <path d="M-100 ${pyreneeH*0.75} Q200 ${pyreneeH*0.5} 400 ${pyreneeH*0.7} Q600 ${pyreneeH*0.85} 720 ${pyreneeH*0.65} Q860 ${pyreneeH*0.45} 1060 ${pyreneeH*0.75} Q1260 ${pyreneeH*0.9} 1540 ${pyreneeH*0.7} L1540 ${forestH} L-100 ${forestH} Z" fill="#4a7a7a" opacity="0.35" filter="url(#wc-bg)"/>
+    <path d="M-100 ${forestH*0.95} Q360 ${forestH*0.88} 720 ${forestH*0.92} Q1080 ${forestH*0.89} 1540 ${forestH*0.94} L1540 ${H} L-100 ${H} Z" fill="#336666" opacity="0.9"/>
+    `;
   }
   draw();
   window.addEventListener('resize', Utils.debounce(draw, 300));
@@ -936,7 +993,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  car.style.transform = `translate3d(${ -carW - 20 }px, 0, 0)`;
+  car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
   const particles = [];
   let fwActive = false, fwRafId = null;
   const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
@@ -980,7 +1037,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   function updateCar() {
     const rect = section.getBoundingClientRect();
     const total = section.offsetHeight - window.innerHeight;
-    if (rect.bottom <= 0 || rect.top >= window.innerHeight) { if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${ -carW - 20 }px, 0, 0)`; stopFW(); } lastProgress = -1; return; }
+    if (rect.bottom <= 0 || rect.top >= window.innerHeight) { if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`; stopFW(); } lastProgress = -1; return; }
     const progress = Math.min(1, Math.max(0, -rect.top / total));
     if (Math.abs(progress - lastProgress) < 0.0005) return;
     lastProgress = progress;
