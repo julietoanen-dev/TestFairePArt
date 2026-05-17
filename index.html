@@ -1,705 +1,867 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Julie &amp; Thomas — 24 juillet 2027</title>
-  <meta name="description" content="Julie &amp; Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
+  <style>
+    /* ============================================================
+       BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: #fff;
+      color: #3a2a1a;
+      overflow-x: hidden;
+    }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+    /* ============================================================
+       VERSION BADGE — supprimer tout ce bloc le jour de la mise en ligne
+    ============================================================ */
+    #version-badge {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 9999;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      pointer-events: none;
+      letter-spacing: 0.05em;
+    }
+    /* ============================================================
+       FIN VERSION BADGE
+    ============================================================ */
 
-  <!-- ✅ Précharge l'image des lanternes (supprime le “clac” au chargement) -->
-  <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
+    /* ============================================================
+       PANORAMA SVG (fond pleine page)
+    ============================================================ */
+    #panorama-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #panorama {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .ios-perf #panorama-wrap { display: none; }
 
-<style>
-  :root {
-    --rose: #FF3CAC;
-    --corail: #FF6B35;
-    --ambre: #FFB347;
-    --rouge: #b5341a;
-    --blanc: #ffffff;
-    --texte: #2e1200;
-    --texte-soft: rgba(46,18,0,0.5);
-    --font-titre: 'Playfair Display', Georgia, serif;
-    --font-texte: 'Montserrat', system-ui, sans-serif;
-    --radius: 14px;
+    /* ============================================================
+       LANTERNES (layer parallaxe)
+    ============================================================ */
+    #lanterns-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .lantern {
+      position: absolute;
+      width: 48px;
+      height: 60px;
+      border-radius: 40% 40% 50% 50% / 30% 30% 50% 50%;
+      background: radial-gradient(ellipse at 40% 35%, #ffe066 30%, #ff8c00 65%, #e03000 100%);
+      box-shadow: 0 0 18px 6px rgba(255,160,30,0.55), 0 0 40px 12px rgba(255,100,0,0.25);
+      opacity: 0.92;
+      filter: blur(0.5px);
+    }
+    .lantern::before {
+      content: '';
+      position: absolute;
+      top: -8px; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 10px;
+      background: #c05000;
+      border-radius: 50% 50% 0 0;
+    }
+    .lantern::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 50%; transform: translateX(-50%);
+      width: 14px; height: 8px;
+      background: rgba(255,180,0,0.5);
+      border-radius: 0 0 50% 50%;
+      filter: blur(2px);
+    }
+    /* Variantes de taille / couleur */
+    .lantern.sm  { width: 32px; height: 40px; opacity: 0.75; }
+    .lantern.lg  { width: 64px; height: 80px; opacity: 0.88; }
+    .lantern.pink {
+      background: radial-gradient(ellipse at 40% 35%, #ffb0d0 20%, #ff3cac 60%, #c0006a 100%);
+      box-shadow: 0 0 18px 6px rgba(255,60,172,0.5), 0 0 40px 12px rgba(200,0,100,0.2);
+    }
+    .lantern.deep-orange {
+      background: radial-gradient(ellipse at 40% 35%, #ffd080 20%, #ff6020 60%, #c03000 100%);
+    }
 
-    /* ✅ VERSION BADGE (désactivable en 1 ligne)
-       Pour publication : mets --version-display: none; */
-    --version-display: block; /* block | none */
-  }
+    /* ============================================================
+       PAGE WRAPPER
+    ============================================================ */
+    #page-wrapper {
+      position: relative;
+      z-index: 2;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; font-size: 16px; }
-  body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
-  img, svg { display: block; max-width: 100%; }
-  a { color: var(--corail); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  a:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 3px; }
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1rem 6rem;
+      position: relative;
+    }
+    .hero-date {
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 1rem;
+    }
+    .hero-names {
+      font-size: clamp(2.8rem, 9vw, 7rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.05;
+      text-shadow: 0 2px 24px rgba(180,60,0,0.25);
+      letter-spacing: 0.02em;
+    }
+    .hero-names span { display: block; }
+    .hero-names .amp {
+      font-size: 0.55em;
+      letter-spacing: 0.18em;
+      opacity: 0.85;
+      margin: 0.15em 0;
+    }
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.06em;
+    }
+    .scroll-hint {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      animation: bounce 2s infinite;
+    }
+    .scroll-hint svg { width: 20px; height: 20px; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
 
-  h1, h2, h3 { font-family: var(--font-titre); line-height: 1.15; }
-  h1 { font-size: clamp(3rem, 9vw, 7rem); color: var(--blanc); }
-  p { line-height: 1.7; }
+    /* ============================================================
+       COUNTDOWN
+    ============================================================ */
+    #countdown-section {
+      padding: 3rem 1rem 4rem;
+      text-align: center;
+    }
+    #countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: clamp(1rem, 4vw, 3rem);
+      flex-wrap: wrap;
+    }
+    .cd-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .cd-num {
+      font-size: clamp(2.2rem, 7vw, 4.5rem);
+      font-weight: 300;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(180,60,0,0.3);
+      line-height: 1;
+      min-width: 2ch;
+    }
+    .cd-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    .cd-sep {
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: rgba(255,255,255,0.5);
+      align-self: flex-start;
+      padding-top: 0.1em;
+    }
+    #countdown-tagline {
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    #countdown-done {
+      display: none;
+      font-size: 1.6rem;
+      color: #fff;
+      letter-spacing: 0.08em;
+    }
 
-  .container { width: min(90%, 960px); margin-inline: auto; }
-  section { padding: 90px 0; position: relative; z-index: 2; }
+    /* ============================================================
+       SECTIONS COMMUNES
+    ============================================================ */
+    .section-card {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      margin: 2rem auto;
+      max-width: 860px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 8px 40px rgba(180,80,0,0.10);
+    }
+    .section-title {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 400;
+      text-align: center;
+      color: #7a3a10;
+      letter-spacing: 0.06em;
+      margin-bottom: 2rem;
+    }
 
-  /* ✅ Badge version */
-  .version-badge{
-    display: var(--version-display);
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 9999;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.88);
-    background: rgba(20, 35, 80, 0.35);
-    border: 1px solid rgba(255,255,255,0.20);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-    user-select: none;
-    pointer-events: none;
-  }
+    /* ============================================================
+       TIMELINE DESKTOP
+    ============================================================ */
+    #timeline-desktop {
+      display: none;
+      position: relative;
+    }
+    @media (min-width: 701px) {
+      #timeline-desktop { display: block; }
+    }
+    #timeline-wrapper {
+      position: relative;
+      padding: 1rem 0 2rem;
+    }
+    #timeline-line-svg {
+      position: absolute;
+      top: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #timeline-path-bg  { fill: none; stroke: rgba(200,120,60,0.18); stroke-width: 2.5; }
+    #timeline-path-draw{ fill: none; stroke: #e07030; stroke-width: 2.5; stroke-linecap: round; }
 
-  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal-left.visible { opacity: 1; transform: translateX(0); }
-  .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .tl-day-header {
+      text-align: center;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #b06030;
+      margin: 2rem 0 1.2rem;
+    }
+    .tl-row {
+      display: grid;
+      grid-template-columns: 1fr 48px 1fr;
+      align-items: start;
+      gap: 0 1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tl-row.right .tl-content { grid-column: 3; grid-row: 1; }
+    .tl-row.right .tl-dot-col { grid-column: 2; grid-row: 1; }
+    .tl-row.right .tl-img-col { grid-column: 1; grid-row: 1; }
+    .tl-row.left  .tl-content { grid-column: 1; }
+    .tl-row.left  .tl-dot-col { grid-column: 2; }
+    .tl-row.left  .tl-img-col { grid-column: 3; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
-  }
+    .event-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #e07030;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px #e07030;
+      margin: 0.6rem auto 0;
+    }
+    .tl-content {
+      background: rgba(255,255,255,0.9);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 4px 18px rgba(180,80,0,0.08);
+    }
+    .tl-time {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #e07030;
+      margin-bottom: 0.3rem;
+    }
+    .tl-event-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #5a2a08;
+      margin-bottom: 0.2rem;
+    }
+    .tl-place { font-size: 0.82rem; color: #8a5a30; }
+    .tl-address { font-size: 0.75rem; color: #aaa; margin-top: 0.15rem; }
+    .tl-map-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+      color: #e07030;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid rgba(224,112,48,0.3);
+    }
+    .tl-img-col {
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #f0e0d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      color: #c09070;
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .tl-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
-  #page-wrapper { position: relative; min-height: 100vh; }
+    /* ============================================================
+       TIMELINE MOBILE
+    ============================================================ */
+    #timeline-mobile {
+      display: block;
+    }
+    @media (min-width: 701px) {
+      #timeline-mobile { display: none; }
+    }
+    #tl-mobile-wrapper {
+      position: relative;
+      padding: 0.5rem 0 2rem 52px;
+    }
+    #tl-mobile-line-svg {
+      position: absolute;
+      left: 12px; top: 0;
+      width: 40px;
+      pointer-events: none;
+    }
+    #tl-mobile-path-bg   { fill: none; stroke: rgba(200,120,60,0.18); stroke-width: 2; }
+    #tl-mobile-path-draw { fill: none; stroke: #e07030; stroke-width: 2; stroke-linecap: round; }
 
-  #lanterns-layer {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100vh;
-    z-index: 1; pointer-events: none;
-    will-change: transform;
-    transform: translate3d(0,0,0);
-  }
-  #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
+    .tl-step { margin-bottom: 2.5rem; }
+    .tl-step-day {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #b06030;
+      margin-bottom: 0.6rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .tl-step-day.show { opacity: 1; transform: none; }
+    .tl-step-dot {
+      position: absolute;
+      left: 12px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #e07030;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px #e07030;
+      margin-top: 0.2rem;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .tl-step-dot.show { opacity: 1; transform: scale(1); }
+    .tl-step-card {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 4px 16px rgba(180,80,0,0.08);
+      opacity: 0;
+      transform: translateX(12px);
+      transition: opacity 0.4s 0.12s, transform 0.4s 0.12s;
+    }
+    .tl-step-card.show { opacity: 1; transform: none; }
+    .tl-step-img {
+      margin-top: 0.8rem;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #f0e0d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #c09070;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s 0.24s, transform 0.4s 0.24s;
+    }
+    .tl-step-img.show { opacity: 1; transform: none; }
+    .tl-step-img img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ✅ Anti-“clac” : on applique le 0% avant la 1ère frame + GPU stable */
-  .lantern {
-    animation-fill-mode: both;
-    will-change: transform;
-    transform: translate3d(0,0,0);
-    backface-visibility: hidden;
-  }
+    /* ============================================================
+       RSVP
+    ============================================================ */
+    #rsvp { padding-bottom: 4rem; }
+    .rsvp-intro {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #8a5a30;
+      margin-bottom: 2rem;
+      letter-spacing: 0.04em;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8a5a30;
+      margin-bottom: 0.4rem;
+    }
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid rgba(200,120,60,0.3);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.8);
+      color: #3a2a1a;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #e07030; }
+    .radio-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .radio-btn {
+      flex: 1;
+      min-width: 120px;
+      border: 1.5px solid rgba(200,120,60,0.3);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.88rem;
+      color: #8a5a30;
+      background: rgba(255,255,255,0.7);
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .radio-btn input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-btn.selected {
+      border-color: #e07030;
+      background: rgba(224,112,48,0.08);
+      color: #c05010;
+      font-weight: 600;
+    }
+    .error-msg {
+      font-size: 0.72rem;
+      color: #c0392b;
+      margin-top: 0.3rem;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    #btn-submit {
+      display: block;
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #e07030, #c05010);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: opacity 0.2s;
+    }
+    #btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    #rsvp-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.1rem;
+      color: #7a3a10;
+    }
+    #rsvp-success.visible { display: block; }
 
-  @keyframes float-a { 0%,100%{transform:translate3d(0,0,0) rotate(-8deg)} 50%{transform:translate3d(0,-18px,0) rotate(8deg)} }
-  @keyframes float-b { 0%,100%{transform:translate3d(0,0,0) rotate(6deg)} 50%{transform:translate3d(0,-24px,0) rotate(-6deg)} }
-  @keyframes float-c { 0%,100%{transform:translate3d(0,0,0) rotate(-4deg)} 50%{transform:translate3d(0,-12px,0) rotate(10deg)} }
-  @keyframes float-d { 0%,100%{transform:translate3d(0,0,0) rotate(10deg)} 50%{transform:translate3d(0,-20px,0) rotate(-4deg)} }
-  @keyframes float-e { 0%,100%{transform:translate3d(0,0,0) rotate(-12deg)} 50%{transform:translate3d(0,-16px,0) rotate(5deg)} }
+    /* ============================================================
+       FINAL SCENE (voiture + feux)
+    ============================================================ */
+    #final-scene {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+    }
+    #car-el {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      font-size: 3rem;
+      will-change: transform;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+    #fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    #fireworks-canvas.visible { opacity: 1; }
 
-  /* Glow léger */
-  .lantern image { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18)); }
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.6);
+      position: relative;
+      z-index: 2;
+    }
+    footer strong { color: rgba(255,255,255,0.85); }
 
-  #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
-  .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-  .hero-date { font-family: var(--font-texte); font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.82); letter-spacing: 0.25em; text-transform: uppercase; }
-  .hero-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.92); max-width: 480px; text-shadow: 0 2px 16px rgba(0,0,0,0.12); }
+    /* ============================================================
+       REVEAL ANIMATIONS
+    ============================================================ */
+    .reveal, .reveal-left, .reveal-right {
+      opacity: 0;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal       { transform: translateY(24px); }
+    .reveal-left  { transform: translateX(-24px); }
+    .reveal-right { transform: translateX(24px); }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible {
+      opacity: 1; transform: none;
+    }
 
-  /* ✅ Scroll hint + chevrons vers le bas */
-  .hero-scroll-hint {
-    margin-top: 50px;
-    color: rgba(255,255,255,0.60);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  .chevrons {
-    display: grid;
-    gap: 4px;
-    opacity: 0.9;
-  }
-  .chevrons span {
-    width: 16px;
-    height: 16px;
-    border-right: 2px solid rgba(255,255,255,0.75);
-    border-bottom: 2px solid rgba(255,255,255,0.75);
-    transform: rotate(45deg);
-    border-radius: 2px;
-  }
-  .chevrons span:nth-child(1) { animation: chevron 1.4s ease-in-out infinite; }
-  .chevrons span:nth-child(2) { animation: chevron 1.4s ease-in-out infinite 0.18s; opacity: 0.8; }
-
-  @keyframes chevron {
-    0%, 100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; }
-    50%      { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; }
-  }
-
-  #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
-  .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
-  .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(181,52,26,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
-  .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--rouge); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
-  .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
-  .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--rouge); margin-top: 16px; display: block; opacity: 0.75; }
-  .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--rouge); margin-top: 20px; }
-
-  #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
-  #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
-  .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
-  .timeline-line-svg { position: absolute; top: 0; pointer-events: none; z-index: 0; overflow: visible; will-change: auto; }
-  #timeline-path-bg { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
-  #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
-  .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
-  .timeline-day-label { text-align: center; font-family: var(--font-texte); font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.75); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
-  .timeline-events { display: flex; flex-direction: column; gap: 28px; }
-  .timeline-event { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: start; gap: 0 16px; }
-  .timeline-event:nth-child(odd) .event-side { grid-column: 1; text-align: right; align-items: flex-end; }
-  .timeline-event:nth-child(odd) .event-dot { grid-column: 2; }
-  .timeline-event:nth-child(odd) .event-img-col { grid-column: 3; }
-  .timeline-event:nth-child(even) .event-img-col { grid-column: 1; }
-  .timeline-event:nth-child(even) .event-dot { grid-column: 2; }
-  .timeline-event:nth-child(even) .event-side { grid-column: 3; text-align: left; align-items: flex-start; }
-  .event-side { display: flex; flex-direction: column; gap: 12px; }
-  .event-dot { display: flex; align-items: flex-start; justify-content: center; padding-top: 16px; }
-  .event-dot-inner { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 4px rgba(255,60,172,0.15), 0 0 14px rgba(255,60,172,0.35); flex-shrink: 0; position: relative; z-index: 2; }
-  .event-card { background: rgba(255,255,255,0.85); border-radius: var(--radius); padding: 22px 26px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.08); backdrop-filter: blur(10px); transition: box-shadow 0.4s ease; }
-  .event-card:hover { box-shadow: 0 10px 40px rgba(46,18,0,0.14); }
-  .event-time { font-size: 0.72rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
-  .event-title { font-family: var(--font-titre); font-size: 1.15rem; color: var(--texte); margin-bottom: 8px; }
-  .event-address { font-size: 0.8rem; color: var(--texte-soft); line-height: 1.6; }
-  .event-map-link { display: inline-block; margin-top: 10px; font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
-  .event-map-link:hover { color: var(--rose); border-color: var(--rose); text-decoration: none; }
-  .event-img-col { display: flex; align-items: flex-start; padding-top: 4px; }
-  .event-img-wrap { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 4/3; position: relative; }
-  .event-img-wrap svg { width: 100%; height: 100%; display: block; }
-  .event-img-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px; background: linear-gradient(to top, rgba(46,18,0,0.45) 0%, transparent 60%); }
-  .event-img-placeholder span { font-family: var(--font-titre); font-style: italic; font-size: 0.85rem; color: var(--blanc); text-align: center; text-shadow: 0 1px 6px rgba(0,0,0,0.4); }
-  .event-img-placeholder small { font-size: 0.68rem; color: rgba(255,255,255,0.7); margin-top: 2px; display: block; text-align: center; }
-  .img-todo-note { position: absolute; top: 8px; right: 8px; background: rgba(255,107,53,0.88); color: white; font-size: 0.6rem; font-weight: 600; padding: 3px 7px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
-
-  #timeline-mobile { display: none; position: relative; z-index: 2; }
-  #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
-  .tl-mobile-wrapper { position: relative; }
-  #tl-mobile-line-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; pointer-events: none; z-index: 0; overflow: visible; }
-  #tl-mobile-path-bg { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
-  #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
-  .tl-step { position: relative; height: 200vh; }
-  .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
-  .tl-step-day { font-family: var(--font-texte); font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.22); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-  .tl-step-day.show { opacity: 1; transform: translateY(0); }
-  .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
-  .tl-step-dot.show { opacity: 1; transform: scale(1); }
-  .tl-step-card { background: rgba(255,255,255,0.92); border-radius: var(--radius); padding: 20px 22px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.12); backdrop-filter: blur(10px); width: 100%; max-width: 360px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s; position: relative; z-index: 3; }
-  .tl-step-card.show { opacity: 1; transform: translateY(0); }
-  .tl-step-img { width: 100%; max-width: 360px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 16/9; position: relative; margin-top: 14px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s; z-index: 3; }
-  .tl-step-img.show { opacity: 1; transform: translateY(0); }
-  .tl-step-img svg { width: 100%; height: 100%; display: block; }
-  .tl-step-time { font-size: 0.7rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 5px; }
-  .tl-step-title { font-family: var(--font-titre); font-size: 1.2rem; color: var(--texte); margin-bottom: 6px; }
-  .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
-  .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
-
-  #rsvp { text-align: center; padding: 80px 20px 100px; position: relative; z-index: 2; }
-  #rsvp h2 { font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
-  .rsvp-subtitle { color: var(--texte-soft); margin-bottom: 50px; font-size: 0.9rem; }
-  .rsvp-form-wrap { background: rgba(250,247,243,0.92); border: 1.5px solid rgba(181,52,26,0.18); border-radius: 20px; padding: clamp(24px, 5vw, 48px); max-width: 540px; margin-inline: auto; text-align: left; box-shadow: 0 8px 40px rgba(46,18,0,0.07); backdrop-filter: blur(12px); }
-  .form-group { margin-bottom: 26px; }
-  .form-group label, .form-group legend { display: block; font-family: var(--font-texte); font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
-  .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color 0.3s, box-shadow 0.3s; resize: none; }
-  .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
-  .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
-  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; background: rgba(255,255,255,0.85); user-select: none; min-width: 0; }
-  .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-  .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
-  .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
-  .radio-btn-text { font-family: var(--font-texte); font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
-  .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
-  .field-error.visible { display: block; }
-  .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; }
-  .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
-  .btn-submit:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; }
-  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
-  .rsvp-success.visible { display: block; }
-  .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
-  .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
-
-  #final-scene { position: relative; height: 300vh; z-index: 2; }
-  .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-  .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  #fireworks-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.6s ease; }
-  #fireworks-canvas.visible { opacity: 1; }
-  .final-text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; pointer-events: none; width: 90%; max-width: 700px; }
-  .final-title { font-family: var(--font-titre); font-size: clamp(2.5rem, 7vw, 5.5rem); color: var(--blanc); line-height: 1.1; text-shadow: 0 3px 30px rgba(0,20,60,0.35), 0 1px 8px rgba(0,0,0,0.2); margin-bottom: 10px; }
-  .final-date { font-family: var(--font-texte); font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
-  .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(0,20,60,0.35); }
-  #car-el { position: absolute; bottom: 22%; will-change: transform; z-index: 6; }
-
-  @media (max-width: 700px) {
-    #timeline-desktop { display: none; }
-    #timeline-mobile { display: block; }
-  }
-  @media (min-width: 701px) {
-    #timeline-desktop { display: block; }
-    #timeline-mobile { display: none; }
-  }
-
-  @media print {
-    .version-badge, #lanterns-layer, #panorama, #final-scene { display: none !important; }
-    body { background: white; color: black; }
-    section { padding: 20px 0; }
-    .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
-  }
-
-  /* =========================
-     iOS PERF MODE (auto)
-     - garde les effets scroll (lanternes/chemin/voiture)
-     - coupe les sources de lag iPhone: backdrop-filter, filtres SVG lourds, panorama
-     ========================= */
-  .ios-perf #panorama { display: none !important; }
-
-  /* ✅ iOS fallback : ciel plus bleu + horizon chaud */
-  .ios-perf body {
-    background: linear-gradient(
-      to bottom,
-      #132a63 0%,
-      #244a9b 18%,
-      #5c88d8 34%,
-      #ff93b4 52%,
-      #ffd1a8 64%,
-      #ffffff 86%,
-      #ffffff 100%
-    );
-  }
-
-  .ios-perf .countdown-unit,
-  .ios-perf .event-card,
-  .ios-perf .timeline-day-label,
-  .ios-perf .tl-step-day,
-  .ios-perf .tl-step-card,
-  .ios-perf .rsvp-form-wrap,
-  .ios-perf .version-badge {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    background: rgba(255,255,255,0.92) !important;
-    box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
-  }
-
-  /* Neutralise les filtres SVG coûteux (glow/blur/turbulence/displacement) sur iOS */
-  .ios-perf svg [filter],
-  .ios-perf svg filter {
-    filter: none !important;
-  }
-
-  /* GPU hint */
-  .ios-perf #lanterns-layer,
-  .ios-perf #car-el {
-    transform: translate3d(0,0,0);
-    will-change: transform;
-  }
-</style>
+    /* ============================================================
+       IOS PERF : fond de secours
+    ============================================================ */
+    .ios-perf body {
+      background: linear-gradient(160deg, #ff9a6c 0%, #ffb89a 30%, #ffcfb0 55%, #fff5f0 80%, #ffffff 100%);
+    }
+  </style>
 </head>
-
 <body>
+
+<!-- ============================================================
+     VERSION BADGE — retirer ce bloc pour la mise en ligne
+============================================================ -->
+<div id="version-badge">V1</div>
+<!-- FIN VERSION BADGE -->
+
+<!-- Fond SVG panorama (fixe, pleine page) -->
+<div id="panorama-wrap" aria-hidden="true">
+  <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"></svg>
+</div>
+
+<!-- Lanternes (parallaxe) -->
+<div id="lanterns-layer" aria-hidden="true">
+  <!-- Rangée haute -->
+  <div class="lantern pink sm"  style="top:3%;  left:6%;  transform:rotate(-8deg)"></div>
+  <div class="lantern"          style="top:5%;  left:18%; transform:rotate(5deg)"></div>
+  <div class="lantern lg"       style="top:2%;  left:35%; transform:rotate(-3deg)"></div>
+  <div class="lantern pink"     style="top:7%;  left:52%; transform:rotate(7deg)"></div>
+  <div class="lantern sm"       style="top:4%;  left:68%; transform:rotate(-6deg)"></div>
+  <div class="lantern deep-orange lg" style="top:1%; left:82%; transform:rotate(4deg)"></div>
+  <div class="lantern pink sm"  style="top:8%;  left:93%; transform:rotate(-10deg)"></div>
+  <!-- Rangée milieu-haute -->
+  <div class="lantern"          style="top:14%; left:3%;  transform:rotate(6deg)"></div>
+  <div class="lantern pink lg"  style="top:12%; left:14%; transform:rotate(-4deg)"></div>
+  <div class="lantern sm"       style="top:16%; left:28%; transform:rotate(9deg)"></div>
+  <div class="lantern deep-orange" style="top:11%;left:44%;transform:rotate(-5deg)"></div>
+  <div class="lantern lg"       style="top:15%; left:60%; transform:rotate(3deg)"></div>
+  <div class="lantern pink sm"  style="top:13%; left:75%; transform:rotate(-7deg)"></div>
+  <div class="lantern"          style="top:17%; left:88%; transform:rotate(8deg)"></div>
+  <!-- Rangée milieu -->
+  <div class="lantern pink"     style="top:24%; left:8%;  transform:rotate(-5deg)"></div>
+  <div class="lantern sm"       style="top:22%; left:22%; transform:rotate(4deg)"></div>
+  <div class="lantern deep-orange lg" style="top:26%;left:38%;transform:rotate(-8deg)"></div>
+  <div class="lantern"          style="top:21%; left:55%; transform:rotate(6deg)"></div>
+  <div class="lantern pink sm"  style="top:25%; left:70%; transform:rotate(-3deg)"></div>
+  <div class="lantern lg"       style="top:23%; left:85%; transform:rotate(5deg)"></div>
+  <!-- Rangée milieu-basse -->
+  <div class="lantern sm"       style="top:34%; left:5%;  transform:rotate(7deg)"></div>
+  <div class="lantern deep-orange" style="top:32%;left:20%;transform:rotate(-6deg)"></div>
+  <div class="lantern pink"     style="top:36%; left:33%; transform:rotate(4deg)"></div>
+  <div class="lantern lg"       style="top:31%; left:48%; transform:rotate(-9deg)"></div>
+  <div class="lantern sm"       style="top:35%; left:63%; transform:rotate(5deg)"></div>
+  <div class="lantern"          style="top:33%; left:78%; transform:rotate(-4deg)"></div>
+  <div class="lantern pink sm"  style="top:37%; left:91%; transform:rotate(8deg)"></div>
+  <!-- Rangée basse -->
+  <div class="lantern"          style="top:46%; left:10%; transform:rotate(-7deg)"></div>
+  <div class="lantern pink lg"  style="top:44%; left:25%; transform:rotate(3deg)"></div>
+  <div class="lantern sm"       style="top:48%; left:42%; transform:rotate(-5deg)"></div>
+  <div class="lantern deep-orange" style="top:43%;left:58%;transform:rotate(6deg)"></div>
+  <div class="lantern"          style="top:47%; left:73%; transform:rotate(-8deg)"></div>
+  <div class="lantern pink sm"  style="top:45%; left:87%; transform:rotate(4deg)"></div>
+</div>
+
 <div id="page-wrapper">
 
-  <!-- ✅ Version badge (V1) -->
-  <div class="version-badge" aria-hidden="true">V1</div>
-
-  <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
-
-  <!-- ✅ LANTERNES -->
-  <div id="lanterns-layer" aria-hidden="true">
-    <svg id="lanterns-svg"
-         xmlns="http://www.w3.org/2000/svg"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
-         viewBox="0 0 414 900"
-         preserveAspectRatio="xMidYMid slice">
-
-      <defs>
-        <image id="lantern-img" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" width="1" height="1" />
-      </defs>
-
-      <g class="lantern" style="animation:float-a 4.2s ease-in-out infinite; animation-delay:-1.1s; transform-origin:52px 52px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="20" y="40" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-b 5.2s ease-in-out infinite; animation-delay:-2.3s; transform-origin:356px 32px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="320" y="20" width="72" height="100" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-c 3.6s ease-in-out infinite; animation-delay:-0.7s; transform-origin:209px 80px; opacity:0.22;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="185" y="70" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-d 4.6s ease-in-out infinite; animation-delay:-1.9s; transform-origin:382px 150px; opacity:0.55;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="360" y="140" width="44" height="60" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-e 4.0s ease-in-out infinite; animation-delay:-2.6s; transform-origin:38px 260px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="10" y="240" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-b 5.8s ease-in-out infinite; animation-delay:-3.1s; transform-origin:340px 275px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="300" y="260" width="80" height="110" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-a 4.7s ease-in-out infinite; animation-delay:-1.4s; transform-origin:77px 345px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-c 5.0s ease-in-out infinite; animation-delay:-2.0s; transform-origin:197px 435px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="420" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-d 4.9s ease-in-out infinite; animation-delay:-3.4s; transform-origin:302px 485px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-e 3.9s ease-in-out infinite; animation-delay:-1.8s; transform-origin:64px 535px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="520" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-a 4.4s ease-in-out infinite; animation-delay:-2.9s; transform-origin:358px 575px; opacity:0.46;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="560" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-b 5.3s ease-in-out infinite; animation-delay:-2.2s; transform-origin:212px 640px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="180" y="620" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-c 4.2s ease-in-out infinite; animation-delay:-3.0s; transform-origin:304px 720px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="280" y="700" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-d 3.8s ease-in-out infinite; animation-delay:-1.6s; transform-origin:144px 780px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="120" y="760" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-e 4.1s ease-in-out infinite; animation-delay:-2.7s; transform-origin:372px 750px; opacity:0.35;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="350" y="740" width="44" height="60" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-      <g class="lantern" style="animation:float-a 4.9s ease-in-out infinite; animation-delay:-3.6s; transform-origin:38px 700px; opacity:0.42;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="10" y="680" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-
-    </svg>
-  </div>
-
-  <!-- HERO -->
-  <section id="hero" aria-label="Accueil">
-    <div class="hero-content">
-      <p class="hero-date reveal">24 juillet 2027</p>
-      <h1 class="reveal">Julie &amp; Thomas</h1>
-      <p class="hero-tagline reveal">On se dit oui ! Venez célébrer avec nous à Verfeil.</p>
-
-      <div class="hero-scroll-hint reveal" aria-hidden="true">
-        Défiler
-        <div class="chevrons">
-          <span></span>
-          <span></span>
-        </div>
-      </div>
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+    <p class="hero-date reveal">24 juillet 2027</p>
+    <h1 class="hero-names reveal">
+      <span>Julie</span>
+      <span class="amp">&amp;</span>
+      <span>Thomas</span>
+    </h1>
+    <p class="hero-sub reveal">On se dit oui&nbsp;! Venez célébrer avec nous à Verfeil.</p>
+    <div class="scroll-hint reveal" onclick="document.getElementById('countdown-section').scrollIntoView({behavior:'smooth'})">
+      <span>Défiler</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
     </div>
   </section>
 
-  <!-- COUNTDOWN -->
-  <section id="countdown" aria-label="Compte à rebours">
-    <div class="container">
-      <div id="countdown-display" aria-live="polite" aria-atomic="true">
-        <div class="countdown-grid reveal" id="countdown-grid">
-          <div class="countdown-unit"><span class="countdown-number" id="cd-days">--</span><span class="countdown-label">Jours</span></div>
-          <div class="countdown-unit"><span class="countdown-number" id="cd-hours">--</span><span class="countdown-label">Heures</span></div>
-          <div class="countdown-unit"><span class="countdown-number" id="cd-minutes">--</span><span class="countdown-label">Min</span></div>
-          <div class="countdown-unit"><span class="countdown-number" id="cd-seconds">--</span><span class="countdown-label">Sec</span></div>
-        </div>
-        <span class="countdown-tagline reveal" id="countdown-tagline">jusqu'au grand jour</span>
-        <p class="countdown-done" id="countdown-done" style="display:none">C'est le grand jour !</p>
+  <!-- ============================================================
+       COUNTDOWN
+  ============================================================ -->
+  <section id="countdown-section">
+    <div id="countdown-grid">
+      <div class="cd-block">
+        <span class="cd-num" id="cd-days">--</span>
+        <span class="cd-label">Jours</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-hours">--</span>
+        <span class="cd-label">Heures</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-minutes">--</span>
+        <span class="cd-label">Min</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-seconds">--</span>
+        <span class="cd-label">Sec</span>
       </div>
     </div>
+    <p id="countdown-tagline">jusqu'au grand jour</p>
+    <p id="countdown-done">C'est le grand jour&nbsp;!</p>
   </section>
 
-  <!-- TIMELINE DESKTOP -->
-  <section id="timeline-desktop" aria-label="Programme">
-    <div class="container">
-      <h2 class="reveal">Le programme</h2>
-      <div class="timeline-wrapper" id="timeline-wrapper">
-        <svg class="timeline-line-svg" id="timeline-line-svg" aria-hidden="true">
-          <defs>
-            <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#FF3CAC"/>
-              <stop offset="50%" stop-color="#FF6B35"/>
-              <stop offset="100%" stop-color="#FFB347"/>
-            </linearGradient>
-          </defs>
-          <path id="timeline-path-bg" d="M20 0"/>
-          <path id="timeline-path-draw" d="M20 0"/>
-        </svg>
-
-        <div class="timeline-day">
-          <div class="timeline-day-label reveal">Samedi 24 juillet 2027</div>
-          <div class="timeline-events">
-
-            <div class="timeline-event">
-              <div class="event-side reveal-left">
-                <div class="event-card">
-                  <div class="event-time">16h30</div>
-                  <div class="event-title">Cérémonie civile</div>
-                  <div class="event-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-                </div>
-              </div>
-              <div class="event-dot"><div class="event-dot-inner"></div></div>
-              <div class="event-img-col reveal-right">
-                <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Mairie de Pin-Balma">
-                    <defs>
-                      <filter id="wc1"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter>
-                      <filter id="bl1"><feGaussianBlur stdDeviation="8"/></filter>
-                      <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient>
-                    </defs>
-                    <rect width="400" height="300" fill="url(#sky1)"/>
-                    <ellipse cx="200" cy="200" rx="280" ry="120" fill="#c8e6a0" opacity="0.4" filter="url(#bl1)"/>
-                    <rect x="100" y="120" width="200" height="130" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1)"/>
-                    <polygon points="90,120 200,60 310,120" fill="#FF6B35" opacity="0.8" filter="url(#wc1)"/>
-                    <rect x="170" y="180" width="40" height="70" rx="3" fill="#AEE1F9" opacity="0.75"/>
-                    <rect x="115" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
-                    <rect x="250" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
-                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1)"/>
-                  </svg>
-                  <div class="event-img-placeholder"><span>Mairie de Pin-Balma</span><small>Remplacez par une vraie photo</small></div>
-                  <span class="img-todo-note">TODO photo</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="timeline-event">
-              <div class="event-img-col reveal-left">
-                <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Domaine de Gailhaguet">
-                    <defs>
-                      <filter id="wc2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter>
-                      <filter id="bl2"><feGaussianBlur stdDeviation="10"/></filter>
-                      <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/><stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/><stop offset="100%" stop-color="#AEE1F9"/></linearGradient>
-                    </defs>
-                    <rect width="400" height="300" fill="url(#sky2)"/>
-                    <ellipse cx="200" cy="180" rx="300" ry="130" fill="#c8e6a0" opacity="0.4" filter="url(#bl2)"/>
-                    <rect x="80" y="110" width="240" height="140" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2)"/>
-                    <polygon points="70,110 200,50 330,110" fill="#FF6B35" opacity="0.75" filter="url(#wc2)"/>
-                    <rect x="30" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
-                    <rect x="310" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
-                    <rect x="100" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
-                    <rect x="185" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
-                    <rect x="270" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
-                    <rect x="175" y="195" width="50" height="55" rx="4" fill="#AEE1F9" opacity="0.65"/>
-                    <ellipse cx="50" cy="200" rx="30" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
-                    <ellipse cx="350" cy="195" rx="28" ry="46" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
-                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2)"/>
-                  </svg>
-                  <div class="event-img-placeholder"><span>Domaine de Gailhaguet</span><small>Remplacez par une vraie photo</small></div>
-                  <span class="img-todo-note">TODO photo</span>
-                </div>
-              </div>
-              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 4px rgba(255,107,53,0.2),0 0 14px rgba(255,107,53,0.4)"></div></div>
-              <div class="event-side reveal-right">
-                <div class="event-card">
-                  <div class="event-time" style="color:#FF6B35">18h00</div>
-                  <div class="event-title">Cocktail &amp; Repas &amp; Soirée</div>
-                  <div class="event-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="timeline-day">
-          <div class="timeline-day-label reveal">Dimanche 25 juillet 2027</div>
-          <div class="timeline-events">
-            <div class="timeline-event">
-              <div class="event-side reveal-left">
-                <div class="event-card">
-                  <div class="event-time">À partir de 12h00</div>
-                  <div class="event-title">Brunch</div>
-                  <div class="event-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-                </div>
-              </div>
-              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 4px rgba(255,179,71,0.2),0 0 14px rgba(255,179,71,0.4)"></div></div>
-              <div class="event-img-col reveal-right">
-                <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Brunch Domaine de Gailhaguet">
-                    <defs>
-                      <filter id="wc3"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter>
-                      <filter id="bl3"><feGaussianBlur stdDeviation="9"/></filter>
-                      <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/><stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/></linearGradient>
-                    </defs>
-                    <rect width="400" height="300" fill="url(#sky3)"/>
-                    <ellipse cx="200" cy="220" rx="280" ry="100" fill="#c8e6a0" opacity="0.45" filter="url(#bl3)"/>
-                    <ellipse cx="120" cy="200" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
-                    <ellipse cx="240" cy="190" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
-                    <ellipse cx="340" cy="205" rx="35" ry="18" fill="#F6E7D7" opacity="0.8" filter="url(#wc3)"/>
-                    <ellipse cx="120" cy="155" rx="50" ry="18" fill="#FF6B35" opacity="0.7" filter="url(#wc3)"/>
-                    <line x1="120" y1="155" x2="120" y2="200" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
-                    <ellipse cx="240" cy="145" rx="50" ry="18" fill="#FF3CAC" opacity="0.65" filter="url(#wc3)"/>
-                    <line x1="240" y1="145" x2="240" y2="190" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
-                    <ellipse cx="50" cy="160" rx="35" ry="55" fill="#7ab840" opacity="0.65" filter="url(#wc3)"/>
-                    <ellipse cx="370" cy="155" rx="32" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc3)"/>
-                    <path d="M0 255 Q200 238 400 255 L400 300 L0 300 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3)"/>
-                  </svg>
-                  <div class="event-img-placeholder"><span>Brunch au domaine</span><small>Remplacez par une vraie photo</small></div>
-                  <span class="img-todo-note">TODO photo</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-<!-- TIMELINE MOBILE -->
-  <div id="timeline-mobile" aria-label="Programme">
-    <h2>Le programme</h2>
-    <div class="tl-mobile-wrapper" id="tl-mobile-wrapper">
-      <svg id="tl-mobile-line-svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="pathGradMobile" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#FF3CAC"/>
-            <stop offset="50%" stop-color="#FF6B35"/>
-            <stop offset="100%" stop-color="#FFB347"/>
-          </linearGradient>
-        </defs>
-        <path id="tl-mobile-path-bg" d="M20 0"/>
-        <path id="tl-mobile-path-draw" d="M20 0"/>
+  <!-- ============================================================
+       PROGRAMME — DESKTOP
+  ============================================================ -->
+  <section id="timeline-desktop" class="section-card reveal">
+    <h2 class="section-title">Le programme</h2>
+    <div id="timeline-wrapper">
+      <svg id="timeline-line-svg" style="position:absolute;top:0;pointer-events:none;z-index:0;">
+        <path id="timeline-path-bg"/>
+        <path id="timeline-path-draw"/>
       </svg>
 
-      <div class="tl-step" id="tl-step-0">
-        <div class="tl-step-sticky">
-          <div class="tl-step-day" id="tl-day-0">Samedi 24 juillet 2027</div>
-          <div class="tl-step-dot" id="tl-dot-0"></div>
-          <div class="tl-step-card" id="tl-card-0">
-            <div class="tl-step-time">16h30</div>
-            <div class="tl-step-title">Cérémonie civile</div>
-            <div class="tl-step-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-          </div>
-          <div class="tl-step-img" id="tl-img-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Mairie de Pin-Balma"><defs><filter id="wc1m"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl1m"><feGaussianBlur stdDeviation="8"/></filter><linearGradient id="sky1m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky1m)"/><ellipse cx="200" cy="160" rx="280" ry="90" fill="#c8e6a0" opacity="0.4" filter="url(#bl1m)"/><rect x="100" y="90" width="200" height="100" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1m)"/><polygon points="90,90 200,45 310,90" fill="#FF6B35" opacity="0.8" filter="url(#wc1m)"/><rect x="170" y="135" width="40" height="55" rx="3" fill="#AEE1F9" opacity="0.75"/><rect x="115" y="105" width="35" height="22" rx="3" fill="#AEE1F9" opacity="0.65"/><rect x="250" y="105" width="35" height="22" rx="3" fill="#AEE1F9" opacity="0.65"/><path d="M0 195 Q200 180 400 195 L400 225 L0 225 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1m)"/></svg>
-            <div class="event-img-placeholder"><span>Mairie de Pin-Balma</span><small>Remplacez par une vraie photo</small></div>
-            <span class="img-todo-note">TODO photo</span>
-          </div>
+      <p class="tl-day-header">Samedi 24 juillet 2027</p>
+
+      <div class="tl-row left">
+        <div class="tl-content">
+          <p class="tl-time">16h30</p>
+          <p class="tl-event-name">Cérémonie civile</p>
+          <p class="tl-place">Mairie de Pin-Balma</p>
+          <p class="tl-address">Pl. de la Mairie, 31130 Pin-Balma</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Mairie+Pin-Balma" target="_blank" rel="noopener">Voir sur la carte</a>
+        </div>
+        <div class="tl-dot-col" style="display:flex;align-items:flex-start;justify-content:center;padding-top:0.6rem;">
+          <div class="event-dot"></div>
+        </div>
+        <div class="tl-img-col">
+          <span>Mairie de Pin-Balma<br/><small>Remplacez par une vraie photo</small></span>
         </div>
       </div>
 
-      <div class="tl-step" id="tl-step-1">
-        <div class="tl-step-sticky">
-          <div class="tl-step-day" id="tl-day-1">Samedi 24 juillet 2027</div>
-          <div class="tl-step-dot" id="tl-dot-1" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 5px rgba(255,107,53,0.2),0 0 18px rgba(255,107,53,0.4)"></div>
-          <div class="tl-step-card" id="tl-card-1">
-            <div class="tl-step-time" style="color:#FF6B35">18h00</div>
-            <div class="tl-step-title">Cocktail &amp; Repas &amp; Soirée</div>
-            <div class="tl-step-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-          </div>
-          <div class="tl-step-img" id="tl-img-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Domaine de Gailhaguet"><defs><filter id="wc2m"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl2m"><feGaussianBlur stdDeviation="10"/></filter><linearGradient id="sky2m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/><stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/><stop offset="100%" stop-color="#AEE1F9"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky2m)"/><ellipse cx="200" cy="140" rx="300" ry="100" fill="#c8e6a0" opacity="0.4" filter="url(#bl2m)"/><rect x="80" y="82" width="240" height="105" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2m)"/><polygon points="70,82 200,38 330,82" fill="#FF6B35" opacity="0.75" filter="url(#wc2m)"/><rect x="30" y="105" width="60" height="82" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2m)"/><rect x="310" y="105" width="60" height="82" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2m)"/><rect x="100" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="185" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="270" y="98" width="30" height="18" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="175" y="148" width="50" height="40" rx="4" fill="#AEE1F9" opacity="0.65"/><ellipse cx="50" cy="152" rx="30" ry="38" fill="#7ab840" opacity="0.6" filter="url(#wc2m)"/><ellipse cx="350" cy="148" rx="28" ry="35" fill="#7ab840" opacity="0.6" filter="url(#wc2m)"/><path d="M0 195 Q200 180 400 195 L400 225 L0 225 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2m)"/></svg>
-            <div class="event-img-placeholder"><span>Domaine de Gailhaguet</span><small>Remplacez par une vraie photo</small></div>
-            <span class="img-todo-note">TODO photo</span>
-          </div>
+      <div class="tl-row right">
+        <div class="tl-img-col">
+          <span>Domaine de Gailhaguet<br/><small>Remplacez par une vraie photo</small></span>
+        </div>
+        <div class="tl-dot-col" style="display:flex;align-items:flex-start;justify-content:center;padding-top:0.6rem;">
+          <div class="event-dot"></div>
+        </div>
+        <div class="tl-content">
+          <p class="tl-time">18h00</p>
+          <p class="tl-event-name">Cocktail &amp; Repas &amp; Soirée</p>
+          <p class="tl-place">Domaine de Gailhaguet</p>
+          <p class="tl-address">577 chemin de GAILHAGUET, 31590 Verfeil</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Domaine+Gailhaguet+Verfeil" target="_blank" rel="noopener">Voir sur la carte</a>
         </div>
       </div>
 
-      <div class="tl-step" id="tl-step-2">
-        <div class="tl-step-sticky">
-          <div class="tl-step-day" id="tl-day-2">Dimanche 25 juillet 2027</div>
-          <div class="tl-step-dot" id="tl-dot-2" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 5px rgba(255,179,71,0.2),0 0 18px rgba(255,179,71,0.4)"></div>
-          <div class="tl-step-card" id="tl-card-2">
-            <div class="tl-step-time" style="color:#FFB347">À partir de 12h00</div>
-            <div class="tl-step-title">Brunch</div>
-            <div class="tl-step-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
-          </div>
-          <div class="tl-step-img" id="tl-img-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" aria-label="Brunch Domaine de Gailhaguet"><defs><filter id="wc3m"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl3m"><feGaussianBlur stdDeviation="9"/></filter><linearGradient id="sky3m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/><stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="225" fill="url(#sky3m)"/><ellipse cx="200" cy="165" rx="280" ry="75" fill="#c8e6a0" opacity="0.45" filter="url(#bl3m)"/><ellipse cx="120" cy="150" rx="40" ry="15" fill="#F6E7D7" opacity="0.85" filter="url(#wc3m)"/><ellipse cx="240" cy="143" rx="40" ry="15" fill="#F6E7D7" opacity="0.85" filter="url(#wc3m)"/><ellipse cx="340" cy="154" rx="35" ry="14" fill="#F6E7D7" opacity="0.8" filter="url(#wc3m)"/><ellipse cx="120" cy="116" rx="50" ry="14" fill="#FF6B35" opacity="0.7" filter="url(#wc3m)"/><line x1="120" y1="116" x2="120" y2="150" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="240" cy="109" rx="50" ry="14" fill="#FF3CAC" opacity="0.65" filter="url(#wc3m)"/><line x1="240" y1="109" x2="240" y2="143" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="50" cy="120" rx="35" ry="42" fill="#7ab840" opacity="0.65" filter="url(#wc3m)"/><ellipse cx="370" cy="116" rx="32" ry="38" fill="#7ab840" opacity="0.6" filter="url(#wc3m)"/><path d="M0 191 Q200 178 400 191 L400 225 L0 225 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3m)"/></svg>
-            <div class="event-img-placeholder"><span>Brunch au domaine</span><small>Remplacez par une vraie photo</small></div>
-            <span class="img-todo-note">TODO photo</span>
-          </div>
-        </div>
-      </div>
+      <p class="tl-day-header">Dimanche 25 juillet 2027</p>
 
-    </div>
-  </div>
-  
-  <!-- RSVP -->
-  <section id="rsvp" aria-label="Formulaire RSVP">
-    <div class="container">
-      <h2 class="reveal">Vous serez là ?</h2>
-      <p class="rsvp-subtitle reveal">Répondez-nous avant le 1er juin 2027 — on compte sur vous.</p>
-      <div class="rsvp-form-wrap reveal">
-        <form id="rsvp-form" method="POST" action="https://docs.google.com/forms/d/e/VOTRE_FORM_ID/formResponse" target="hidden_iframe" novalidate aria-label="Formulaire de confirmation de présence">
-          <input type="hidden" name="fvv" value="1"/>
-          <input type="hidden" name="draftResponse" value="[]"/>
-          <input type="hidden" name="pageHistory" value="0"/>
-          <div class="form-group">
-            <label for="rsvp-name">Nom complet *</label>
-            <input type="text" id="rsvp-name" name="ENTRY_NAME_TODO" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
-            <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
-          </div>
-          <div class="form-group">
-            <fieldset style="border:none;padding:0">
-              <legend>Serez-vous présent(e) ? *</legend>
-              <div class="radio-row" aria-describedby="error-attending">
-                <label class="radio-btn"><input type="radio" name="ENTRY_ATTENDING_TODO" value="Oui je serai là !" required aria-required="true"/><span class="radio-btn-text">Oui, j'y serai !</span></label>
-                <label class="radio-btn"><input type="radio" name="ENTRY_ATTENDING_TODO" value="Malheureusement non…"/><span class="radio-btn-text">Malheureusement non...</span></label>
-              </div>
-              <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
-            </fieldset>
-          </div>
-          <div class="form-group">
-            <label for="rsvp-message">Un mot pour les mariés</label>
-            <textarea id="rsvp-message" name="ENTRY_MESSAGE_TODO" placeholder="Écrivez-nous quelques mots..."></textarea>
-            <span class="optional-hint">Optionnel</span>
-          </div>
-          <button type="submit" class="btn-submit" id="btn-submit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Confirmer
-          </button>
-        </form>
-        <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
-          <p>Merci ! On a bien enregistré ta réponse.</p>
+      <div class="tl-row left">
+        <div class="tl-content">
+          <p class="tl-time">À partir de 12h00</p>
+          <p class="tl-event-name">Brunch</p>
+          <p class="tl-place">Domaine de Gailhaguet</p>
+          <p class="tl-address">31590 Verfeil</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Domaine+Gailhaguet+Verfeil" target="_blank" rel="noopener">Voir sur la carte</a>
+        </div>
+        <div class="tl-dot-col" style="display:flex;align-items:flex-start;justify-content:center;padding-top:0.6rem;">
+          <div class="event-dot"></div>
+        </div>
+        <div class="tl-img-col">
+          <span>Brunch au domaine<br/><small>Remplacez par une vraie photo</small></span>
         </div>
       </div>
     </div>
   </section>
 
-  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
+  <!-- ============================================================
+       PROGRAMME — MOBILE
+  ============================================================ -->
+  <section id="timeline-mobile" class="section-card reveal">
+    <h2 class="section-title">Le programme</h2>
+    <div id="tl-mobile-wrapper">
+      <svg id="tl-mobile-line-svg" style="position:absolute;left:12px;top:0;width:40px;pointer-events:none;">
+        <path id="tl-mobile-path-bg"/>
+        <path id="tl-mobile-path-draw"/>
+      </svg>
 
-  <!-- FINAL SCENE (inchangée) -->
-  <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
-    <div class="final-sticky">
-      <!-- Ton SVG final + voiture + feux d’artifice restent identiques -->
-      <!-- (tu peux garder ton bloc original ici tel quel) -->
+      <!-- Étape 0 -->
+      <div class="tl-step" style="position:relative;">
+        <div class="tl-step-day" id="tl-day-0">Samedi 24 juillet 2027</div>
+        <div class="tl-step-dot" id="tl-dot-0" style="position:absolute;left:-40px;top:1.4rem;"></div>
+        <div class="tl-step-card" id="tl-card-0">
+          <p class="tl-time">16h30</p>
+          <p class="tl-event-name">Cérémonie civile</p>
+          <p class="tl-place">Mairie de Pin-Balma</p>
+          <p class="tl-address">Pl. de la Mairie, 31130 Pin-Balma</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Mairie+Pin-Balma" target="_blank" rel="noopener">Voir sur la carte</a>
+        </div>
+        <div class="tl-step-img" id="tl-img-0">
+          <span>Mairie de Pin-Balma<br/><small>Remplacez par une vraie photo</small></span>
+        </div>
+      </div>
+
+      <!-- Étape 1 -->
+      <div class="tl-step" style="position:relative;">
+        <div class="tl-step-day" id="tl-day-1">Samedi 24 juillet 2027</div>
+        <div class="tl-step-dot" id="tl-dot-1" style="position:absolute;left:-40px;top:1.4rem;"></div>
+        <div class="tl-step-card" id="tl-card-1">
+          <p class="tl-time">18h00</p>
+          <p class="tl-event-name">Cocktail &amp; Repas &amp; Soirée</p>
+          <p class="tl-place">Domaine de Gailhaguet</p>
+          <p class="tl-address">577 chemin de GAILHAGUET, 31590 Verfeil</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Domaine+Gailhaguet+Verfeil" target="_blank" rel="noopener">Voir sur la carte</a>
+        </div>
+        <div class="tl-step-img" id="tl-img-1">
+          <span>Domaine de Gailhaguet<br/><small>Remplacez par une vraie photo</small></span>
+        </div>
+      </div>
+
+      <!-- Étape 2 -->
+      <div class="tl-step" style="position:relative;">
+        <div class="tl-step-day" id="tl-day-2">Dimanche 25 juillet 2027</div>
+        <div class="tl-step-dot" id="tl-dot-2" style="position:absolute;left:-40px;top:1.4rem;"></div>
+        <div class="tl-step-card" id="tl-card-2">
+          <p class="tl-time">À partir de 12h00</p>
+          <p class="tl-event-name">Brunch</p>
+          <p class="tl-place">Domaine de Gailhaguet</p>
+          <p class="tl-address">31590 Verfeil</p>
+          <a class="tl-map-link" href="https://maps.google.com/?q=Domaine+Gailhaguet+Verfeil" target="_blank" rel="noopener">Voir sur la carte</a>
+        </div>
+        <div class="tl-step-img" id="tl-img-2">
+          <span>Brunch au domaine<br/><small>Remplacez par une vraie photo</small></span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-</div>
+  <!-- ============================================================
+       RSVP
+  ============================================================ -->
+  <section id="rsvp" class="section-card reveal">
+    <h2 class="section-title">Vous serez là&nbsp;?</h2>
+    <p class="rsvp-intro">Répondez-nous avant le 1er juin 2027 — on compte sur vous.</p>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+    <form id="rsvp-form" method="POST" action="https://docs.google.com/forms/d/e/VOTRE_ID_FORMULAIRE/formResponse" target="hidden_iframe">
+      <div class="form-group">
+        <label for="rsvp-name">Nom complet *</label>
+        <input type="text" id="rsvp-name" name="ENTRY_NAME_TODO" placeholder="Votre prénom et nom"/>
+        <p class="error-msg" id="error-name">Merci d'indiquer votre nom complet.</p>
+      </div>
+      <div class="form-group">
+        <label>Serez-vous présent(e)&nbsp;? *</label>
+        <div class="radio-group">
+          <label class="radio-btn">
+            <input type="radio" name="ENTRY_ATTENDING_TODO" value="yes"/>
+            Oui, j'y serai&nbsp;!
+          </label>
+          <label class="radio-btn">
+            <input type="radio" name="ENTRY_ATTENDING_TODO" value="no"/>
+            Malheureusement non...
+          </label>
+        </div>
+        <p class="error-msg" id="error-attending">Merci de choisir une réponse.</p>
+      </div>
+      <div class="form-group">
+        <label for="rsvp-message">Un mot pour les mariés</label>
+        <textarea id="rsvp-message" name="ENTRY_MESSAGE_TODO" rows="3" placeholder="Optionnel"></textarea>
+      </div>
+      <button type="submit" id="btn-submit">Confirmer</button>
+    </form>
+    <div id="rsvp-success">
+      <p>Merci&nbsp;! On a bien enregistré ta réponse. 🎉</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCÈNE FINALE (voiture + feux d'artifice)
+  ============================================================ -->
+  <section id="final-scene">
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="car-el">🚗</div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <strong>Julie &amp; Thomas</strong><br/>
+    24 juillet 2027 — En route pour Verfeil<br/>
+    <span style="font-size:0.65rem;opacity:0.5;letter-spacing:0.08em;">31 JT</span>
+  </footer>
+
+</div><!-- /page-wrapper -->
 
 <script>
 const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
@@ -708,191 +870,246 @@ const Utils = {
   pad: (n) => String(n).padStart(2, '0'),
   debounce: (fn, delay) => {
     let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => fn(...args), delay);
-    };
+    return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); };
   }
 };
 
-// --- iOS PERF MODE (auto) ---
+// --- iOS PERF MODE ---
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 if (isIOS) document.documentElement.classList.add('ios-perf');
 
-// ✅ PANORAMA (V1) : ciel + Pyrénées + neige + forêt (style illustré)
+// ============================================================
+// PANORAMA SVG — ciel coucher de soleil rose/pêche + Pyrénées
+// ============================================================
 (function buildPanorama() {
   if (document.documentElement.classList.contains('ios-perf')) return;
-
   const svg = document.getElementById('panorama');
 
   function draw() {
+    const W = 1440;
     const H = document.getElementById('page-wrapper').scrollHeight;
-
-    svg.setAttribute('viewBox', `0 0 1440 ${H}`);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', H);
     svg.style.height = H + 'px';
 
-    // Zones (adaptatives)
-    const skyTop     = 0;
-    const horizonY   = H * 0.58;   // zone “coucher de soleil” (un peu plus bas pour l’effet des captures)
-    const farMountY  = H * 0.70;   // montagnes lointaines
-    const midMountY  = H * 0.76;   // montagnes intermédiaires
-    const nearMountY = H * 0.82;   // montagnes proches
-    const forestY    = H * 0.86;   // forêt silhouette
-    const baseY      = H * 0.92;   // zone basse douce (page blanche)
+    // Proportions
+    const skyEnd   = H * 0.72;   // le ciel occupe 72% de la hauteur
+    const mtnBase  = H * 0.78;   // base des montagnes
+    const forestY  = H * 0.84;   // ligne de forêt
+    const groundY  = H * 0.90;   // sol
 
-    // Quelques amplitudes
-    const ampFar  = H * 0.018;
-    const ampMid  = H * 0.024;
-    const ampNear = H * 0.030;
+    // ---- Dégradé ciel : rose chaud en haut -> pêche -> lavande -> blanc ----
+    // Inspiré des captures : rose saumon en haut, orange pêche au milieu,
+    // lavande/bleu doux à l'horizon, puis blanc pour les sections de contenu
+    const skyStops = [
+      { o: '0%',   c: '#FF3CAC' },   // rose vif tout en haut
+      { o: '8%',   c: '#FF6B6B' },   // rose saumon
+      { o: '22%',  c: '#FF8C5A' },   // orange saumon
+      { o: '38%',  c: '#FFAA7A' },   // pêche chaud
+      { o: '52%',  c: '#FFCBA4' },   // pêche clair
+      { o: '62%',  c: '#F0C0C8' },   // rose pâle / lavande rosée
+      { o: '70%',  c: '#C8B8E8' },   // lavande douce (horizon)
+      { o: '76%',  c: '#E8D8F0' },   // lavande très clair
+      { o: '84%',  c: '#F8F0F8' },   // quasi blanc rosé
+      { o: '100%', c: '#ffffff' }
+    ];
+
+    // ---- Halo soleil (centre-haut) ----
+    const sunY = H * 0.08;
+
+    // ---- Montagnes Pyrénées (3 plans) ----
+    // Plan arrière : sommets enneigés, silhouette douce
+    // Plan milieu  : versants rocheux
+    // Plan avant   : forêt sombre
+
+    // Sommets enneigés (plan arrière, très clair)
+    const snowColor   = '#EEE8F8';   // blanc légèrement lavande
+    const rockColor1  = '#C8B0D8';   // violet-gris clair (versants éclairés)
+    const rockColor2  = '#A890C0';   // violet-gris moyen (versants ombragés)
+    const forestColor1= '#5A7840';   // vert forêt moyen
+    const forestColor2= '#3D5A28';   // vert forêt sombre
+    const groundColor = '#8AAA60';   // prairie verte
+
+    // Génération des pics de montagne (plan arrière)
+    function mountainPath(peaks, baseY, H_total) {
+      // peaks = [{x, y}] points de sommet, baseY = y de la base
+      let d = `M -50 ${baseY}`;
+      for (let i = 0; i < peaks.length; i++) {
+        const p = peaks[i];
+        if (i === 0) {
+          d += ` L ${p.x} ${p.y}`;
+        } else {
+          const prev = peaks[i - 1];
+          const mx = (prev.x + p.x) / 2;
+          d += ` Q ${mx} ${Math.max(prev.y, p.y) + 20} ${p.x} ${p.y}`;
+        }
+      }
+      d += ` L ${W + 50} ${baseY} Z`;
+      return d;
+    }
+
+    // Pics arrière (hauts, enneigés)
+    const peaksBack = [
+      { x: -50,  y: mtnBase * 0.72 },
+      { x: 80,   y: mtnBase * 0.62 },
+      { x: 180,  y: mtnBase * 0.55 },
+      { x: 290,  y: mtnBase * 0.68 },
+      { x: 400,  y: mtnBase * 0.50 },  // pic principal gauche
+      { x: 500,  y: mtnBase * 0.63 },
+      { x: 600,  y: mtnBase * 0.58 },
+      { x: 700,  y: mtnBase * 0.45 },  // pic central (le plus haut)
+      { x: 800,  y: mtnBase * 0.60 },
+      { x: 900,  y: mtnBase * 0.52 },
+      { x: 1020, y: mtnBase * 0.48 },  // pic droit
+      { x: 1130, y: mtnBase * 0.62 },
+      { x: 1240, y: mtnBase * 0.55 },
+      { x: 1340, y: mtnBase * 0.65 },
+      { x: 1440, y: mtnBase * 0.58 },
+      { x: 1490, y: mtnBase * 0.70 }
+    ];
+
+    // Neige : caps sur les sommets (petits triangles blancs)
+    function snowCaps(peaks, snowDepth) {
+      let d = '';
+      for (const p of peaks) {
+        if (p.y < mtnBase * 0.65) {  // seulement les hauts sommets
+          const sd = snowDepth * (1 - p.y / mtnBase);
+          d += `M ${p.x} ${p.y} L ${p.x - sd * 1.8} ${p.y + sd * 2.2} L ${p.x + sd * 1.8} ${p.y + sd * 2.2} Z `;
+        }
+      }
+      return d;
+    }
+
+    // Pics milieu (versants rocheux, plus sombres)
+    const peaksMid = [
+      { x: -50,  y: mtnBase * 0.82 },
+      { x: 60,   y: mtnBase * 0.74 },
+      { x: 160,  y: mtnBase * 0.80 },
+      { x: 260,  y: mtnBase * 0.70 },
+      { x: 370,  y: mtnBase * 0.76 },
+      { x: 480,  y: mtnBase * 0.68 },
+      { x: 580,  y: mtnBase * 0.74 },
+      { x: 680,  y: mtnBase * 0.65 },
+      { x: 780,  y: mtnBase * 0.72 },
+      { x: 880,  y: mtnBase * 0.67 },
+      { x: 980,  y: mtnBase * 0.73 },
+      { x: 1080, y: mtnBase * 0.69 },
+      { x: 1180, y: mtnBase * 0.75 },
+      { x: 1290, y: mtnBase * 0.71 },
+      { x: 1390, y: mtnBase * 0.78 },
+      { x: 1490, y: mtnBase * 0.82 }
+    ];
+
+    // Forêt (silhouette d'arbres stylisée, plan avant)
+    function forestLine(y0, y1, count, W_total) {
+      let d = `M -10 ${y1}`;
+      const step = (W_total + 20) / count;
+      for (let i = 0; i <= count; i++) {
+        const x = -10 + i * step;
+        const h = (y1 - y0) * (0.6 + 0.4 * Math.sin(i * 2.3 + 1));
+        const w = step * 0.55;
+        // Sapin stylisé : triangle
+        d += ` L ${x} ${y1}`;
+        d += ` L ${x + w * 0.1} ${y1}`;
+        d += ` L ${x + w * 0.5} ${y1 - h}`;
+        d += ` L ${x + w * 0.9} ${y1}`;
+      }
+      d += ` L ${W_total + 10} ${y1} Z`;
+      return d;
+    }
+
+    // Filtre aquarelle / texture papier
+    const filters = `
+      <filter id="wc-mtn" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018 0.025" numOctaves="3" seed="12" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+        <feGaussianBlur in="displaced" stdDeviation="1.5"/>
+      </filter>
+      <filter id="wc-forest" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.025 0.03" numOctaves="2" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="blur-halo">
+        <feGaussianBlur stdDeviation="40"/>
+      </filter>
+      <filter id="blur-snow">
+        <feGaussianBlur stdDeviation="1.2"/>
+      </filter>
+    `;
+
+    const gradients = `
+      <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+        ${skyStops.map(s => `<stop offset="${s.o}" stop-color="${s.c}"/>`).join('')}
+      </linearGradient>
+      <radialGradient id="sun-halo" cx="50%" cy="0%" r="55%">
+        <stop offset="0%"   stop-color="#FFE0A0" stop-opacity="0.55"/>
+        <stop offset="40%"  stop-color="#FFAA60" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="mtn-back-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="${snowColor}"/>
+        <stop offset="40%"  stop-color="${rockColor1}"/>
+        <stop offset="100%" stop-color="${rockColor2}"/>
+      </linearGradient>
+      <linearGradient id="mtn-mid-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="${rockColor2}"/>
+        <stop offset="100%" stop-color="#8878A8"/>
+      </linearGradient>
+      <linearGradient id="forest-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="${forestColor1}"/>
+        <stop offset="100%" stop-color="${forestColor2}"/>
+      </linearGradient>
+    `;
+
+    const pathBack   = mountainPath(peaksBack, mtnBase, H);
+    const pathMid    = mountainPath(peaksMid,  mtnBase * 1.02, H);
+    const pathForest = forestLine(forestY, groundY, 38, W);
+    const pathGround = `M -10 ${groundY} Q ${W/2} ${groundY - 15} ${W + 10} ${groundY} L ${W + 10} ${H} L -10 ${H} Z`;
+    const snowPath   = snowCaps(peaksBack, 28);
 
     svg.innerHTML = `
-      <defs>
-        <!-- Texture légère “papier” -->
-        <filter id="paperNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
-          <feColorMatrix in="n" type="matrix"
-            values="0 0 0 0 0.7
-                    0 0 0 0 0.7
-                    0 0 0 0 0.7
-                    0 0 0 0.25 0" result="g"/>
-          <feBlend in="SourceGraphic" in2="g" mode="soft-light"/>
-        </filter>
+      <defs>${filters}${gradients}</defs>
 
-        <!-- Légère irrégularité “dessiné à la main” -->
-        <filter id="wobble">
-          <feTurbulence type="fractalNoise" baseFrequency="0.007 0.012" numOctaves="3" seed="11" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
+      <!-- Ciel -->
+      <rect width="${W}" height="${H}" fill="url(#sky-grad)"/>
 
-        <filter id="softBlur">
-          <feGaussianBlur stdDeviation="14"/>
-        </filter>
+      <!-- Halo soleil -->
+      <ellipse cx="${W/2}" cy="${sunY}" rx="${W * 0.55}" ry="${H * 0.35}"
+               fill="url(#sun-halo)" filter="url(#blur-halo)" opacity="0.7"/>
 
-        <!-- Dégradé ciel (plus bleu) -->
-        <linearGradient id="skyGrad" x1="0" y1="${skyTop}" x2="0" y2="${baseY}">
-          <stop offset="0%" stop-color="#122a64"/>
-          <stop offset="${(horizonY/H*100*0.55).toFixed(1)}%" stop-color="#274ea4"/>
-          <stop offset="${(horizonY/H*100*0.90).toFixed(1)}%" stop-color="#78a7ff"/>
-          <stop offset="${(horizonY/H*100).toFixed(1)}%" stop-color="#ff96ba"/>
-          <stop offset="${(horizonY/H*100 + 8).toFixed(1)}%" stop-color="#ffd5ad"/>
-          <stop offset="${(baseY/H*100).toFixed(1)}%" stop-color="#ffffff"/>
-          <stop offset="100%" stop-color="#ffffff"/>
-        </linearGradient>
+      <!-- Lueur rose latérale gauche -->
+      <ellipse cx="200" cy="${H * 0.18}" rx="320" ry="200"
+               fill="#FF3CAC" opacity="0.07" filter="url(#blur-halo)"/>
 
-        <!-- Halo soleil discret -->
-        <radialGradient id="sunHalo" cx="55%" cy="${(horizonY/H*100 - 8).toFixed(1)}%" r="45%">
-          <stop offset="0%" stop-color="#ffe1b6" stop-opacity="0.55"/>
-          <stop offset="45%" stop-color="#ff9ec4" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#1a3d8a" stop-opacity="0"/>
-        </radialGradient>
+      <!-- Lueur orange latérale droite -->
+      <ellipse cx="${W - 200}" cy="${H * 0.22}" rx="280" ry="180"
+               fill="#FF8C35" opacity="0.08" filter="url(#blur-halo)"/>
 
-        <!-- Dégradés montagnes -->
-        <linearGradient id="farMountGrad" x1="0" y1="${farMountY-ampFar*2}" x2="0" y2="${farMountY+ampFar*6}">
-          <stop offset="0%" stop-color="#6f86bf" stop-opacity="0.65"/>
-          <stop offset="100%" stop-color="#4e5f94" stop-opacity="0.85"/>
-        </linearGradient>
+      <!-- Montagne arrière (enneigée) -->
+      <path d="${pathBack}" fill="url(#mtn-back-grad)" opacity="0.82"
+            filter="url(#wc-mtn)"/>
 
-        <linearGradient id="midMountGrad" x1="0" y1="${midMountY-ampMid*2}" x2="0" y2="${midMountY+ampMid*6}">
-          <stop offset="0%" stop-color="#4a5f97" stop-opacity="0.75"/>
-          <stop offset="100%" stop-color="#344a7a" stop-opacity="0.92"/>
-        </linearGradient>
+      <!-- Neige sur les sommets -->
+      <path d="${snowPath}" fill="#FFFFFF" opacity="0.75"
+            filter="url(#blur-snow)"/>
 
-        <linearGradient id="nearMountGrad" x1="0" y1="${nearMountY-ampNear*2}" x2="0" y2="${nearMountY+ampNear*8}">
-          <stop offset="0%" stop-color="#2f3f68" stop-opacity="0.85"/>
-          <stop offset="100%" stop-color="#1f2f53" stop-opacity="0.98"/>
-        </linearGradient>
+      <!-- Montagne milieu (versants rocheux) -->
+      <path d="${pathMid}" fill="url(#mtn-mid-grad)" opacity="0.70"
+            filter="url(#wc-mtn)"/>
 
-      </defs>
+      <!-- Forêt (sapins stylisés) -->
+      <path d="${pathForest}" fill="url(#forest-grad)" opacity="0.88"
+            filter="url(#wc-forest)"/>
 
-      <!-- ciel -->
-      <rect width="1440" height="${H}" fill="url(#skyGrad)"/>
+      <!-- Prairie / sol -->
+      <path d="${pathGround}" fill="${groundColor}" opacity="0.55"
+            filter="url(#wc-forest)"/>
 
-      <!-- halo -->
-      <ellipse cx="780" cy="${horizonY - H*0.12}" rx="860" ry="${H*0.22}" fill="url(#sunHalo)" opacity="0.9" filter="url(#softBlur)"/>
-
-      <!-- nuages très doux -->
-      <g opacity="0.14" filter="url(#softBlur)">
-        <ellipse cx="280" cy="${horizonY - H*0.38}" rx="220" ry="64" fill="white"/>
-        <ellipse cx="1180" cy="${horizonY - H*0.34}" rx="190" ry="56" fill="white"/>
-        <ellipse cx="920" cy="${horizonY - H*0.44}" rx="240" ry="68" fill="white"/>
-      </g>
-
-      <!-- montagnes lointaines -->
-      <path d="
-        M -60 ${farMountY}
-        Q 160 ${farMountY-ampFar*3} 300 ${farMountY-ampFar*1}
-        Q 420 ${farMountY+ampFar*2} 560 ${farMountY-ampFar*2}
-        Q 720 ${farMountY-ampFar*4} 860 ${farMountY-ampFar*1}
-        Q 1040 ${farMountY+ampFar*2} 1180 ${farMountY-ampFar*2}
-        Q 1320 ${farMountY-ampFar*5} 1500 ${farMountY-ampFar*1}
-        L 1500 ${H}
-        L -60 ${H}
-        Z"
-        fill="url(#farMountGrad)" opacity="0.55" filter="url(#wobble)"/>
-
-      <!-- neige lointaine (subtile) -->
-      <g opacity="0.35" filter="url(#wobble)">
-        <path d="M 520 ${farMountY-ampFar*2} L 560 ${farMountY-ampFar*5} L 605 ${farMountY-ampFar*2} Q 566 ${farMountY-ampFar*1} 520 ${farMountY-ampFar*2} Z" fill="white"/>
-        <path d="M 1040 ${farMountY-ampFar*1} L 1080 ${farMountY-ampFar*4} L 1125 ${farMountY-ampFar*1} Q 1086 ${farMountY} 1040 ${farMountY-ampFar*1} Z" fill="white" opacity="0.9"/>
-      </g>
-
-      <!-- montagnes intermédiaires -->
-      <path d="
-        M -80 ${midMountY}
-        Q 140 ${midMountY-ampMid*2} 260 ${midMountY-ampMid*6}
-        Q 360 ${midMountY-ampMid*10} 480 ${midMountY-ampMid*4}
-        Q 600 ${midMountY+ampMid*2} 700 ${midMountY-ampMid*6}
-        Q 820 ${midMountY-ampMid*11} 960 ${midMountY-ampMid*5}
-        Q 1120 ${midMountY+ampMid*2} 1260 ${midMountY-ampMid*6}
-        Q 1360 ${midMountY-ampMid*10} 1520 ${midMountY-ampMid*2}
-        L 1520 ${H}
-        L -80 ${H}
-        Z"
-        fill="url(#midMountGrad)" opacity="0.70" filter="url(#wobble)"/>
-
-      <!-- neige intermédiaire -->
-      <g opacity="0.45" filter="url(#wobble)">
-        <path d="M 260 ${midMountY-ampMid*6} L 300 ${midMountY-ampMid*10} L 340 ${midMountY-ampMid*6} Q 300 ${midMountY-ampMid*5} 260 ${midMountY-ampMid*6} Z" fill="white"/>
-        <path d="M 820 ${midMountY-ampMid*11} L 860 ${midMountY-ampMid*15} L 910 ${midMountY-ampMid*11} Q 864 ${midMountY-ampMid*9} 820 ${midMountY-ampMid*11} Z" fill="white" opacity="0.95"/>
-      </g>
-
-      <!-- montagnes proches -->
-      <path d="
-        M -100 ${nearMountY}
-        Q 120 ${nearMountY-ampNear*3} 220 ${nearMountY-ampNear*8}
-        Q 340 ${nearMountY-ampNear*14} 480 ${nearMountY-ampNear*6}
-        Q 620 ${nearMountY+ampNear*2} 740 ${nearMountY-ampNear*10}
-        Q 860 ${nearMountY-ampNear*16} 1020 ${nearMountY-ampNear*7}
-        Q 1180 ${nearMountY+ampNear*2} 1320 ${nearMountY-ampNear*10}
-        Q 1400 ${nearMountY-ampNear*14} 1560 ${nearMountY-ampNear*4}
-        L 1560 ${H}
-        L -100 ${H}
-        Z"
-        fill="url(#nearMountGrad)" opacity="0.82" filter="url(#wobble)"/>
-
-      <!-- forêt (silhouette) -->
-      <path d="
-        M -120 ${forestY}
-        Q 40 ${forestY-18} 140 ${forestY}
-        Q 240 ${forestY+18} 340 ${forestY}
-        Q 480 ${forestY-20} 580 ${forestY}
-        Q 700 ${forestY+22} 820 ${forestY}
-        Q 960 ${forestY-18} 1080 ${forestY}
-        Q 1220 ${forestY+20} 1360 ${forestY}
-        Q 1480 ${forestY-10} 1560 ${forestY}
-        L 1560 ${H}
-        L -120 ${H}
-        Z"
-        fill="#17331f" opacity="0.42" filter="url(#wobble)"/>
-
-      <!-- brume douce au pied -->
-      <rect x="0" y="${baseY-40}" width="1440" height="${H-(baseY-40)}" fill="white" opacity="0.75" filter="url(#softBlur)"/>
-
-      <!-- grain final -->
-      <rect width="1440" height="${H}" fill="transparent" filter="url(#paperNoise)"/>
+      <!-- Fondu vers blanc pour les sections de contenu -->
+      <rect x="0" y="${groundY}" width="${W}" height="${H - groundY}"
+            fill="url(#sky-grad)" opacity="0"/>
     `;
   }
 
@@ -900,7 +1117,9 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   window.addEventListener('resize', Utils.debounce(draw, 300));
 })();
 
+// ============================================================
 // LANTERNES (parallaxe 0.45x)
+// ============================================================
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const layer = document.getElementById('lanterns-layer');
@@ -916,16 +1135,28 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   }, { passive: true });
 })();
 
+// ============================================================
 // COUNTDOWN
+// ============================================================
 (function() {
   const target = new Date(CONFIG.weddingDate).getTime();
   const grid = document.getElementById('countdown-grid');
   const done = document.getElementById('countdown-done');
-  const tag = document.getElementById('countdown-tagline');
-  const els = { d: document.getElementById('cd-days'), h: document.getElementById('cd-hours'), m: document.getElementById('cd-minutes'), s: document.getElementById('cd-seconds') };
+  const tag  = document.getElementById('countdown-tagline');
+  const els  = {
+    d: document.getElementById('cd-days'),
+    h: document.getElementById('cd-hours'),
+    m: document.getElementById('cd-minutes'),
+    s: document.getElementById('cd-seconds')
+  };
   function tick() {
     const diff = target - Date.now();
-    if (diff <= 0) { grid.style.display = 'none'; if (tag) tag.style.display = 'none'; done.style.display = 'block'; return; }
+    if (diff <= 0) {
+      grid.style.display = 'none';
+      if (tag) tag.style.display = 'none';
+      done.style.display = 'block';
+      return;
+    }
     els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
     els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
     els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
@@ -935,16 +1166,310 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   setInterval(tick, 1000);
 })();
 
+// ============================================================
 // REVEAL
+// ============================================================
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
 })();
 
-// RADIO
+// ============================================================
+// TIMELINE DESKTOP
+// ============================================================
+(function() {
+  if (window.innerWidth <= 700) return;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const section  = document.getElementById('timeline-desktop');
+  const wrapper  = document.getElementById('timeline-wrapper');
+  const lineSvg  = document.getElementById('timeline-line-svg');
+  const pathBg   = document.getElementById('timeline-path-bg');
+  const pathDraw = document.getElementById('timeline-path-draw');
+  if (!section || !wrapper || !lineSvg) return;
+
+  function wavyPath(cx, H) {
+    const amp = 10, period = 100;
+    let d = `M ${cx} 0`, y = 0, dir = 1;
+    while (y < H) {
+      const nextY = Math.min(y + period, H);
+      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+      y = nextY; dir *= -1;
+    }
+    return d;
+  }
+
+  let isSetup = false;
+  function setup() {
+    const firstDot = wrapper.querySelector('.event-dot');
+    if (!firstDot) return;
+    const wRect = wrapper.getBoundingClientRect();
+    const dRect = firstDot.getBoundingClientRect();
+    const cx = dRect.left + dRect.width / 2 - wRect.left;
+    const H  = wrapper.offsetHeight;
+    const svgW = 40;
+    lineSvg.style.left   = (cx - svgW / 2) + 'px';
+    lineSvg.style.width  = svgW + 'px';
+    lineSvg.style.height = H + 'px';
+    lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
+    const d = wavyPath(svgW / 2, H);
+    pathBg.setAttribute('d', d);
+    pathDraw.setAttribute('d', d);
+    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
+    pathDraw.style.transition = 'none';
+    pathDraw.style.strokeDasharray  = len;
+    pathDraw.style.strokeDashoffset = len;
+    pathDraw._len = len;
+    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
+    isSetup = true;
+  }
+  setTimeout(setup, 200);
+  window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
+
+  if (prefersReduced) {
+    setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300);
+    return;
+  }
+  window.addEventListener('scroll', () => {
+    if (window.innerWidth <= 700 || !isSetup) return;
+    const rect  = section.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+    const total    = section.offsetHeight - window.innerHeight;
+    const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
+    pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
+  }, { passive: true });
+})();
+
+// ============================================================
+// TIMELINE MOBILE
+// ============================================================
+(function() {
+  if (window.innerWidth > 700) return;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wrapper  = document.getElementById('tl-mobile-wrapper');
+  const lineSvg  = document.getElementById('tl-mobile-line-svg');
+  const pathBg   = document.getElementById('tl-mobile-path-bg');
+  const pathDraw = document.getElementById('tl-mobile-path-draw');
+  const steps    = document.querySelectorAll('.tl-step');
+  if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
+
+  function wavyPath(cx, H) {
+    const amp = 8, period = 80;
+    let d = `M ${cx} 0`, y = 0, dir = 1;
+    while (y < H) {
+      const nextY = Math.min(y + period, H);
+      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+      y = nextY; dir *= -1;
+    }
+    return d;
+  }
+
+  function setupLine() {
+    const H = wrapper.offsetHeight;
+    lineSvg.style.height = H + 'px';
+    lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
+    const d = wavyPath(20, H);
+    pathBg.setAttribute('d', d);
+    pathDraw.setAttribute('d', d);
+    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
+    pathDraw.style.transition = 'none';
+    pathDraw.style.strokeDasharray  = len;
+    pathDraw.style.strokeDashoffset = prefersReduced ? 0 : len;
+    pathDraw._len = len;
+    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
+  }
+  setTimeout(setupLine, 300);
+  window.addEventListener('resize', Utils.debounce(() => { setupLine(); onScroll(); }, 250));
+
+  let raf = null;
+  function updateGlobalPath() {
+    raf = null;
+    if (prefersReduced) return;
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const wrapperH    = wrapper.offsetHeight;
+    const totalScroll = Math.max(1, wrapperH - window.innerHeight);
+    const scrolled    = Math.max(0, -wrapperRect.top);
+    const globalProg  = Math.min(1, scrolled / totalScroll);
+    const len = pathDraw._len || 1000;
+    pathDraw.style.strokeDashoffset = len * (1 - globalProg);
+  }
+  function onScroll() { if (raf) return; raf = requestAnimationFrame(updateGlobalPath); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const step = entry.target;
+      const i    = step.dataset.i;
+      const day  = document.getElementById(`tl-day-${i}`);
+      const dot  = document.getElementById(`tl-dot-${i}`);
+      const card = document.getElementById(`tl-card-${i}`);
+      const img  = document.getElementById(`tl-img-${i}`);
+      if (entry.isIntersecting) {
+        day?.classList.add('show');
+        dot?.classList.add('show');
+        setTimeout(() => card?.classList.add('show'), 120);
+        setTimeout(() => img?.classList.add('show'),  240);
+      } else {
+        day?.classList.remove('show');
+        dot?.classList.remove('show');
+        card?.classList.remove('show');
+        img?.classList.remove('show');
+      }
+    });
+  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+
+  steps.forEach((step, i) => { step.dataset.i = String(i); io.observe(step); });
+  document.getElementById('tl-day-0')?.classList.add('show');
+  document.getElementById('tl-dot-0')?.classList.add('show');
+  document.getElementById('tl-card-0')?.classList.add('show');
+  document.getElementById('tl-img-0')?.classList.add('show');
+})();
+
+// ============================================================
+// VOITURE + FEUX D'ARTIFICE
+// ============================================================
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const section = document.getElementById('final-scene');
+  const car     = document.getElementById('car-el');
+  const canvas  = document.getElementById('fireworks-canvas');
+  if (!section || !car || !canvas) return;
+  const ctx     = canvas.getContext('2d');
+  const perfIOS = document.documentElement.classList.contains('ios-perf');
+  const carW    = 200;
+
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
+    canvas.width  = Math.floor(canvas.offsetWidth  * dpr);
+    canvas.height = Math.floor(canvas.offsetHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
+
+  const particles = [];
+  let fwActive = false, fwRafId = null;
+  const FW_COLORS = ['#FF3CAC','#FF6B35','#FFB347','#FFD166','#ffffff','#FF8C42','#ffaacc','#ffe0a0'];
+
+  function burst(x, y) {
+    const count = Math.floor((perfIOS ? 28 : 60) + Math.random() * (perfIOS ? 18 : 40));
+    const c1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+    const c2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
+      const speed = 2 + Math.random() * 5;
+      const life  = 60 + Math.random() * 60;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - Math.random() * 2,
+        alpha: 1, life, maxLife: life,
+        radius: 1.5 + Math.random() * 2,
+        color: Math.random() > 0.5 ? c1 : c2,
+        trail: [], gravity: 0.06 + Math.random() * 0.06
+      });
+    }
+  }
+
+  function animateFW() {
+    if (!fwActive) return;
+    fwRafId = requestAnimationFrame(animateFW);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
+      if (p.trail.length > 6) p.trail.shift();
+      p.x += p.vx; p.y += p.vy;
+      p.vy += p.gravity; p.vx *= 0.98;
+      p.life--; p.alpha = p.life / p.maxLife;
+      p.trail.forEach((tp, t) => {
+        ctx.beginPath();
+        ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
+        ctx.fill();
+      });
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+  }
+
+  let burstTOs = [];
+  function launchFW() {
+    burstTOs.forEach(clearTimeout); burstTOs = [];
+    const W = canvas.width, H = canvas.height;
+    const pos = [
+      { x: W*0.2,  y: H*0.18 }, { x: W*0.5,  y: H*0.12 },
+      { x: W*0.78, y: H*0.2  }, { x: W*0.35, y: H*0.28 },
+      { x: W*0.65, y: H*0.25 }, { x: W*0.12, y: H*0.3  },
+      { x: W*0.88, y: H*0.15 }
+    ];
+    pos.forEach((p, i) => {
+      burstTOs.push(setTimeout(() => {
+        burst(p.x, p.y);
+        setTimeout(() => burst(p.x + (Math.random()-0.5)*80, p.y + (Math.random()-0.5)*40), 200);
+      }, i * 280));
+    });
+    burstTOs.push(setTimeout(launchFW, pos.length * 280 + 800));
+  }
+
+  function startFW() {
+    if (fwActive) return;
+    fwActive = true;
+    canvas.classList.add('visible');
+    launchFW(); animateFW();
+  }
+  function stopFW() {
+    if (!fwActive) return;
+    fwActive = false;
+    canvas.classList.remove('visible');
+    burstTOs.forEach(clearTimeout); burstTOs = [];
+    if (fwRafId) cancelAnimationFrame(fwRafId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.length = 0;
+  }
+
+  let rafCar = null, lastProgress = -1;
+  function updateCar() {
+    const rect  = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
+    if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+      if (lastProgress > 0 && lastProgress < 1) {
+        car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
+        stopFW();
+      }
+      lastProgress = -1; return;
+    }
+    const progress = Math.min(1, Math.max(0, -rect.top / total));
+    if (Math.abs(progress - lastProgress) < 0.0005) return;
+    lastProgress = progress;
+    const startX = -carW - 20;
+    const endX   = window.innerWidth + 20;
+    car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
+    if (progress >= 0.85) startFW(); else stopFW();
+  }
+  window.addEventListener('scroll', () => {
+    if (rafCar) cancelAnimationFrame(rafCar);
+    rafCar = requestAnimationFrame(updateCar);
+  }, { passive: true });
+  window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; updateCar(); });
+  updateCar();
+})();
+
+// ============================================================
+// RADIO BUTTONS
+// ============================================================
 (function() {
   document.querySelectorAll('.radio-btn input[type="radio"]').forEach(r => {
     r.addEventListener('change', () => {
@@ -954,15 +1479,18 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   });
 })();
 
-// RSVP
+// ============================================================
+// RSVP FORM
+// ============================================================
 (function() {
-  const form = document.getElementById('rsvp-form');
-  const btn = document.getElementById('btn-submit');
+  const form    = document.getElementById('rsvp-form');
+  const btn     = document.getElementById('btn-submit');
   const success = document.getElementById('rsvp-success');
-  const iframe = document.getElementById('hidden_iframe');
+  const iframe  = document.getElementById('hidden_iframe');
   const errorName = document.getElementById('error-name');
-  const errorAtt = document.getElementById('error-attending');
+  const errorAtt  = document.getElementById('error-attending');
   let submitted = false;
+
   iframe.addEventListener('load', () => {
     if (!submitted) return;
     form.style.display = 'none';
@@ -971,17 +1499,29 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
     btn.textContent = 'Confirmer';
     submitted = false;
   });
+
   form.addEventListener('submit', (e) => {
     let valid = true;
     const nameVal = form.querySelector('#rsvp-name').value.trim();
-    if (!nameVal) { errorName.classList.add('visible'); if (valid) form.querySelector('#rsvp-name').focus(); valid = false; } else { errorName.classList.remove('visible'); }
+    if (!nameVal) {
+      errorName.classList.add('visible');
+      if (valid) form.querySelector('#rsvp-name').focus();
+      valid = false;
+    } else { errorName.classList.remove('visible'); }
+
     const radioChecked = form.querySelector('input[name="ENTRY_ATTENDING_TODO"]:checked');
-    if (!radioChecked) { errorAtt.classList.add('visible'); if (valid) document.querySelector('.radio-btn input').focus(); valid = false; } else { errorAtt.classList.remove('visible'); }
+    if (!radioChecked) {
+      errorAtt.classList.add('visible');
+      if (valid) document.querySelector('.radio-btn input').focus();
+      valid = false;
+    } else { errorAtt.classList.remove('visible'); }
+
     if (!valid) { e.preventDefault(); return; }
-    submitted = true; btn.disabled = true; btn.textContent = 'Envoi en cours...';
+    submitted = true;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
   });
 })();
 </script>
-
 </body>
 </html>
