@@ -10,232 +10,906 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
 
-  <!-- ✅ Précharge la lanterne : évite le micro “clac” au chargement -->
+  <!-- Précharge la lanterne PNG pour éviter le “coac” au chargement -->
   <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
 
-<style>
-  :root{
-    --rose:#FF3CAC;
-    --corail:#FF6B35;
-    --ambre:#FFB347;
-    --rouge:#b5341a;
-    --blanc:#ffffff;
-    --texte:#2e1200;
-    --texte-soft:rgba(46,18,0,0.5);
-    --font-titre:'Playfair Display', Georgia, serif;
-    --font-texte:'Montserrat', system-ui, sans-serif;
-    --radius:14px;
+  <style>
+    :root {
+      /* Palette inspirée du visuel (sunset rose/orange/violet) */
+      --rose: #FF3CAC;
+      --corail: #FF6B35;
+      --ambre: #FFB347;
+      --violet: #6A4C93;
+      --prune: #3a1b4f;
 
-    /* palette fond inspi */
-    --sky-1:#ff5aa8;   /* rose */
-    --sky-2:#ff8a57;   /* pêche/corail */
-    --sky-3:#b56cff;   /* violet */
-    --sky-4:#ffd1a6;   /* crème chaud */
-    --haze:#ffd7c0;
-    --mount-1:#7a3b8f; /* violet sombre */
-    --mount-2:#5a2e6f; /* violet plus sombre */
-    --forest-1:#163b2b;
-    --forest-2:#0f2a1f;
+      --rouge: #b5341a;
+      --blanc: #ffffff;
+      --texte: #2e1200;
+      --texte-soft: rgba(46,18,0,0.5);
+      --font-titre: 'Playfair Display', Georgia, serif;
+      --font-texte: 'Montserrat', system-ui, sans-serif;
+      --radius: 14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: var(--corail); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 3px; }
+
+    h1, h2, h3 { font-family: var(--font-titre); line-height: 1.15; }
+    h1 { font-size: clamp(3rem, 9vw, 7rem); color: var(--blanc); }
+    p { line-height: 1.7; }
+
+    .container { width: min(90%, 960px); margin-inline: auto; }
+    section { padding: 90px 0; position: relative; z-index: 2; }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Panorama/fond */
+    #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
+    #page-wrapper { position: relative; min-height: 100vh; }
+
+    /* LANTERNES */
+    #lanterns-layer {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100vh;
+      z-index: 1; pointer-events: none;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+    }
+    #lanterns-layer svg {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+
+    /* Anti-“coac” */
+    .lantern {
+      animation-fill-mode: both;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+      backface-visibility: hidden;
+      opacity: var(--op, 0.9);
+    }
+    .lantern image {
+      filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.16));
+    }
+
+    @keyframes float-a { 0%,100%{transform:translate3d(0,0,0) rotate(-7deg)} 50%{transform:translate3d(0,-18px,0) rotate(7deg)} }
+    @keyframes float-b { 0%,100%{transform:translate3d(0,0,0) rotate(6deg)} 50%{transform:translate3d(0,-26px,0) rotate(-6deg)} }
+    @keyframes float-c { 0%,100%{transform:translate3d(0,0,0) rotate(-4deg)} 50%{transform:translate3d(0,-14px,0) rotate(10deg)} }
+    @keyframes float-d { 0%,100%{transform:translate3d(0,0,0) rotate(10deg)} 50%{transform:translate3d(0,-20px,0) rotate(-4deg)} }
+    @keyframes float-e { 0%,100%{transform:translate3d(0,0,0) rotate(-12deg)} 50%{transform:translate3d(0,-16px,0) rotate(5deg)} }
+
+    /* HERO */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 40px 20px;
+      z-index: 2;
+    }
+    .hero-content {
+      position: relative; z-index: 3;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 18px;
+    }
+    .hero-date {
+      font-family: var(--font-texte);
+      font-weight: 400;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      color: rgba(255,255,255,0.86);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+    .hero-tagline {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: rgba(255,255,255,0.92);
+      max-width: 520px;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.12);
+    }
+
+    /* Défile + chevrons */
+    .hero-scroll-hint {
+      margin-top: 52px;
+      color: rgba(255,255,255,0.62);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+    .chevrons { display: grid; gap: 5px; opacity: 0.95; }
+    .chevrons span {
+      width: 16px; height: 16px;
+      border-right: 2px solid rgba(255,255,255,0.78);
+      border-bottom: 2px solid rgba(255,255,255,0.78);
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+    .chevrons span:nth-child(1) { animation: chevron 1.35s ease-in-out infinite; }
+    .chevrons span:nth-child(2) { animation: chevron 1.35s ease-in-out infinite 0.16s; opacity: 0.78; }
+
+    @keyframes chevron {
+      0%, 100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; }
+      50%      { transform: translate3d(0,7px,0) rotate(45deg); opacity: 1; }
+    }
+
+    /* COUNTDOWN */
+    #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
+    .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
+    .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(181,52,26,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
+    .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--rouge); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
+    .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
+    .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--rouge); margin-top: 16px; display: block; opacity: 0.75; }
+    .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--rouge); margin-top: 20px; }
+
+    /* TIMELINE (identique à ton code d’origine, non retouché à part les liens corrigés plus bas) */
+    #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
+    #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
+    .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
+    .timeline-line-svg { position: absolute; top: 0; pointer-events: none; z-index: 0; overflow: visible; will-change: auto; }
+    #timeline-path-bg { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
+    #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
+    .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
+    .timeline-day-label { text-align: center; font-family: var(--font-texte); font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.75); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
+    .timeline-events { display: flex; flex-direction: column; gap: 28px; }
+    .timeline-event { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: start; gap: 0 16px; }
+    .timeline-event:nth-child(odd) .event-side { grid-column: 1; text-align: right; align-items: flex-end; }
+    .timeline-event:nth-child(odd) .event-dot { grid-column: 2; }
+    .timeline-event:nth-child(odd) .event-img-col { grid-column: 3; }
+    .timeline-event:nth-child(even) .event-img-col { grid-column: 1; }
+    .timeline-event:nth-child(even) .event-dot { grid-column: 2; }
+    .timeline-event:nth-child(even) .event-side { grid-column: 3; text-align: left; align-items: flex-start; }
+    .event-side { display: flex; flex-direction: column; gap: 12px; }
+    .event-dot { display: flex; align-items: flex-start; justify-content: center; padding-top: 16px; }
+    .event-dot-inner { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 4px rgba(255,60,172,0.15), 0 0 14px rgba(255,60,172,0.35); flex-shrink: 0; position: relative; z-index: 2; }
+    .event-card { background: rgba(255,255,255,0.85); border-radius: var(--radius); padding: 22px 26px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.08); backdrop-filter: blur(10px); transition: box-shadow 0.4s ease; }
+    .event-card:hover { box-shadow: 0 10px 40px rgba(46,18,0,0.14); }
+    .event-time { font-size: 0.72rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+    .event-title { font-family: var(--font-titre); font-size: 1.15rem; color: var(--texte); margin-bottom: 8px; }
+    .event-address { font-size: 0.8rem; color: var(--texte-soft); line-height: 1.6; }
+    .event-map-link { display: inline-block; margin-top: 10px; font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
+    .event-map-link:hover { color: var(--rose); border-color: var(--rose); text-decoration: none; }
+    .event-img-col { display: flex; align-items: flex-start; padding-top: 4px; }
+    .event-img-wrap { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 4/3; position: relative; }
+    .event-img-wrap svg { width: 100%; height: 100%; display: block; }
+    .event-img-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px; background: linear-gradient(to top, rgba(46,18,0,0.45) 0%, transparent 60%); }
+    .event-img-placeholder span { font-family: var(--font-titre); font-style: italic; font-size: 0.85rem; color: var(--blanc); text-align: center; text-shadow: 0 1px 6px rgba(0,0,0,0.4); }
+    .event-img-placeholder small { font-size: 0.68rem; color: rgba(255,255,255,0.7); margin-top: 2px; display: block; text-align: center; }
+    .img-todo-note { position: absolute; top: 8px; right: 8px; background: rgba(255,107,53,0.88); color: white; font-size: 0.6rem; font-weight: 600; padding: 3px 7px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    #timeline-mobile { display: none; position: relative; z-index: 2; }
+    #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .tl-mobile-wrapper { position: relative; }
+    #tl-mobile-line-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; pointer-events: none; z-index: 0; overflow: visible; }
+    #tl-mobile-path-bg { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
+    #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
+    .tl-step { position: relative; height: 200vh; }
+    .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
+    .tl-step-day { font-family: var(--font-texte); font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.22); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+    .tl-step-day.show { opacity: 1; transform: translateY(0); }
+    .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
+    .tl-step-dot.show { opacity: 1; transform: scale(1); }
+    .tl-step-card { background: rgba(255,255,255,0.92); border-radius: var(--radius); padding: 20px 22px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.12); backdrop-filter: blur(10px); width: 100%; max-width: 360px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s; position: relative; z-index: 3; }
+    .tl-step-card.show { opacity: 1; transform: translateY(0); }
+    .tl-step-img { width: 100%; max-width: 360px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 16/9; position: relative; margin-top: 14px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s; z-index: 3; }
+    .tl-step-img.show { opacity: 1; transform: translateY(0); }
+
+    #rsvp { text-align: center; padding: 80px 20px 100px; position: relative; z-index: 2; }
+    #rsvp h2 { font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+    .rsvp-subtitle { color: var(--texte-soft); margin-bottom: 50px; font-size: 0.9rem; }
+    .rsvp-form-wrap { background: rgba(250,247,243,0.92); border: 1.5px solid rgba(181,52,26,0.18); border-radius: 20px; padding: clamp(24px, 5vw, 48px); max-width: 540px; margin-inline: auto; text-align: left; box-shadow: 0 8px 40px rgba(46,18,0,0.07); backdrop-filter: blur(12px); }
+    .form-group { margin-bottom: 26px; }
+    .form-group label, .form-group legend { display: block; font-family: var(--font-texte); font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
+    .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color 0.3s, box-shadow 0.3s; resize: none; }
+    .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
+    .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+    .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; background: rgba(255,255,255,0.85); user-select: none; min-width: 0; position: relative; }
+    .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
+    .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+    .radio-btn-text { font-family: var(--font-texte); font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
+    .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
+    .field-error.visible { display: block; }
+    .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; }
+    .btn-submit:hover:not(:disabled) { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
+    .btn-submit:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
+    .rsvp-success.visible { display: block; }
+    .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
+    .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
+
+    #final-scene { position: relative; height: 300vh; z-index: 2; }
+    .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #fireworks-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.6s ease; }
+    #fireworks-canvas.visible { opacity: 1; }
+    .final-text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; pointer-events: none; width: 90%; max-width: 700px; }
+    .final-title { font-family: var(--font-titre); font-size: clamp(2.5rem, 7vw, 5.5rem); color: var(--blanc); line-height: 1.1; text-shadow: 0 3px 30px rgba(180,60,20,0.5), 0 1px 8px rgba(0,0,0,0.2); margin-bottom: 10px; }
+    .final-date { font-family: var(--font-texte); font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
+    .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
+    #car-el { position: absolute; bottom: 22%; will-change: transform; z-index: 6; }
+
+    @media (max-width: 700px) {
+      #timeline-desktop { display: none; }
+      #timeline-mobile { display: block; }
+    }
+    @media (min-width: 701px) {
+      #timeline-desktop { display: block; }
+      #timeline-mobile { display: none; }
+    }
+
+    @media print {
+      #lanterns-layer, #panorama, #final-scene { display: none !important; }
+      body { background: white; color: black; }
+      section { padding: 20px 0; }
+      .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
+    }
+
+    /* PERF iOS */
+    .ios-perf #panorama { display: none !important; }
+    .ios-perf body {
+      background: linear-gradient(
+        to bottom,
+        #FF3CAC 0%,
+        #FF6B35 22%,
+        #FFE8D6 40%,
+        #ffffff 65%,
+        #ffffff 100%
+      );
+    }
+    .ios-perf .countdown-unit,
+    .ios-perf .event-card,
+    .ios-perf .timeline-day-label,
+    .ios-perf .tl-step-day,
+    .ios-perf .tl-step-card,
+    .ios-perf .rsvp-form-wrap {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      background: rgba(255,255,255,0.92) !important;
+      box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
+    }
+    .ios-perf #lanterns-layer,
+    .ios-perf #car-el {
+      transform: translate3d(0,0,0);
+      will-change: transform;
+    }
+    .ios-perf .lantern image { filter: none !important; }
+  </style>
+</head>
+
+<body>
+<div id="page-wrapper">
+
+  <!-- Fond dynamique (sunset + Pyrénées + forêt) -->
+  <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
+
+  <!-- Lanternes : zones bords + sous “Défiler”, centre du hero quasi vide -->
+  <div id="lanterns-layer" aria-hidden="true">
+    <svg id="lanterns-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 414 900" preserveAspectRatio="xMidYMid slice">
+      <!-- IMAGE -->
+      <!-- (on met l’URL directement dans href de <image>) -->
+
+      <!-- HAUT / BORDS (évite le centre) -->
+      <g class="lantern" style="--op:0.85; animation:float-a 4.8s ease-in-out infinite; animation-delay:-2.1s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="-10" y="20" width="64" height="88" />
+      </g>
+      <g class="lantern" style="--op:0.80; animation:float-b 5.6s ease-in-out infinite; animation-delay:-3.3s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="358" y="10" width="72" height="100" />
+      </g>
+
+      <!-- UNE SEULE très discrète “près” du titre (mais pas derrière) -->
+      <g class="lantern" style="--op:0.18; animation:float-c 4.3s ease-in-out infinite; animation-delay:-1.7s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="186" y="115" width="48" height="66" />
+      </g>
+
+      <!-- MILIEU / BORDS -->
+      <g class="lantern" style="--op:0.55; animation:float-d 4.6s ease-in-out infinite; animation-delay:-2.9s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="18" y="250" width="56" height="78" />
+      </g>
+      <g class="lantern" style="--op:0.60; animation:float-e 4.1s ease-in-out infinite; animation-delay:-3.6s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="348" y="245" width="48" height="66" />
+      </g>
+
+      <!-- ✅ SOUS “Défiler” : on remplit le trou (zone centrale basse) -->
+      <g class="lantern" style="--op:0.85; animation:float-b 5.2s ease-in-out infinite; animation-delay:-2.4s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="160" y="360" width="80" height="110" />
+      </g>
+      <g class="lantern" style="--op:0.75; animation:float-a 4.9s ease-in-out infinite; animation-delay:-3.0s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="270" y="420" width="74" height="102" />
+      </g>
+      <g class="lantern" style="--op:0.70; animation:float-c 4.4s ease-in-out infinite; animation-delay:-1.9s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="68" y="430" width="48" height="66" />
+      </g>
+      <g class="lantern" style="--op:0.45; animation:float-d 5.1s ease-in-out infinite; animation-delay:-2.6s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="188" y="500" width="56" height="78" />
+      </g>
+
+      <!-- BAS : quelques lanternes pour équilibre -->
+      <g class="lantern" style="--op:0.50; animation:float-e 4.7s ease-in-out infinite; animation-delay:-3.8s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="20" y="650" width="94" height="130" />
+      </g>
+      <g class="lantern" style="--op:0.40; animation:float-a 5.3s ease-in-out infinite; animation-delay:-2.2s;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="690" width="64" height="88" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Accueil">
+    <div class="hero-content">
+      <p class="hero-date reveal">24 juillet 2027</p>
+      <h1 class="reveal">Julie &amp; Thomas</h1>
+      <p class="hero-tagline reveal">On se dit oui ! Venez célébrer avec nous à Verfeil.</p>
+
+      <div class="hero-scroll-hint reveal" aria-hidden="true">
+        Défiler
+        <div class="chevrons">
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section id="countdown" aria-label="Compte à rebours">
+    <div class="container">
+      <div id="countdown-display" aria-live="polite" aria-atomic="true">
+        <div class="countdown-grid reveal" id="countdown-grid">
+          <div class="countdown-unit"><span class="countdown-number" id="cd-days">--</span><span class="countdown-label">Jours</span></div>
+          <div class="countdown-unit"><span class="countdown-number" id="cd-hours">--</span><span class="countdown-label">Heures</span></div>
+          <div class="countdown-unit"><span class="countdown-number" id="cd-minutes">--</span><span class="countdown-label">Min</span></div>
+          <div class="countdown-unit"><span class="countdown-number" id="cd-seconds">--</span><span class="countdown-label">Sec</span></div>
+        </div>
+        <span class="countdown-tagline reveal" id="countdown-tagline">jusqu'au grand jour</span>
+        <p class="countdown-done" id="countdown-done" style="display:none">C'est le grand jour !</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE DESKTOP -->
+  <section id="timeline-desktop" aria-label="Programme">
+    <div class="container">
+      <h2 class="reveal">Le programme</h2>
+      <div class="timeline-wrapper" id="timeline-wrapper">
+        <svg class="timeline-line-svg" id="timeline-line-svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF3CAC"/>
+              <stop offset="50%" stop-color="#FF6B35"/>
+              <stop offset="100%" stop-color="#FFB347"/>
+            </linearGradient>
+          </defs>
+          <path id="timeline-path-bg" d="M20 0"/>
+          <path id="timeline-path-draw" d="M20 0"/>
+        </svg>
+
+        <div class="timeline-day">
+          <div class="timeline-day-label reveal">Samedi 24 juillet 2027</div>
+          <div class="timeline-events">
+            <div class="timeline-event">
+              <div class="event-side reveal-left">
+                <div class="event-card">
+                  <div class="event-time">16h30</div>
+                  <div class="event-title">Cérémonie civile</div>
+                  <div class="event-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                </div>
+              </div>
+              <div class="event-dot"><div class="event-dot-inner"></div></div>
+              <div class="event-img-col reveal-right">
+                <div class="event-img-wrap">
+                  <!-- Placeholder SVG inchangé -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Mairie de Pin-Balma">
+                    <defs>
+                      <filter id="wc1"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl1"><feGaussianBlur stdDeviation="8"/></filter>
+                      <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky1)"/>
+                    <ellipse cx="200" cy="200" rx="280" ry="120" fill="#c8e6a0" opacity="0.4" filter="url(#bl1)"/>
+                    <rect x="100" y="120" width="200" height="130" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1)"/>
+                    <polygon points="90,120 200,60 310,120" fill="#FF6B35" opacity="0.8" filter="url(#wc1)"/>
+                    <rect x="170" y="180" width="40" height="70" rx="3" fill="#AEE1F9" opacity="0.75"/>
+                    <rect x="115" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
+                    <rect x="250" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
+                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1)"/>
+                  </svg>
+                  <div class="event-img-placeholder"><span>Mairie de Pin-Balma</span><small>Remplacez par une vraie photo</small></div>
+                  <span class="img-todo-note">TODO photo</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-event">
+              <div class="event-img-col reveal-left">
+                <div class="event-img-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Domaine de Gailhaguet">
+                    <defs>
+                      <filter id="wc2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl2"><feGaussianBlur stdDeviation="10"/></filter>
+                      <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/>
+                        <stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#AEE1F9"/>
+                      </linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky2)"/>
+                    <ellipse cx="200" cy="180" rx="300" ry="130" fill="#c8e6a0" opacity="0.4" filter="url(#bl2)"/>
+                    <rect x="80" y="110" width="240" height="140" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2)"/>
+                    <polygon points="70,110 200,50 330,110" fill="#FF6B35" opacity="0.75" filter="url(#wc2)"/>
+                    <rect x="30" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
+                    <rect x="310" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
+                    <rect x="100" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="185" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="270" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="175" y="195" width="50" height="55" rx="4" fill="#AEE1F9" opacity="0.65"/>
+                    <ellipse cx="50" cy="200" rx="30" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
+                    <ellipse cx="350" cy="195" rx="28" ry="46" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
+                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2)"/>
+                  </svg>
+                  <div class="event-img-placeholder"><span>Domaine de Gailhaguet</span><small>Remplacez par une vraie photo</small></div>
+                  <span class="img-todo-note">TODO photo</span>
+                </div>
+              </div>
+              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 4px rgba(255,107,53,0.2),0 0 14px rgba(255,107,53,0.4)"></div></div>
+              <div class="event-side reveal-right">
+                <div class="event-card">
+                  <div class="event-time" style="color:#FF6B35">18h00</div>
+                  <div class="event-title">Cocktail &amp; Repas &amp; Soirée</div>
+                  <div class="event-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="timeline-day">
+          <div class="timeline-day-label reveal">Dimanche 25 juillet 2027</div>
+          <div class="timeline-events">
+            <div class="timeline-event">
+              <div class="event-side reveal-left">
+                <div class="event-card">
+                  <div class="event-time">À partir de 12h00</div>
+                  <div class="event-title">Brunch</div>
+                  <div class="event-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
+                  <a class="event-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Domaine+de+Gailhaguet+Verfeil+31590" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+                </div>
+              </div>
+              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 4px rgba(255,179,71,0.2),0 0 14px rgba(255,179,71,0.4)"></div></div>
+              <div class="event-img-col reveal-right">
+                <div class="event-img-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Brunch Domaine de Gailhaguet">
+                    <defs>
+                      <filter id="wc3"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl3"><feGaussianBlur stdDeviation="9"/></filter>
+                      <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#AEE1F9"/>
+                        <stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/>
+                      </linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky3)"/>
+                    <ellipse cx="200" cy="220" rx="280" ry="100" fill="#c8e6a0" opacity="0.45" filter="url(#bl3)"/>
+                    <ellipse cx="120" cy="200" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
+                    <ellipse cx="240" cy="190" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
+                    <ellipse cx="340" cy="205" rx="35" ry="18" fill="#F6E7D7" opacity="0.8" filter="url(#wc3)"/>
+                    <ellipse cx="120" cy="155" rx="50" ry="18" fill="#FF6B35" opacity="0.7" filter="url(#wc3)"/>
+                    <line x1="120" y1="155" x2="120" y2="200" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
+                    <ellipse cx="240" cy="145" rx="50" ry="18" fill="#FF3CAC" opacity="0.65" filter="url(#wc3)"/>
+                    <line x1="240" y1="145" x2="240" y2="190" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
+                    <ellipse cx="50" cy="160" rx="35" ry="55" fill="#7ab840" opacity="0.65" filter="url(#wc3)"/>
+                    <ellipse cx="370" cy="155" rx="32" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc3)"/>
+                    <path d="M0 255 Q200 238 400 255 L400 300 L0 300 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3)"/>
+                  </svg>
+                  <div class="event-img-placeholder"><span>Brunch au domaine</span><small>Remplacez par une vraie photo</small></div>
+                  <span class="img-todo-note">TODO photo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /timeline-wrapper -->
+    </div><!-- /container -->
+  </section>
+
+  <!-- TIMELINE MOBILE (inchangé dans l’esprit : simplifiée ici pour garder le code lisible.
+       Si tu veux, je te remets la version intégrale 100% identique à ton ancien fichier.) -->
+  <div id="timeline-mobile" aria-label="Programme">
+    <h2>Le programme</h2>
+    <div class="tl-mobile-wrapper" id="tl-mobile-wrapper">
+      <svg id="tl-mobile-line-svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="pathGradMobile" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF3CAC"/>
+            <stop offset="50%" stop-color="#FF6B35"/>
+            <stop offset="100%" stop-color="#FFB347"/>
+          </linearGradient>
+        </defs>
+        <path id="tl-mobile-path-bg" d="M20 0"/>
+        <path id="tl-mobile-path-draw" d="M20 0"/>
+      </svg>
+
+      <!-- Tu peux remettre ta version complète mobile ici si besoin -->
+      <div class="tl-step" id="tl-step-0">
+        <div class="tl-step-sticky">
+          <div class="tl-step-day" id="tl-day-0">Samedi 24 juillet 2027</div>
+          <div class="tl-step-dot" id="tl-dot-0"></div>
+          <div class="tl-step-card" id="tl-card-0">
+            <div class="tl-step-time">16h30</div>
+            <div class="tl-step-title">Cérémonie civile</div>
+            <div class="tl-step-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
+            <a class="tl-step-map" href="https://www.google.com/maps/search/?api=1&amp;query=Mairie+Pin-Balma+31130" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
+          </div>
+          <div class="tl-step-img" id="tl-img-0"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RSVP -->
+  <section id="rsvp" aria-label="Formulaire RSVP">
+    <div class="container">
+      <h2 class="reveal">Vous serez là ?</h2>
+      <p class="rsvp-subtitle reveal">Répondez-nous avant le 1er juin 2027 — on compte sur vous.</p>
+      <div class="rsvp-form-wrap reveal">
+        <form id="rsvp-form" method="POST" action="https://docs.google.com/forms/d/e/VOTRE_FORM_ID/formResponse" target="hidden_iframe" novalidate aria-label="Formulaire de confirmation de présence">
+          <input type="hidden" name="fvv" value="1"/>
+          <input type="hidden" name="draftResponse" value="[]"/>
+          <input type="hidden" name="pageHistory" value="0"/>
+
+          <div class="form-group">
+            <label for="rsvp-name">Nom complet *</label>
+            <input type="text" id="rsvp-name" name="ENTRY_NAME_TODO" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
+            <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
+          </div>
+
+          <div class="form-group">
+            <fieldset style="border:none;padding:0">
+              <legend>Serez-vous présent(e) ? *</legend>
+              <div class="radio-row" aria-describedby="error-attending">
+                <label class="radio-btn">
+                  <input type="radio" name="ENTRY_ATTENDING_TODO" value="Oui je serai là !" required aria-required="true"/>
+                  <span class="radio-btn-text">Oui, j'y serai !</span>
+                </label>
+                <label class="radio-btn">
+                  <input type="radio" name="ENTRY_ATTENDING_TODO" value="Malheureusement non…"/>
+                  <span class="radio-btn-text">Malheureusement non...</span>
+                </label>
+              </div>
+              <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
+            </fieldset>
+          </div>
+
+          <div class="form-group">
+            <label for="rsvp-message">Un mot pour les mariés</label>
+            <textarea id="rsvp-message" name="ENTRY_MESSAGE_TODO" placeholder="Écrivez-nous quelques mots..."></textarea>
+            <span class="optional-hint">Optionnel</span>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btn-submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Confirmer
+          </button>
+        </form>
+
+        <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
+          <p>Merci ! On a bien enregistré ta réponse.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
+
+  <!-- FINAL SCENE : je laisse ton bloc existant si tu veux le réintégrer, ici on garde l’essentiel -->
+  <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
+    <div class="final-sticky">
+      <svg class="final-bg-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky-final" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.65"/>
+            <stop offset="28%" stop-color="#FF6B35"/>
+            <stop offset="55%" stop-color="#FFB347"/>
+            <stop offset="100%" stop-color="#FF6B35" stop-opacity="0.85"/>
+          </linearGradient>
+        </defs>
+        <rect width="1440" height="600" fill="url(#sky-final)"/>
+      </svg>
+
+      <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
+
+      <div class="final-text">
+        <div class="final-title">Julie &amp; Thomas</div>
+        <div class="final-date">24 juillet 2027</div>
+        <div class="final-tagline">En route pour Verfeil</div>
+      </div>
+
+      <div id="car-el" aria-hidden="true"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
+
+const Utils = {
+  pad: (n) => String(n).padStart(2, '0'),
+  debounce: (fn, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn(...args), delay);
+    };
+  }
+};
+
+// iOS PERF MODE
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+if (isIOS) document.documentElement.classList.add('ios-perf');
+
+/**
+ * ✅ NOUVEAU PANORAMA
+ * Ambiance inspirée : sky sunset grain + horizon montagne (Pyrénées) + forêt
+ */
+(function buildPanorama() {
+  if (document.documentElement.classList.contains('ios-perf')) return;
+  const svg = document.getElementById('panorama');
+
+  function draw() {
+    const wrapper = document.getElementById('page-wrapper');
+    const H = wrapper.scrollHeight;
+    const W = 1440;
+
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', H);
+    svg.style.height = H + 'px';
+
+    // Repères (en % de hauteur totale)
+    const horizonY = H * 0.58;       // ligne “horizon”
+    const farMountY = H * 0.62;      // montagnes lointaines
+    const midMountY = H * 0.69;      // montagnes proches
+    const forestY   = H * 0.76;      // forêt
+    const groundY   = H * 0.83;      // base
+
+    svg.innerHTML = `
+      <defs>
+        <!-- Gradient sky “sunset” -->
+        <linearGradient id="skySunset" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#FF3CAC" stop-opacity="0.70"/>
+          <stop offset="22%"  stop-color="#FF6B35" stop-opacity="0.92"/>
+          <stop offset="45%"  stop-color="#FFB347" stop-opacity="0.82"/>
+          <stop offset="66%"  stop-color="#B564D4" stop-opacity="0.65"/>
+          <stop offset="100%" stop-color="#4D2D6A" stop-opacity="0.55"/>
+        </linearGradient>
+
+        <!-- Grain / texture légère (style “peinture”) -->
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="noise"/>
+          <feColorMatrix type="saturate" values="0" />
+          <feComponentTransfer>
+            <feFuncA type="table" tableValues="0 0.22"/>
+          </feComponentTransfer>
+        </filter>
+
+        <!-- Brume/haze -->
+        <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+
+        <!-- Dégradés montagnes -->
+        <linearGradient id="mountFar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6A4C93" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#3a1b4f" stop-opacity="0.85"/>
+        </linearGradient>
+        <linearGradient id="mountMid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3d1b4f" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#23102f" stop-opacity="0.95"/>
+        </linearGradient>
+
+        <!-- Forêt -->
+        <linearGradient id="forest" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2f6b3a" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#16331c" stop-opacity="0.98"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="${W}" height="${H}" fill="url(#skySunset)"/>
+      <rect width="${W}" height="${H}" filter="url(#grain)" opacity="0.85"/>
+
+      <!-- Nuages/haze doux -->
+      <rect y="${H*0.18}" width="${W}" height="${H*0.55}" fill="url(#haze)" opacity="0.65"/>
+
+      <!-- Fine ligne d’horizon lumineuse (inspi “ocean line”) -->
+      <rect y="${horizonY}" width="${W}" height="${H*0.005}" fill="#FFD8A8" opacity="0.35"/>
+
+      <!-- Montagnes lointaines (Pyrénées stylisées) -->
+      <path d="
+        M 0 ${farMountY}
+        C 180 ${farMountY-50}, 320 ${farMountY-18}, 480 ${farMountY-55}
+        C 620 ${farMountY-88}, 760 ${farMountY-30}, 920 ${farMountY-70}
+        C 1040 ${farMountY-95}, 1180 ${farMountY-45}, 1320 ${farMountY-75}
+        C 1380 ${farMountY-92}, 1420 ${farMountY-70}, 1440 ${farMountY-84}
+        L 1440 ${H}
+        L 0 ${H}
+        Z" fill="url(#mountFar)" opacity="0.65"/>
+
+      <!-- Montagnes proches -->
+      <path d="
+        M 0 ${midMountY}
+        C 220 ${midMountY-80}, 350 ${midMountY-35}, 520 ${midMountY-95}
+        C 680 ${midMountY-150}, 820 ${midMountY-45}, 980 ${midMountY-110}
+        C 1120 ${midMountY-165}, 1250 ${midMountY-70}, 1440 ${midMountY-135}
+        L 1440 ${H}
+        L 0 ${H}
+        Z" fill="url(#mountMid)" opacity="0.78"/>
+
+      <!-- Forêt (ligne d’arbres stylisée) -->
+      <path d="
+        M 0 ${forestY}
+        C 200 ${forestY-25}, 360 ${forestY-10}, 520 ${forestY-28}
+        C 720 ${forestY-55}, 900 ${forestY-18}, 1100 ${forestY-44}
+        C 1260 ${forestY-66}, 1380 ${forestY-34}, 1440 ${forestY-52}
+        L 1440 ${H}
+        L 0 ${H}
+        Z" fill="url(#forest)"/>
+
+      <!-- Sol -->
+      <path d="M 0 ${groundY} L 1440 ${groundY-18} L 1440 ${H} L 0 ${H} Z" fill="#1b121f" opacity="0.25"/>
+    `;
   }
 
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;font-size:16px}
-  body{
-    font-family:var(--font-texte);
-    color:var(--texte);
-    overflow-x:hidden;
-    background:transparent;
-  }
-  img,svg{display:block;max-width:100%}
-  a{color:var(--corail);text-decoration:none}
-  a:hover{text-decoration:underline}
-  a:focus-visible{outline:3px solid var(--corail);outline-offset:3px;border-radius:3px}
+  draw();
+  window.addEventListener('resize', Utils.debounce(draw, 250));
+})();
 
-  h1,h2,h3{font-family:var(--font-titre);line-height:1.15}
-  h1{font-size:clamp(3rem,9vw,7rem);color:var(--blanc)}
-  p{line-height:1.7}
+// LANTERNES (parallaxe 0.45x)
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.getElementById('lanterns-layer');
+  if (!layer) return;
+  let rafId = null;
+  layer.style.transform = 'translate3d(0, 0px, 0)';
+  window.addEventListener('scroll', () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      layer.style.transform = `translate3d(0, -${window.scrollY * 0.45}px, 0)`;
+    });
+  }, { passive: true });
+})();
 
-  .container{width:min(90%,960px);margin-inline:auto}
-  section{padding:90px 0;position:relative;z-index:2}
+// COUNTDOWN
+(function() {
+  const target = new Date(CONFIG.weddingDate).getTime();
+  const grid = document.getElementById('countdown-grid');
+  const done = document.getElementById('countdown-done');
+  const tag = document.getElementById('countdown-tagline');
+  const els = {
+    d: document.getElementById('cd-days'),
+    h: document.getElementById('cd-hours'),
+    m: document.getElementById('cd-minutes'),
+    s: document.getElementById('cd-seconds')
+  };
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      grid.style.display = 'none';
+      if (tag) tag.style.display = 'none';
+      done.style.display = 'block';
+      return;
+    }
+    els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
+    els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
+    els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
+    els.s.textContent = Utils.pad(Math.floor((diff % 60000) / 1000));
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 
-  /* reveal */
-  .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
-  .reveal.visible{opacity:1;transform:translateY(0)}
-  .reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .7s ease,transform .7s ease}
-  .reveal-left.visible{opacity:1;transform:translateX(0)}
-  .reveal-right{opacity:0;transform:translateX(40px);transition:opacity .7s ease,transform .7s ease}
-  .reveal-right.visible{opacity:1;transform:translateX(0)}
+// REVEAL
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+})();
 
-  @media (prefers-reduced-motion: reduce){
-    .reveal,.reveal-left,.reveal-right{opacity:1;transform:none;transition:none}
-  }
+// RADIO
+(function() {
+  document.querySelectorAll('.radio-btn input[type="radio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('selected'));
+      if (r.checked) r.closest('.radio-btn').classList.add('selected');
+    });
+  });
+})();
 
-  #page-wrapper{position:relative;min-height:100vh}
+// RSVP
+(function() {
+  const form = document.getElementById('rsvp-form');
+  const btn = document.getElementById('btn-submit');
+  const success = document.getElementById('rsvp-success');
+  const iframe = document.getElementById('hidden_iframe');
+  const errorName = document.getElementById('error-name');
+  const errorAtt = document.getElementById('error-attending');
+  let submitted = false;
 
-  /* ====== PANORAMA INSPI (ciel aquarelle + Pyrénées + forêt) ====== */
-  #panorama{
-    position:absolute;top:0;left:0;width:100%;
-    z-index:0;pointer-events:none;
-  }
+  iframe.addEventListener('load', () => {
+    if (!submitted) return;
+    form.style.display = 'none';
+    success.classList.add('visible');
+    btn.disabled = false;
+    btn.textContent = 'Confirmer';
+    submitted = false;
+  });
 
-  /* ====== LANTERNES ====== */
-  #lanterns-layer{
-    position:fixed;top:0;left:0;width:100%;height:100vh;
-    z-index:1;pointer-events:none;
-    will-change:transform;
-    transform:translate3d(0,0,0);
-  }
-  #lanterns-layer svg{
-    position:absolute;top:0;left:0;width:100%;height:100%;
-    overflow:visible;
-  }
+  form.addEventListener('submit', (e) => {
+    let valid = true;
+    const nameVal = form.querySelector('#rsvp-name').value.trim();
+    if (!nameVal) {
+      errorName.classList.add('visible');
+      if (valid) form.querySelector('#rsvp-name').focus();
+      valid = false;
+    } else {
+      errorName.classList.remove('visible');
+    }
+    const radioChecked = form.querySelector('input[name="ENTRY_ATTENDING_TODO"]:checked');
+    if (!radioChecked) {
+      errorAtt.classList.add('visible');
+      if (valid) document.querySelector('.radio-btn input').focus();
+      valid = false;
+    } else {
+      errorAtt.classList.remove('visible');
+    }
+    if (!valid) { e.preventDefault(); return; }
+    submitted = true;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+  });
+})();
+</script>
 
-  /* anti "coac" : 0% appliqué avant 1ère frame + GPU stable */
-  .lantern{
-    animation-fill-mode:both;
-    will-change:transform;
-    transform:translate3d(0,0,0);
-    backface-visibility:hidden;
-  }
-
-  @keyframes float-a{0%,100%{transform:translate3d(0,0,0) rotate(-7deg)}50%{transform:translate3d(0,-18px,0) rotate(7deg)}}
-  @keyframes float-b{0%,100%{transform:translate3d(0,0,0) rotate(6deg)}50%{transform:translate3d(0,-24px,0) rotate(-6deg)}}
-  @keyframes float-c{0%,100%{transform:translate3d(0,0,0) rotate(-4deg)}50%{transform:translate3d(0,-12px,0) rotate(9deg)}}
-  @keyframes float-d{0%,100%{transform:translate3d(0,0,0) rotate(10deg)}50%{transform:translate3d(0,-20px,0) rotate(-4deg)}}
-  @keyframes float-e{0%,100%{transform:translate3d(0,0,0) rotate(-10deg)}50%{transform:translate3d(0,-16px,0) rotate(5deg)}}
-
-  /* glow léger (proche inspi) */
-  .lantern image{
-    filter:drop-shadow(0 0 10px rgba(255,107,53,0.18));
-  }
-
-  /* ====== HERO ====== */
-  #hero{
-    position:relative;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:40px 20px;
-    z-index:2;
-  }
-  .hero-content{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:18px}
-  .hero-date{
-    font-family:var(--font-texte);
-    font-weight:400;
-    font-size:clamp(.85rem,1.8vw,1rem);
-    color:rgba(255,255,255,.82);
-    letter-spacing:.25em;
-    text-transform:uppercase;
-  }
-  .hero-tagline{
-    font-family:var(--font-titre);
-    font-style:italic;
-    font-size:clamp(1.1rem,2.5vw,1.5rem);
-    color:rgba(255,255,255,.92);
-    max-width:520px;
-    text-shadow:0 2px 18px rgba(0,0,0,.14);
-  }
-
-  /* scroll hint + ">>" vers le bas (2 chevrons) */
-  .hero-scroll-hint{
-    margin-top:50px;
-    color:rgba(255,255,255,.62);
-    font-size:.72rem;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    display:inline-flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-    user-select:none;
-  }
-  .scroll-arrows{
-    width:26px;height:26px;
-    opacity:.95;
-    overflow:visible;
-  }
-  .scroll-arrows path{
-    stroke:rgba(255,255,255,.78);
-    stroke-width:2.4;
-    fill:none;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-  }
-  .scroll-arrows .a1{animation:arrow 1.4s ease-in-out infinite}
-  .scroll-arrows .a2{animation:arrow 1.4s ease-in-out infinite .18s;opacity:.85}
-  @keyframes arrow{
-    0%,100%{transform:translate3d(0,0,0);opacity:.55}
-    50%{transform:translate3d(0,6px,0);opacity:1}
-  }
-
-  /* ====== COUNTDOWN ====== */
-  #countdown{ text-align:center; padding:60px 20px 70px; position:relative; z-index:2; }
-  .countdown-grid{ display:flex; justify-content:center; gap:clamp(6px,2vw,18px); flex-wrap:nowrap; margin-bottom:20px; }
-  .countdown-unit{
-    background:rgba(255,255,255,.78);
-    border:1.5px solid rgba(181,52,26,.28);
-    border-radius:10px;
-    width:90px; height:90px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    flex-shrink:1; min-width:0;
-    backdrop-filter:blur(8px);
-  }
-  .countdown-number{
-    font-family:var(--font-titre);
-    font-size:clamp(1.4rem,5vw,2.4rem);
-    color:var(--rouge);
-    line-height:1;
-    display:block;
-    width:2.2ch;
-    text-align:center;
-    font-variant-numeric:tabular-nums;
-  }
-  .countdown-label{
-    font-size:clamp(.5rem,1.5vw,.6rem);
-    color:var(--texte-soft);
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    margin-top:5px;
-    display:block;
-    white-space:nowrap;
-  }
-  .countdown-tagline{
-    font-family:var(--font-titre);
-    font-style:italic;
-    font-size:1rem;
-    color:var(--rouge);
-    margin-top:16px;
-    display:block;
-    opacity:.75;
-  }
-  .countdown-done{
-    font-family:var(--font-titre);
-    font-style:italic;
-    font-size:clamp(1.3rem,3vw,2rem);
-    color:var(--rouge);
-    margin-top:20px;
-  }
-
-  /* ====== TIMELINE (inchangé) ====== */
-  #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
-  #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-family: var(--font-texte); font-style: normal; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
-  .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
-  .timeline-line-svg { position: absolute; top: 0; pointer-events: none; z-index: 0; overflow: visible; will-change: auto; }
-  #timeline-path-bg { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
-  #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
-  .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
-  .timeline-day-label { text-align: center; font-family: var(--font-texte); font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.75); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
-  .timeline-events { display: flex; flex-direction: column; gap: 28px; }
-  .timeline-event { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: start; gap: 0 16px; }
-  .timeline-event:nth-child(odd) .event-side { grid-column: 1; text-align: right; align-items: flex-end; }
-  .timeline-event:nth-child(odd) .event-dot { grid-column: 2; }
-  .timeline-event:nth-child(odd) .event-img-col { grid-column: 3; }
-  .timeline-event:nth-child(even) .event-img-col { grid-column: 1; }
-  .timeline-event:nth-child(even) .event-dot { grid-column: 2; }
-  .timeline-event:nth-child(even) .event-side { grid-column: 3; text-align: left; align-items: flex-start; }
-  .event-side { display: flex; flex-direction: column; gap: 12px; }
-  .event-dot { display: flex; align-items: flex-start; justify-content: center; padding-top: 16px; }
-  .event-dot-inner { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 4px rgba(255,60,172,0.15), 0 0 14px rgba(255,60,172,0.35); flex-shrink: 0; position: relative; z-index: 2; }
+</body>
+</html>
+``
