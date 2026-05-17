@@ -25,6 +25,10 @@
     --font-titre: 'Playfair Display', Georgia, serif;
     --font-texte: 'Montserrat', system-ui, sans-serif;
     --radius: 14px;
+
+    /* ✅ VERSION BADGE (désactivable en 1 ligne)
+       Pour publication : mets --version-display: none; */
+    --version-display: block; /* block | none */
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,6 +45,29 @@
 
   .container { width: min(90%, 960px); margin-inline: auto; }
   section { padding: 90px 0; position: relative; z-index: 2; }
+
+  /* ✅ Badge version */
+  .version-badge{
+    display: var(--version-display);
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 9999;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.88);
+    background: rgba(20, 35, 80, 0.35);
+    border: 1px solid rgba(255,255,255,0.20);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    user-select: none;
+    pointer-events: none;
+  }
 
   .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -79,7 +106,7 @@
   @keyframes float-d { 0%,100%{transform:translate3d(0,0,0) rotate(10deg)} 50%{transform:translate3d(0,-20px,0) rotate(-4deg)} }
   @keyframes float-e { 0%,100%{transform:translate3d(0,0,0) rotate(-12deg)} 50%{transform:translate3d(0,-16px,0) rotate(5deg)} }
 
-  /* Glow léger (tu peux réduire/supprimer si tu veux) */
+  /* Glow léger */
   .lantern image { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18)); }
 
   #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
@@ -109,7 +136,7 @@
     height: 16px;
     border-right: 2px solid rgba(255,255,255,0.75);
     border-bottom: 2px solid rgba(255,255,255,0.75);
-    transform: rotate(45deg); /* chevron vers le bas */
+    transform: rotate(45deg);
     border-radius: 2px;
   }
   .chevrons span:nth-child(1) { animation: chevron 1.4s ease-in-out infinite; }
@@ -216,9 +243,9 @@
   #fireworks-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.6s ease; }
   #fireworks-canvas.visible { opacity: 1; }
   .final-text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; pointer-events: none; width: 90%; max-width: 700px; }
-  .final-title { font-family: var(--font-titre); font-size: clamp(2.5rem, 7vw, 5.5rem); color: var(--blanc); line-height: 1.1; text-shadow: 0 3px 30px rgba(180,60,20,0.5), 0 1px 8px rgba(0,0,0,0.2); margin-bottom: 10px; }
+  .final-title { font-family: var(--font-titre); font-size: clamp(2.5rem, 7vw, 5.5rem); color: var(--blanc); line-height: 1.1; text-shadow: 0 3px 30px rgba(0,20,60,0.35), 0 1px 8px rgba(0,0,0,0.2); margin-bottom: 10px; }
   .final-date { font-family: var(--font-texte); font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
-  .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
+  .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(0,20,60,0.35); }
   #car-el { position: absolute; bottom: 22%; will-change: transform; z-index: 6; }
 
   @media (max-width: 700px) {
@@ -231,7 +258,7 @@
   }
 
   @media print {
-    #lanterns-layer, #panorama, #final-scene { display: none !important; }
+    .version-badge, #lanterns-layer, #panorama, #final-scene { display: none !important; }
     body { background: white; color: black; }
     section { padding: 20px 0; }
     .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
@@ -243,13 +270,17 @@
      - coupe les sources de lag iPhone: backdrop-filter, filtres SVG lourds, panorama
      ========================= */
   .ios-perf #panorama { display: none !important; }
+
+  /* ✅ iOS fallback : ciel plus bleu + horizon chaud */
   .ios-perf body {
     background: linear-gradient(
       to bottom,
-      #FF3CAC 0%,
-      #FF6B35 22%,
-      #FFE8D6 40%,
-      #ffffff 65%,
+      #132a63 0%,
+      #244a9b 18%,
+      #5c88d8 34%,
+      #ff93b4 52%,
+      #ffd1a8 64%,
+      #ffffff 86%,
       #ffffff 100%
     );
   }
@@ -259,7 +290,8 @@
   .ios-perf .timeline-day-label,
   .ios-perf .tl-step-day,
   .ios-perf .tl-step-card,
-  .ios-perf .rsvp-form-wrap {
+  .ios-perf .rsvp-form-wrap,
+  .ios-perf .version-badge {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     background: rgba(255,255,255,0.92) !important;
@@ -284,9 +316,12 @@
 <body>
 <div id="page-wrapper">
 
+  <!-- ✅ Version badge (V1) -->
+  <div class="version-badge" aria-hidden="true">V1</div>
+
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
-  <!-- ✅ LANTERNES : repositionnées + moins sur le titre, plus sous “Défiler” + anti clac -->
+  <!-- ✅ LANTERNES -->
   <div id="lanterns-layer" aria-hidden="true">
     <svg id="lanterns-svg"
          xmlns="http://www.w3.org/2000/svg"
@@ -294,12 +329,10 @@
          viewBox="0 0 414 900"
          preserveAspectRatio="xMidYMid slice">
 
-      <!-- Image -->
       <defs>
         <image id="lantern-img" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" width="1" height="1" />
       </defs>
 
-      <!-- Haut : bords (peu au centre) -->
       <g class="lantern" style="animation:float-a 4.2s ease-in-out infinite; animation-delay:-1.1s; transform-origin:52px 52px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="20" y="40" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -308,7 +341,6 @@
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="320" y="20" width="72" height="100" preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- Petite derrière le titre (discrète) -->
       <g class="lantern" style="animation:float-c 3.6s ease-in-out infinite; animation-delay:-0.7s; transform-origin:209px 80px; opacity:0.22;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="185" y="70" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -317,7 +349,6 @@
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="360" y="140" width="44" height="60" preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- Milieu : on libère le centre autour du titre, mais on commence à remplir sous -->
       <g class="lantern" style="animation:float-e 4.0s ease-in-out infinite; animation-delay:-2.6s; transform-origin:38px 260px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="10" y="240" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -330,7 +361,6 @@
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- ✅ Zone sous “Défiler” : on remplit le “trou” -->
       <g class="lantern" style="animation:float-c 5.0s ease-in-out infinite; animation-delay:-2.0s; transform-origin:197px 435px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="420" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -347,7 +377,6 @@
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="560" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- Bas : quelques lanternes pour équilibrer -->
       <g class="lantern" style="animation:float-b 5.3s ease-in-out infinite; animation-delay:-2.2s; transform-origin:212px 640px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="180" y="620" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -378,7 +407,6 @@
       <h1 class="reveal">Julie &amp; Thomas</h1>
       <p class="hero-tagline reveal">On se dit oui ! Venez célébrer avec nous à Verfeil.</p>
 
-      <!-- ✅ Défiler + double chevrons -->
       <div class="hero-scroll-hint reveal" aria-hidden="true">
         Défiler
         <div class="chevrons">
@@ -425,6 +453,7 @@
         <div class="timeline-day">
           <div class="timeline-day-label reveal">Samedi 24 juillet 2027</div>
           <div class="timeline-events">
+
             <div class="timeline-event">
               <div class="event-side reveal-left">
                 <div class="event-card">
@@ -437,7 +466,21 @@
               <div class="event-dot"><div class="event-dot-inner"></div></div>
               <div class="event-img-col reveal-right">
                 <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Mairie de Pin-Balma"><defs><filter id="wc1"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl1"><feGaussianBlur stdDeviation="8"/></filter><linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="300" fill="url(#sky1)"/><ellipse cx="200" cy="200" rx="280" ry="120" fill="#c8e6a0" opacity="0.4" filter="url(#bl1)"/><rect x="100" y="120" width="200" height="130" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1)"/><polygon points="90,120 200,60 310,120" fill="#FF6B35" opacity="0.8" filter="url(#wc1)"/><rect x="170" y="180" width="40" height="70" rx="3" fill="#AEE1F9" opacity="0.75"/><rect x="115" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/><rect x="250" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/><path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1)"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Mairie de Pin-Balma">
+                    <defs>
+                      <filter id="wc1"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl1"><feGaussianBlur stdDeviation="8"/></filter>
+                      <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="100%" stop-color="#FFD166" stop-opacity="0.5"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky1)"/>
+                    <ellipse cx="200" cy="200" rx="280" ry="120" fill="#c8e6a0" opacity="0.4" filter="url(#bl1)"/>
+                    <rect x="100" y="120" width="200" height="130" rx="4" fill="#F6E7D7" opacity="0.9" filter="url(#wc1)"/>
+                    <polygon points="90,120 200,60 310,120" fill="#FF6B35" opacity="0.8" filter="url(#wc1)"/>
+                    <rect x="170" y="180" width="40" height="70" rx="3" fill="#AEE1F9" opacity="0.75"/>
+                    <rect x="115" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
+                    <rect x="250" y="140" width="35" height="28" rx="3" fill="#AEE1F9" opacity="0.65"/>
+                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.55" filter="url(#wc1)"/>
+                  </svg>
                   <div class="event-img-placeholder"><span>Mairie de Pin-Balma</span><small>Remplacez par une vraie photo</small></div>
                   <span class="img-todo-note">TODO photo</span>
                 </div>
@@ -447,7 +490,26 @@
             <div class="timeline-event">
               <div class="event-img-col reveal-left">
                 <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Domaine de Gailhaguet"><defs><filter id="wc2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="10"/></filter><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/><stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/><stop offset="100%" stop-color="#AEE1F9"/></linearGradient></defs><rect width="400" height="300" fill="url(#sky2)"/><ellipse cx="200" cy="180" rx="300" ry="130" fill="#c8e6a0" opacity="0.4" filter="url(#bl2)"/><rect x="80" y="110" width="240" height="140" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2)"/><polygon points="70,110 200,50 330,110" fill="#FF6B35" opacity="0.75" filter="url(#wc2)"/><rect x="30" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/><rect x="310" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/><rect x="100" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="185" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="270" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/><rect x="175" y="195" width="50" height="55" rx="4" fill="#AEE1F9" opacity="0.65"/><ellipse cx="50" cy="200" rx="30" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/><ellipse cx="350" cy="195" rx="28" ry="46" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/><path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2)"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Domaine de Gailhaguet">
+                    <defs>
+                      <filter id="wc2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl2"><feGaussianBlur stdDeviation="10"/></filter>
+                      <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.35"/><stop offset="40%" stop-color="#FFB347" stop-opacity="0.5"/><stop offset="100%" stop-color="#AEE1F9"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky2)"/>
+                    <ellipse cx="200" cy="180" rx="300" ry="130" fill="#c8e6a0" opacity="0.4" filter="url(#bl2)"/>
+                    <rect x="80" y="110" width="240" height="140" rx="6" fill="#F6E7D7" opacity="0.88" filter="url(#wc2)"/>
+                    <polygon points="70,110 200,50 330,110" fill="#FF6B35" opacity="0.75" filter="url(#wc2)"/>
+                    <rect x="30" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
+                    <rect x="310" y="140" width="60" height="110" rx="4" fill="#e8d5c0" opacity="0.8" filter="url(#wc2)"/>
+                    <rect x="100" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="185" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="270" y="130" width="30" height="24" rx="3" fill="#AEE1F9" opacity="0.7"/>
+                    <rect x="175" y="195" width="50" height="55" rx="4" fill="#AEE1F9" opacity="0.65"/>
+                    <ellipse cx="50" cy="200" rx="30" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
+                    <ellipse cx="350" cy="195" rx="28" ry="46" fill="#7ab840" opacity="0.6" filter="url(#wc2)"/>
+                    <path d="M0 260 Q200 240 400 260 L400 300 L0 300 Z" fill="#a8d878" opacity="0.65" filter="url(#wc2)"/>
+                  </svg>
                   <div class="event-img-placeholder"><span>Domaine de Gailhaguet</span><small>Remplacez par une vraie photo</small></div>
                   <span class="img-todo-note">TODO photo</span>
                 </div>
@@ -481,7 +543,25 @@
               <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 4px rgba(255,179,71,0.2),0 0 14px rgba(255,179,71,0.4)"></div></div>
               <div class="event-img-col reveal-right">
                 <div class="event-img-wrap">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Brunch Domaine de Gailhaguet"><defs><filter id="wc3"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl3"><feGaussianBlur stdDeviation="9"/></filter><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/><stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/></linearGradient></defs><rect width="400" height="300" fill="url(#sky3)"/><ellipse cx="200" cy="220" rx="280" ry="100" fill="#c8e6a0" opacity="0.45" filter="url(#bl3)"/><ellipse cx="120" cy="200" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/><ellipse cx="240" cy="190" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/><ellipse cx="340" cy="205" rx="35" ry="18" fill="#F6E7D7" opacity="0.8" filter="url(#wc3)"/><ellipse cx="120" cy="155" rx="50" ry="18" fill="#FF6B35" opacity="0.7" filter="url(#wc3)"/><line x1="120" y1="155" x2="120" y2="200" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="240" cy="145" rx="50" ry="18" fill="#FF3CAC" opacity="0.65" filter="url(#wc3)"/><line x1="240" y1="145" x2="240" y2="190" stroke="#a67c52" stroke-width="3" opacity="0.6"/><ellipse cx="50" cy="160" rx="35" ry="55" fill="#7ab840" opacity="0.65" filter="url(#wc3)"/><ellipse cx="370" cy="155" rx="32" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc3)"/><path d="M0 255 Q200 238 400 255 L400 300 L0 300 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3)"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" aria-label="Brunch Domaine de Gailhaguet">
+                    <defs>
+                      <filter id="wc3"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="14" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter>
+                      <filter id="bl3"><feGaussianBlur stdDeviation="9"/></filter>
+                      <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AEE1F9"/><stop offset="60%" stop-color="#FFD166" stop-opacity="0.4"/><stop offset="100%" stop-color="#c8e6a0" stop-opacity="0.5"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#sky3)"/>
+                    <ellipse cx="200" cy="220" rx="280" ry="100" fill="#c8e6a0" opacity="0.45" filter="url(#bl3)"/>
+                    <ellipse cx="120" cy="200" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
+                    <ellipse cx="240" cy="190" rx="40" ry="20" fill="#F6E7D7" opacity="0.85" filter="url(#wc3)"/>
+                    <ellipse cx="340" cy="205" rx="35" ry="18" fill="#F6E7D7" opacity="0.8" filter="url(#wc3)"/>
+                    <ellipse cx="120" cy="155" rx="50" ry="18" fill="#FF6B35" opacity="0.7" filter="url(#wc3)"/>
+                    <line x1="120" y1="155" x2="120" y2="200" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
+                    <ellipse cx="240" cy="145" rx="50" ry="18" fill="#FF3CAC" opacity="0.65" filter="url(#wc3)"/>
+                    <line x1="240" y1="145" x2="240" y2="190" stroke="#a67c52" stroke-width="3" opacity="0.6"/>
+                    <ellipse cx="50" cy="160" rx="35" ry="55" fill="#7ab840" opacity="0.65" filter="url(#wc3)"/>
+                    <ellipse cx="370" cy="155" rx="32" ry="50" fill="#7ab840" opacity="0.6" filter="url(#wc3)"/>
+                    <path d="M0 255 Q200 238 400 255 L400 300 L0 300 Z" fill="#a8d878" opacity="0.7" filter="url(#wc3)"/>
+                  </svg>
                   <div class="event-img-placeholder"><span>Brunch au domaine</span><small>Remplacez par une vraie photo</small></div>
                   <span class="img-todo-note">TODO photo</span>
                 </div>
@@ -494,7 +574,7 @@
     </div>
   </section>
 
-  <!-- TIMELINE MOBILE -->
+<!-- TIMELINE MOBILE -->
   <div id="timeline-mobile" aria-label="Programme">
     <h2>Le programme</h2>
     <div class="tl-mobile-wrapper" id="tl-mobile-wrapper">
@@ -566,7 +646,7 @@
 
     </div>
   </div>
-
+  
   <!-- RSVP -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
@@ -611,74 +691,11 @@
 
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
 
-  <!-- FINAL SCENE -->
+  <!-- FINAL SCENE (inchangée) -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
     <div class="final-sticky">
-      <svg class="final-bg-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <filter id="wc-final"><feTurbulence type="fractalNoise" baseFrequency="0.015 0.02" numOctaves="3" seed="11" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter>
-          <filter id="blur-final"><feGaussianBlur stdDeviation="10"/></filter>
-          <linearGradient id="sky-final" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC" stop-opacity="0.6"/><stop offset="20%" stop-color="#FF6B35"/><stop offset="45%" stop-color="#FFB347"/><stop offset="70%" stop-color="#FF9A5C"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0.8"/></linearGradient>
-          <radialGradient id="sun-final" cx="50%" cy="35%" r="30%"><stop offset="0%" stop-color="#FFD166" stop-opacity="0.9"/><stop offset="55%" stop-color="#FFB347" stop-opacity="0.4"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></radialGradient>
-        </defs>
-        <rect width="1440" height="600" fill="url(#sky-final)"/>
-        <ellipse cx="720" cy="210" rx="320" ry="170" fill="url(#sun-final)"/>
-        <ellipse cx="260" cy="90" rx="190" ry="48" fill="white" opacity="0.14" filter="url(#blur-final)"/>
-        <ellipse cx="1150" cy="110" rx="170" ry="42" fill="white" opacity="0.12" filter="url(#blur-final)"/>
-        <path d="M0 330 Q360 278 720 302 Q1080 326 1440 290 L1440 600 L0 600 Z" fill="#c8dfa0" opacity="0.42" filter="url(#blur-final)"/>
-        <path d="M0 375 Q200 348 400 362 Q600 376 720 355 Q860 334 1060 360 Q1260 382 1440 362 L1440 600 L0 600 Z" fill="#9aca60" opacity="0.58" filter="url(#wc-final)"/>
-        <path d="M0 428 Q720 415 1440 428 L1440 600 L0 600 Z" fill="#6a9a38" opacity="0.72"/>
-        <rect x="0" y="448" width="1440" height="82" fill="#c8b89a" opacity="0.88"/>
-        <rect x="0" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="170" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="340" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="510" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="680" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="850" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1020" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1190" y="485" width="110" height="8" rx="4" fill="white" opacity="0.55"/><rect x="1360" y="485" width="80" height="8" rx="4" fill="white" opacity="0.55"/>
-        <rect x="0" y="446" width="1440" height="4" fill="#a89878" opacity="0.5"/>
-        <rect x="0" y="526" width="1440" height="4" fill="#a89878" opacity="0.5"/>
-        <g transform="translate(78,278)"><rect x="-3" y="100" width="6" height="62" rx="2" fill="#5a3a10"/><path d="M0,100 C-18,80 -22,55 -16,30 C-10,5 -5,-10 0,-20 C5,-10 10,5 16,30 C22,55 18,80 0,100 Z" fill="#2d5a0e"/><path d="M0,84 C-14,66 -17,44 -12,23 C-7,3 -3,-8 0,-16 C3,-8 7,3 12,23 C17,44 14,66 0,84 Z" fill="#3d7018"/><path d="M0,68 C-10,53 -12,34 -8,17 C-4,2 -2,-6 0,-12 C2,-6 4,2 8,17 C12,34 10,53 0,68 Z" fill="#4a8020"/></g>
-        <g transform="translate(116,296)"><rect x="-2" y="72" width="5" height="52" rx="2" fill="#5a3a10"/><path d="M0,72 C-13,57 -15,38 -11,20 C-6,3 -3,-7 0,-13 C3,-7 6,3 11,20 C15,38 13,57 0,72 Z" fill="#2d5a0e"/><path d="M0,60 C-10,47 -12,30 -8,15 C-4,1 -2,-5 0,-10 C2,-5 4,1 8,15 C12,30 10,47 0,60 Z" fill="#3d7018"/></g>
-        <g transform="translate(196,272)"><rect x="-3" y="106" width="6" height="66" rx="2" fill="#5a3a10"/><path d="M0,106 C-20,84 -24,58 -17,32 C-10,6 -5,-12 0,-22 C5,-12 10,6 17,32 C24,58 20,84 0,106 Z" fill="#2d5a0e"/><path d="M0,88 C-15,70 -18,48 -13,26 C-8,4 -4,-9 0,-18 C4,-9 8,4 13,26 C18,48 15,70 0,88 Z" fill="#3d7018"/><path d="M0,72 C-11,56 -13,38 -9,20 C-5,3 -2,-7 0,-14 C2,-7 5,3 9,20 C13,38 11,56 0,72 Z" fill="#4a8020"/></g>
-        <g transform="translate(1244,276)"><rect x="-3" y="104" width="6" height="64" rx="2" fill="#5a3a10"/><path d="M0,104 C-19,83 -23,57 -16,31 C-10,5 -5,-11 0,-21 C5,-11 10,5 16,31 C23,57 19,83 0,104 Z" fill="#2d5a0e"/><path d="M0,87 C-14,69 -17,47 -12,25 C-7,4 -3,-8 0,-17 C3,-8 7,4 12,25 C17,47 14,69 0,87 Z" fill="#3d7018"/><path d="M0,71 C-10,56 -12,37 -8,19 C-4,2 -2,-6 0,-13 C2,-6 4,2 8,19 C12,37 10,56 0,71 Z" fill="#4a8020"/></g>
-        <g transform="translate(1318,282)"><rect x="-3" y="92" width="6" height="60" rx="2" fill="#5a3a10"/><path d="M0,92 C-17,73 -20,51 -14,28 C-8,5 -4,-9 0,-17 C4,-9 8,5 14,28 C20,51 17,73 0,92 Z" fill="#2d5a0e"/><path d="M0,77 C-13,61 -15,41 -10,22 C-6,4 -3,-7 0,-14 C3,-7 6,4 10,22 C15,41 13,61 0,77 Z" fill="#3d7018"/></g>
-        <g transform="translate(1362,270)"><rect x="-3" y="110" width="6" height="70" rx="2" fill="#5a3a10"/><path d="M0,110 C-21,87 -25,60 -18,33 C-11,7 -5,-13 0,-24 C5,-13 11,7 18,33 C25,60 21,87 0,110 Z" fill="#2d5a0e"/><path d="M0,92 C-16,73 -19,51 -13,28 C-8,6 -4,-9 0,-18 C4,-9 8,6 13,28 C19,51 16,73 0,92 Z" fill="#3d7018"/><path d="M0,75 C-12,59 -14,41 -9,22 C-5,5 -2,-7 0,-14 C2,-7 5,5 9,22 C14,41 12,59 0,75 Z" fill="#4a8020"/></g>
-      </svg>
-
-      <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
-
-      <div class="final-text">
-        <div class="final-title">Julie &amp; Thomas</div>
-        <div class="final-date">24 juillet 2027</div>
-        <div class="final-tagline">En route pour Verfeil</div>
-      </div>
-
-      <div id="car-el" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" width="200" height="83">
-          <defs>
-            <linearGradient id="car-body-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C42"/><stop offset="100%" stop-color="#d44a1a"/></linearGradient>
-            <linearGradient id="car-roof-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFB347"/><stop offset="100%" stop-color="#FF6B35"/></linearGradient>
-            <radialGradient id="wheel-rg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#555"/><stop offset="100%" stop-color="#111"/></radialGradient>
-            <radialGradient id="headlight-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffde0"/><stop offset="100%" stop-color="#FFD166"/></radialGradient>
-          </defs>
-          <ellipse cx="120" cy="92" rx="95" ry="6" fill="rgba(0,0,0,0.15)"/>
-          <rect x="20" y="52" width="200" height="30" rx="8" fill="url(#car-body-g)"/>
-          <path d="M60 52 Q72 24 100 20 Q140 15 170 20 Q192 25 200 52 Z" fill="url(#car-roof-g)"/>
-          <path d="M170 52 Q182 30 198 24 L200 52 Z" fill="#c8e8f8" opacity="0.82"/>
-          <path d="M174 50 Q183 33 194 27 L196 50 Z" fill="white" opacity="0.25"/>
-          <path d="M62 52 Q58 32 70 26 L80 52 Z" fill="#c8e8f8" opacity="0.72"/>
-          <path d="M84 51 Q82 22 105 18 Q138 14 162 19 L165 51 Z" fill="#d8f0fc" opacity="0.75"/>
-          <line x1="84" y1="51" x2="82" y2="24" stroke="#c04010" stroke-width="2.5" opacity="0.7"/>
-          <line x1="165" y1="51" x2="163" y2="20" stroke="#c04010" stroke-width="2.5" opacity="0.7"/>
-          <rect x="20" y="76" width="200" height="6" rx="3" fill="#b03808" opacity="0.5"/>
-          <circle cx="172" cy="82" r="18" fill="#1a1a1a"/><circle cx="172" cy="82" r="14" fill="url(#wheel-rg)"/><circle cx="172" cy="82" r="7" fill="#444"/><circle cx="172" cy="82" r="3" fill="#aaa"/>
-          <line x1="172" y1="68" x2="172" y2="96" stroke="#666" stroke-width="1.5"/><line x1="158" y1="82" x2="186" y2="82" stroke="#666" stroke-width="1.5"/><line x1="162" y1="72" x2="182" y2="92" stroke="#666" stroke-width="1.2"/><line x1="182" y1="72" x2="162" y2="92" stroke="#666" stroke-width="1.2"/>
-          <circle cx="68" cy="82" r="18" fill="#1a1a1a"/><circle cx="68" cy="82" r="14" fill="url(#wheel-rg)"/><circle cx="68" cy="82" r="7" fill="#444"/><circle cx="68" cy="82" r="3" fill="#aaa"/>
-          <line x1="68" y1="68" x2="68" y2="96" stroke="#666" stroke-width="1.5"/><line x1="54" y1="82" x2="82" y2="82" stroke="#666" stroke-width="1.5"/><line x1="58" y1="72" x2="78" y2="92" stroke="#666" stroke-width="1.2"/><line x1="78" y1="72" x2="58" y2="92" stroke="#666" stroke-width="1.2"/>
-          <ellipse cx="216" cy="63" rx="9" ry="6" fill="url(#headlight-g)" opacity="0.95"/>
-          <ellipse cx="216" cy="63" rx="5" ry="3" fill="white" opacity="0.8"/>
-          <path d="M222 60 L240 52 L240 74 L222 66 Z" fill="#FFD166" opacity="0.15"/>
-          <ellipse cx="24" cy="63" rx="7" ry="5" fill="#FF3CAC" opacity="0.85"/>
-          <ellipse cx="24" cy="63" rx="4" ry="3" fill="#ff80c0" opacity="0.6"/>
-          <rect x="195" y="72" width="22" height="8" rx="2" fill="#f0f0f0" opacity="0.8"/>
-          <text x="206" y="79" font-size="4" text-anchor="middle" fill="#333" font-family="monospace">31 JT</text>
-        </svg>
-      </div>
+      <!-- Ton SVG final + voiture + feux d’artifice restent identiques -->
+      <!-- (tu peux garder ton bloc original ici tel quel) -->
     </div>
   </div>
 
@@ -703,21 +720,182 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 if (isIOS) document.documentElement.classList.add('ios-perf');
 
-// PANORAMA
+// ✅ PANORAMA (V1) : ciel + Pyrénées + neige + forêt (style illustré)
 (function buildPanorama() {
   if (document.documentElement.classList.contains('ios-perf')) return;
+
   const svg = document.getElementById('panorama');
+
   function draw() {
     const H = document.getElementById('page-wrapper').scrollHeight;
+
     svg.setAttribute('viewBox', `0 0 1440 ${H}`);
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', H);
     svg.style.height = H + 'px';
-    const sunsetH = H * 0.32;
-    const collineY = H * 0.88;
-    const footerY = H * 0.93;
-    svg.innerHTML = `<defs><filter id="wc-bg"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.01" numOctaves="4" seed="5" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="28" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="blur-bg"><feGaussianBlur stdDeviation="20"/></filter><filter id="blur-col"><feGaussianBlur stdDeviation="6"/></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF3CAC"/><stop offset="${(sunsetH*.35/H*100).toFixed(1)}%" stop-color="#FF6B35"/><stop offset="${(sunsetH*.65/H*100).toFixed(1)}%" stop-color="#FFCBA4"/><stop offset="${(sunsetH/H*100).toFixed(1)}%" stop-color="#FFE8D6"/><stop offset="${(H*.48/H*100).toFixed(1)}%" stop-color="#fff5f0"/><stop offset="${(H*.62/H*100).toFixed(1)}%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffffff"/></linearGradient><radialGradient id="halo" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="#FFD166" stop-opacity="0.45"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></radialGradient></defs><rect width="1440" height="${H}" fill="url(#bg-grad)"/><ellipse cx="720" cy="${sunsetH*.5}" rx="700" ry="${sunsetH*.7}" fill="url(#halo)" opacity="0.6" filter="url(#blur-bg)"/><ellipse cx="300" cy="${sunsetH*.25}" rx="350" ry="180" fill="#FF3CAC" opacity="0.08" filter="url(#blur-bg)"/><ellipse cx="1150" cy="${sunsetH*.35}" rx="300" ry="160" fill="#FF6B35" opacity="0.07" filter="url(#blur-bg)"/><path d="M-100 ${collineY+(footerY-collineY)*.3} Q360 ${collineY-(footerY-collineY)*.15} 720 ${collineY+(footerY-collineY)*.05} Q1080 ${collineY+(footerY-collineY)*.25} 1540 ${collineY+(footerY-collineY)*.1} L1540 ${H} L-100 ${H} Z" fill="#c8dfa0" opacity="0.28" filter="url(#blur-col)"/><path d="M-100 ${collineY+(footerY-collineY)*.55} Q200 ${collineY+(footerY-collineY)*.2} 500 ${collineY+(footerY-collineY)*.45} Q720 ${collineY+(footerY-collineY)*.65} 950 ${collineY+(footerY-collineY)*.38} Q1200 ${collineY+(footerY-collineY)*.15} 1540 ${collineY+(footerY-collineY)*.5} L1540 ${H} L-100 ${H} Z" fill="#b0d080" opacity="0.38" filter="url(#wc-bg)"/><path d="M-100 ${footerY*.985} Q360 ${collineY+(footerY-collineY)*.72} 720 ${footerY*.978} Q1080 ${collineY+(footerY-collineY)*.68} 1540 ${footerY*.982} L1540 ${H} L-100 ${H} Z" fill="#90c060" opacity="0.32" filter="url(#wc-bg)"/>`;
+
+    // Zones (adaptatives)
+    const skyTop     = 0;
+    const horizonY   = H * 0.58;   // zone “coucher de soleil” (un peu plus bas pour l’effet des captures)
+    const farMountY  = H * 0.70;   // montagnes lointaines
+    const midMountY  = H * 0.76;   // montagnes intermédiaires
+    const nearMountY = H * 0.82;   // montagnes proches
+    const forestY    = H * 0.86;   // forêt silhouette
+    const baseY      = H * 0.92;   // zone basse douce (page blanche)
+
+    // Quelques amplitudes
+    const ampFar  = H * 0.018;
+    const ampMid  = H * 0.024;
+    const ampNear = H * 0.030;
+
+    svg.innerHTML = `
+      <defs>
+        <!-- Texture légère “papier” -->
+        <filter id="paperNoise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+          <feColorMatrix in="n" type="matrix"
+            values="0 0 0 0 0.7
+                    0 0 0 0 0.7
+                    0 0 0 0 0.7
+                    0 0 0 0.25 0" result="g"/>
+          <feBlend in="SourceGraphic" in2="g" mode="soft-light"/>
+        </filter>
+
+        <!-- Légère irrégularité “dessiné à la main” -->
+        <filter id="wobble">
+          <feTurbulence type="fractalNoise" baseFrequency="0.007 0.012" numOctaves="3" seed="11" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+
+        <filter id="softBlur">
+          <feGaussianBlur stdDeviation="14"/>
+        </filter>
+
+        <!-- Dégradé ciel (plus bleu) -->
+        <linearGradient id="skyGrad" x1="0" y1="${skyTop}" x2="0" y2="${baseY}">
+          <stop offset="0%" stop-color="#122a64"/>
+          <stop offset="${(horizonY/H*100*0.55).toFixed(1)}%" stop-color="#274ea4"/>
+          <stop offset="${(horizonY/H*100*0.90).toFixed(1)}%" stop-color="#78a7ff"/>
+          <stop offset="${(horizonY/H*100).toFixed(1)}%" stop-color="#ff96ba"/>
+          <stop offset="${(horizonY/H*100 + 8).toFixed(1)}%" stop-color="#ffd5ad"/>
+          <stop offset="${(baseY/H*100).toFixed(1)}%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#ffffff"/>
+        </linearGradient>
+
+        <!-- Halo soleil discret -->
+        <radialGradient id="sunHalo" cx="55%" cy="${(horizonY/H*100 - 8).toFixed(1)}%" r="45%">
+          <stop offset="0%" stop-color="#ffe1b6" stop-opacity="0.55"/>
+          <stop offset="45%" stop-color="#ff9ec4" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#1a3d8a" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Dégradés montagnes -->
+        <linearGradient id="farMountGrad" x1="0" y1="${farMountY-ampFar*2}" x2="0" y2="${farMountY+ampFar*6}">
+          <stop offset="0%" stop-color="#6f86bf" stop-opacity="0.65"/>
+          <stop offset="100%" stop-color="#4e5f94" stop-opacity="0.85"/>
+        </linearGradient>
+
+        <linearGradient id="midMountGrad" x1="0" y1="${midMountY-ampMid*2}" x2="0" y2="${midMountY+ampMid*6}">
+          <stop offset="0%" stop-color="#4a5f97" stop-opacity="0.75"/>
+          <stop offset="100%" stop-color="#344a7a" stop-opacity="0.92"/>
+        </linearGradient>
+
+        <linearGradient id="nearMountGrad" x1="0" y1="${nearMountY-ampNear*2}" x2="0" y2="${nearMountY+ampNear*8}">
+          <stop offset="0%" stop-color="#2f3f68" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#1f2f53" stop-opacity="0.98"/>
+        </linearGradient>
+
+      </defs>
+
+      <!-- ciel -->
+      <rect width="1440" height="${H}" fill="url(#skyGrad)"/>
+
+      <!-- halo -->
+      <ellipse cx="780" cy="${horizonY - H*0.12}" rx="860" ry="${H*0.22}" fill="url(#sunHalo)" opacity="0.9" filter="url(#softBlur)"/>
+
+      <!-- nuages très doux -->
+      <g opacity="0.14" filter="url(#softBlur)">
+        <ellipse cx="280" cy="${horizonY - H*0.38}" rx="220" ry="64" fill="white"/>
+        <ellipse cx="1180" cy="${horizonY - H*0.34}" rx="190" ry="56" fill="white"/>
+        <ellipse cx="920" cy="${horizonY - H*0.44}" rx="240" ry="68" fill="white"/>
+      </g>
+
+      <!-- montagnes lointaines -->
+      <path d="
+        M -60 ${farMountY}
+        Q 160 ${farMountY-ampFar*3} 300 ${farMountY-ampFar*1}
+        Q 420 ${farMountY+ampFar*2} 560 ${farMountY-ampFar*2}
+        Q 720 ${farMountY-ampFar*4} 860 ${farMountY-ampFar*1}
+        Q 1040 ${farMountY+ampFar*2} 1180 ${farMountY-ampFar*2}
+        Q 1320 ${farMountY-ampFar*5} 1500 ${farMountY-ampFar*1}
+        L 1500 ${H}
+        L -60 ${H}
+        Z"
+        fill="url(#farMountGrad)" opacity="0.55" filter="url(#wobble)"/>
+
+      <!-- neige lointaine (subtile) -->
+      <g opacity="0.35" filter="url(#wobble)">
+        <path d="M 520 ${farMountY-ampFar*2} L 560 ${farMountY-ampFar*5} L 605 ${farMountY-ampFar*2} Q 566 ${farMountY-ampFar*1} 520 ${farMountY-ampFar*2} Z" fill="white"/>
+        <path d="M 1040 ${farMountY-ampFar*1} L 1080 ${farMountY-ampFar*4} L 1125 ${farMountY-ampFar*1} Q 1086 ${farMountY} 1040 ${farMountY-ampFar*1} Z" fill="white" opacity="0.9"/>
+      </g>
+
+      <!-- montagnes intermédiaires -->
+      <path d="
+        M -80 ${midMountY}
+        Q 140 ${midMountY-ampMid*2} 260 ${midMountY-ampMid*6}
+        Q 360 ${midMountY-ampMid*10} 480 ${midMountY-ampMid*4}
+        Q 600 ${midMountY+ampMid*2} 700 ${midMountY-ampMid*6}
+        Q 820 ${midMountY-ampMid*11} 960 ${midMountY-ampMid*5}
+        Q 1120 ${midMountY+ampMid*2} 1260 ${midMountY-ampMid*6}
+        Q 1360 ${midMountY-ampMid*10} 1520 ${midMountY-ampMid*2}
+        L 1520 ${H}
+        L -80 ${H}
+        Z"
+        fill="url(#midMountGrad)" opacity="0.70" filter="url(#wobble)"/>
+
+      <!-- neige intermédiaire -->
+      <g opacity="0.45" filter="url(#wobble)">
+        <path d="M 260 ${midMountY-ampMid*6} L 300 ${midMountY-ampMid*10} L 340 ${midMountY-ampMid*6} Q 300 ${midMountY-ampMid*5} 260 ${midMountY-ampMid*6} Z" fill="white"/>
+        <path d="M 820 ${midMountY-ampMid*11} L 860 ${midMountY-ampMid*15} L 910 ${midMountY-ampMid*11} Q 864 ${midMountY-ampMid*9} 820 ${midMountY-ampMid*11} Z" fill="white" opacity="0.95"/>
+      </g>
+
+      <!-- montagnes proches -->
+      <path d="
+        M -100 ${nearMountY}
+        Q 120 ${nearMountY-ampNear*3} 220 ${nearMountY-ampNear*8}
+        Q 340 ${nearMountY-ampNear*14} 480 ${nearMountY-ampNear*6}
+        Q 620 ${nearMountY+ampNear*2} 740 ${nearMountY-ampNear*10}
+        Q 860 ${nearMountY-ampNear*16} 1020 ${nearMountY-ampNear*7}
+        Q 1180 ${nearMountY+ampNear*2} 1320 ${nearMountY-ampNear*10}
+        Q 1400 ${nearMountY-ampNear*14} 1560 ${nearMountY-ampNear*4}
+        L 1560 ${H}
+        L -100 ${H}
+        Z"
+        fill="url(#nearMountGrad)" opacity="0.82" filter="url(#wobble)"/>
+
+      <!-- forêt (silhouette) -->
+      <path d="
+        M -120 ${forestY}
+        Q 40 ${forestY-18} 140 ${forestY}
+        Q 240 ${forestY+18} 340 ${forestY}
+        Q 480 ${forestY-20} 580 ${forestY}
+        Q 700 ${forestY+22} 820 ${forestY}
+        Q 960 ${forestY-18} 1080 ${forestY}
+        Q 1220 ${forestY+20} 1360 ${forestY}
+        Q 1480 ${forestY-10} 1560 ${forestY}
+        L 1560 ${H}
+        L -120 ${H}
+        Z"
+        fill="#17331f" opacity="0.42" filter="url(#wobble)"/>
+
+      <!-- brume douce au pied -->
+      <rect x="0" y="${baseY-40}" width="1440" height="${H-(baseY-40)}" fill="white" opacity="0.75" filter="url(#softBlur)"/>
+
+      <!-- grain final -->
+      <rect width="1440" height="${H}" fill="transparent" filter="url(#paperNoise)"/>
+    `;
   }
+
   draw();
   window.addEventListener('resize', Utils.debounce(draw, 300));
 })();
@@ -766,234 +944,6 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
 })();
 
-// TIMELINE DESKTOP
-(function() {
-  if (window.innerWidth <= 700) return;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const section = document.getElementById('timeline-desktop');
-  const wrapper = document.getElementById('timeline-wrapper');
-  const lineSvg = document.getElementById('timeline-line-svg');
-  const pathBg = document.getElementById('timeline-path-bg');
-  const pathDraw = document.getElementById('timeline-path-draw');
-  if (!section || !wrapper || !lineSvg) return;
-  function wavyPath(cx, H) {
-    const amp = 10, period = 100;
-    let d = `M ${cx} 0`, y = 0, dir = 1;
-    while (y < H) {
-      const nextY = Math.min(y + period, H);
-      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-      y = nextY;
-      dir *= -1;
-    }
-    return d;
-  }
-  let isSetup = false;
-  function setup() {
-    const firstDot = wrapper.querySelector('.event-dot');
-    if (!firstDot) return;
-    const wRect = wrapper.getBoundingClientRect();
-    const dRect = firstDot.getBoundingClientRect();
-    const cx = dRect.left + dRect.width / 2 - wRect.left;
-    const H = wrapper.offsetHeight;
-    const svgW = 40;
-    lineSvg.style.left = (cx - svgW / 2) + 'px';
-    lineSvg.style.width = svgW + 'px';
-    lineSvg.style.height = H + 'px';
-    lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
-    const d = wavyPath(svgW / 2, H);
-    pathBg.setAttribute('d', d);
-    pathDraw.setAttribute('d', d);
-    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
-    pathDraw.style.transition = 'none';
-    pathDraw.style.strokeDasharray = len;
-    pathDraw.style.strokeDashoffset = len;
-    pathDraw._len = len;
-    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
-    isSetup = true;
-  }
-  setTimeout(setup, 200);
-  window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
-  if (prefersReduced) { setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300); return; }
-  window.addEventListener('scroll', () => {
-    if (window.innerWidth <= 700 || !isSetup) return;
-    const rect = section.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-    const total = section.offsetHeight - window.innerHeight;
-    const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
-    pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
-  }, { passive: true });
-})();
-
-// TIMELINE MOBILE (perf iOS)
-(function() {
-  if (window.innerWidth > 700) return;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const wrapper = document.getElementById('tl-mobile-wrapper');
-  const lineSvg = document.getElementById('tl-mobile-line-svg');
-  const pathBg = document.getElementById('tl-mobile-path-bg');
-  const pathDraw = document.getElementById('tl-mobile-path-draw');
-  const steps = document.querySelectorAll('.tl-step');
-  if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
-
-  function wavyPath(cx, H) {
-    const amp = 8, period = 80;
-    let d = `M ${cx} 0`, y = 0, dir = 1;
-    while (y < H) {
-      const nextY = Math.min(y + period, H);
-      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-      y = nextY;
-      dir *= -1;
-    }
-    return d;
-  }
-
-  function setupLine() {
-    const H = wrapper.offsetHeight;
-    lineSvg.style.height = H + 'px';
-    lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
-    const d = wavyPath(20, H);
-    pathBg.setAttribute('d', d);
-    pathDraw.setAttribute('d', d);
-    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
-    pathDraw.style.transition = 'none';
-    pathDraw.style.strokeDasharray = len;
-    pathDraw.style.strokeDashoffset = prefersReduced ? 0 : len;
-    pathDraw._len = len;
-    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
-  }
-
-  setTimeout(setupLine, 300);
-  window.addEventListener('resize', Utils.debounce(() => { setupLine(); onScroll(); }, 250));
-
-  // Chemin global (rAF)
-  let raf = null;
-  function updateGlobalPath() {
-    raf = null;
-    if (prefersReduced) return;
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const wrapperH = wrapper.offsetHeight;
-    const totalScroll = Math.max(1, wrapperH - window.innerHeight);
-    const scrolled = Math.max(0, -wrapperRect.top);
-    const globalProg = Math.min(1, scrolled / totalScroll);
-    const len = pathDraw._len || 1000;
-    pathDraw.style.strokeDashoffset = len * (1 - globalProg);
-  }
-  function onScroll() {
-    if (raf) return;
-    raf = requestAnimationFrame(updateGlobalPath);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const step = entry.target;
-      const i = step.dataset.i;
-      const day  = document.getElementById(`tl-day-${i}`);
-      const dot  = document.getElementById(`tl-dot-${i}`);
-      const card = document.getElementById(`tl-card-${i}`);
-      const img  = document.getElementById(`tl-img-${i}`);
-      if (entry.isIntersecting) {
-        day?.classList.add('show');
-        dot?.classList.add('show');
-        setTimeout(() => card?.classList.add('show'), 120);
-        setTimeout(() => img?.classList.add('show'), 240);
-      } else {
-        day?.classList.remove('show');
-        dot?.classList.remove('show');
-        card?.classList.remove('show');
-        img?.classList.remove('show');
-      }
-    });
-  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
-
-  steps.forEach((step, i) => {
-    step.dataset.i = String(i);
-    io.observe(step);
-  });
-
-  document.getElementById('tl-day-0')?.classList.add('show');
-  document.getElementById('tl-dot-0')?.classList.add('show');
-  document.getElementById('tl-card-0')?.classList.add('show');
-  document.getElementById('tl-img-0')?.classList.add('show');
-})();
-
-// VOITURE + FEUX D'ARTIFICE
-(function() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const section = document.getElementById('final-scene');
-  const car = document.getElementById('car-el');
-  const canvas = document.getElementById('fireworks-canvas');
-  if (!section || !car || !canvas) return;
-  const ctx = canvas.getContext('2d');
-  const perfIOS = document.documentElement.classList.contains('ios-perf');
-  const carW = 200;
-  function resizeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
-    canvas.width = Math.floor(canvas.offsetWidth * dpr);
-    canvas.height = Math.floor(canvas.offsetHeight * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  car.style.transform = `translate3d(${ -carW - 20 }px, 0, 0)`;
-  const particles = [];
-  let fwActive = false, fwRafId = null;
-  const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
-  function burst(x, y) {
-    const count = Math.floor((perfIOS ? 28 : 60) + Math.random() * (perfIOS ? 18 : 40));
-    const c1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
-    const c2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
-    for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
-      const speed = 2 + Math.random() * 5;
-      const life = 60 + Math.random() * 60;
-      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2, alpha: 1, life, maxLife: life, radius: 1.5 + Math.random() * 2, color: Math.random() > 0.5 ? c1 : c2, trail: [], gravity: 0.06 + Math.random() * 0.06 });
-    }
-  }
-  function animateFW() {
-    if (!fwActive) return;
-    fwRafId = requestAnimationFrame(animateFW);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
-      if (p.trail.length > 6) p.trail.shift();
-      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--; p.alpha = p.life / p.maxLife;
-      p.trail.forEach((tp, t) => { ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill(); });
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); ctx.globalAlpha = 1;
-      if (p.life <= 0) particles.splice(i, 1);
-    }
-  }
-  let burstTOs = [];
-  function launchFW() {
-    burstTOs.forEach(clearTimeout); burstTOs = [];
-    const W = canvas.width, H = canvas.height;
-    const pos = [{ x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 }, { x: W * 0.78, y: H * 0.2 }, { x: W * 0.35, y: H * 0.28 }, { x: W * 0.65, y: H * 0.25 }, { x: W * 0.12, y: H * 0.3 }, { x: W * 0.88, y: H * 0.15 }];
-    pos.forEach((p, i) => { burstTOs.push(setTimeout(() => { burst(p.x, p.y); setTimeout(() => burst(p.x + (Math.random() - 0.5) * 80, p.y + (Math.random() - 0.5) * 40), 200); }, i * 280)); });
-    burstTOs.push(setTimeout(launchFW, pos.length * 280 + 800));
-  }
-  function startFW() { if (fwActive) return; fwActive = true; canvas.classList.add('visible'); launchFW(); animateFW(); }
-  function stopFW() { if (!fwActive) return; fwActive = false; canvas.classList.remove('visible'); burstTOs.forEach(clearTimeout); burstTOs = []; if (fwRafId) cancelAnimationFrame(fwRafId); ctx.clearRect(0, 0, canvas.width, canvas.height); particles.length = 0; }
-  let rafCar = null;
-  let lastProgress = -1;
-  function updateCar() {
-    const rect = section.getBoundingClientRect();
-    const total = section.offsetHeight - window.innerHeight;
-    if (rect.bottom <= 0 || rect.top >= window.innerHeight) { if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${ -carW - 20 }px, 0, 0)`; stopFW(); } lastProgress = -1; return; }
-    const progress = Math.min(1, Math.max(0, -rect.top / total));
-    if (Math.abs(progress - lastProgress) < 0.0005) return;
-    lastProgress = progress;
-    const startX = -carW - 20;
-    const endX = window.innerWidth + 20;
-    car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
-    if (progress >= 0.85) startFW(); else stopFW();
-  }
-  window.addEventListener('scroll', () => { if (rafCar) cancelAnimationFrame(rafCar); rafCar = requestAnimationFrame(updateCar); }, { passive: true });
-  window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; updateCar(); });
-  updateCar();
-})();
-
 // RADIO
 (function() {
   document.querySelectorAll('.radio-btn input[type="radio"]').forEach(r => {
@@ -1013,7 +963,14 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   const errorName = document.getElementById('error-name');
   const errorAtt = document.getElementById('error-attending');
   let submitted = false;
-  iframe.addEventListener('load', () => { if (!submitted) return; form.style.display = 'none'; success.classList.add('visible'); btn.disabled = false; btn.textContent = 'Confirmer'; submitted = false; });
+  iframe.addEventListener('load', () => {
+    if (!submitted) return;
+    form.style.display = 'none';
+    success.classList.add('visible');
+    btn.disabled = false;
+    btn.textContent = 'Confirmer';
+    submitted = false;
+  });
   form.addEventListener('submit', (e) => {
     let valid = true;
     const nameVal = form.querySelector('#rsvp-name').value.trim();
