@@ -16,7 +16,7 @@
       --rose: #FF3CAC;
       --corail: #FF6B35;
       --ambre: #FFB347;
-      --rouge: #b5341a;
+      --violet: #8B5CF6;
       --blanc: #ffffff;
       --texte: #2e1200;
       --texte-soft: rgba(46,18,0,0.5);
@@ -78,11 +78,11 @@
 
     #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
     .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
-    .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(181,52,26,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
-    .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--rouge); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
+    .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(139,92,246,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
+    .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
     .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
     .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
-    .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--rouge); margin-top: 20px; }
+    .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; }
 
     #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
     #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
@@ -91,7 +91,7 @@
     #timeline-path-bg { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
     #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
     .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
-    .timeline-day-label { text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.88); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
+    .timeline-day-label { text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.92); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
     .timeline-events { display: flex; flex-direction: column; gap: 28px; }
     .timeline-event { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: start; gap: 0 16px; }
     .timeline-event:nth-child(odd) .event-side { grid-column: 1; text-align: right; align-items: flex-end; }
@@ -123,7 +123,7 @@
     #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
     .tl-step { position: relative; height: 200vh; }
     .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
-    .tl-step-day { font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.35); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,107,53,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+    .tl-step-day { font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.75); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,107,53,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
     .tl-step-day.show { opacity: 1; transform: translateY(0); }
     .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
     .tl-step-dot.show { opacity: 1; transform: scale(1); }
@@ -143,24 +143,24 @@
     .rsvp-subtitle { color: rgba(255,255,255,0.9); margin-bottom: 50px; font-size: 0.9rem; }
     .rsvp-form-wrap { background: rgba(250,247,243,0.96); border: 1.5px solid rgba(181,52,26,0.18); border-radius: 20px; padding: clamp(24px, 5vw, 48px); max-width: 540px; margin-inline: auto; text-align: left; box-shadow: 0 8px 40px rgba(46,18,0,0.07); backdrop-filter: blur(12px); }
     .form-group { margin-bottom: 26px; }
-    .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
-    .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color 0.3s, box-shadow 0.3s; resize: none; }
+    .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--violet); text-transform: uppercase; letter-spacing: 0.12em; }
+    .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(139,92,246,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color 0.3s, box-shadow 0.3s; resize: none; }
     .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
-    .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+    .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
     .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; background: rgba(255,255,255,0.85); user-select: none; min-width: 0; }
+    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(139,92,246,0.22); border-radius: 12px; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; background: rgba(255,255,255,0.85); user-select: none; min-width: 0; }
     .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-    .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
-    .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+    .radio-btn:hover { border-color: var(--violet); background: rgba(139,92,246,0.04); }
+    .radio-btn.selected { border-color: var(--violet); background: rgba(139,92,246,0.07); box-shadow: 0 0 0 3px rgba(139,92,246,0.12); }
     .radio-btn-text { font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
-    .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
+    .field-error { color: var(--violet); font-size: 0.78rem; margin-top: 6px; display: none; }
     .field-error.visible { display: block; }
     .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; }
     .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
+    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(139,92,246,0.06); border-radius: var(--radius); border: 1px solid rgba(139,92,246,0.2); margin-top: 20px; }
     .rsvp-success.visible { display: block; }
-    .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
+    .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--violet); }
     .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
 
     #final-scene { position: relative; height: 300vh; z-index: 2; }
@@ -480,12 +480,8 @@
         </defs>
         <rect width="1440" height="600" fill="url(#sky-final)"/>
         
-        <!-- Route avec couleurs sable -->
-        <path d="M 0 420 Q 360 380 720 400 Q 1080 420 1440 400 L 1440 600 L 0 600 Z" fill="#d4a574" opacity="0.9"/>
-        <path d="M 0 420 Q 360 380 720 400 Q 1080 420 1440 400" stroke="#e8c9a0" stroke-width="8" fill="none" opacity="0.7" stroke-dasharray="40,20"/>
-        
         <!-- Montagnes en arrière-plan -->
-        <path d="M 0 380 Q 180 280 360 350 Q 540 420 720 320 Q 900 220 1080 380 Q 1260 450 1440 350 L 1440 420 L 0 420 Z" fill="#4a6b5a" opacity="0.7"/>
+        <path d="M 0 380 Q 180 280 360 350 Q 540 420 720 320 Q 900 220 1080 380 Q 1260 450 1440 350 L 1440 600 L 0 600 Z" fill="#4a6b5a" opacity="0.7"/>
         <path d="M 0 350 Q 200 250 400 320 Q 600 390 800 280 Q 1000 170 1200 340 Q 1300 400 1440 320 L 1440 380 L 0 380 Z" fill="#5a8b6a" opacity="0.6"/>
       </svg>
       <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
