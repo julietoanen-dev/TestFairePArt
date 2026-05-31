@@ -239,7 +239,7 @@
       border: 1.5px solid rgba(181,52,26,0.18); 
       border-radius: 50px; 
       font-family: var(--font-texte); 
-      font-size: 0.95rem; 
+      font-size: 16px;
       color: var(--texte); 
       background: rgba(255,255,255,0.9); 
       transition: border-color var(--transition-base), box-shadow var(--transition-base); 
@@ -261,7 +261,6 @@
       outline: none; 
       border-color: var(--corail); 
       box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
-      scroll-margin-top: 60px;
     }
 
     .radio-row { 
@@ -333,7 +332,7 @@
       border-radius: 12px; 
       padding: 17px 40px; 
       font-family: var(--font-texte); 
-      font-size: 0.95rem; 
+      font-size: 16px;
       font-weight: 600; 
       cursor: pointer; 
       transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base); 
@@ -1165,7 +1164,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   updateCar();
 })();
 
-// FIX iOS : Gestion du clavier virtuel
+// FIX iOS : Gestion simplifiée du clavier virtuel
 (function() {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   if (!isIOS) return;
@@ -1173,59 +1172,22 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   const form = document.getElementById('rsvp-form');
   if (!form) return;
   
-  const inputs = form.querySelectorAll('input[type="text"], textarea');
-  const body = document.body;
-  const html = document.documentElement;
-
-  let keyboardHeight = 0;
-  let originalScrollY = 0;
+  const inputs = form.querySelectorAll('input[type="text"], textarea, button');
 
   inputs.forEach(input => {
-    input.addEventListener('focus', (e) => {
-      originalScrollY = window.scrollY;
-      
+    input.style.fontSize = '16px';
+    
+    input.addEventListener('focus', () => {
       setTimeout(() => {
-        const inputRect = input.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        if (inputRect.bottom > viewportHeight * 0.7) {
-          const scrollAmount = inputRect.bottom - (viewportHeight * 0.4);
-          window.scrollBy({
-            top: scrollAmount,
-            behavior: 'smooth'
-          });
-        }
-      }, 300);
-    });
-
-    input.addEventListener('blur', () => {
-      setTimeout(() => {
-        window.scrollTo(0, originalScrollY);
-      }, 100);
-    });
+        input.scrollIntoView({ behavior: 'auto', block: 'center' });
+      }, 500);
+    }, { passive: true });
   });
 
   document.addEventListener('touchstart', (e) => {
     if (e.target.matches('input[type="text"], textarea, button')) {
       e.target.style.fontSize = '16px';
     }
-  }, { passive: true });
-
-  let lastHeight = window.innerHeight;
-  window.addEventListener('resize', () => {
-    const currentHeight = window.innerHeight;
-    const heightDiff = lastHeight - currentHeight;
-    
-    if (heightDiff > 100) {
-      const activeInput = document.activeElement;
-      if (activeInput && (activeInput.tagName === 'INPUT' || activeInput.tagName === 'TEXTAREA')) {
-        setTimeout(() => {
-          activeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      }
-    }
-    
-    lastHeight = currentHeight;
   }, { passive: true });
 })();
 
