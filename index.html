@@ -174,6 +174,7 @@
     .final-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
     .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
     #car-el { position: absolute; bottom: 22%; will-change: transform; z-index: 6; }
+    #car-el img { width: 100%; height: auto; display: block; }
 
     @media (max-width: 700px) {
       #timeline-desktop { display: none; }
@@ -492,15 +493,7 @@
         <div class="final-tagline">En route pour Verfeil</div>
       </div>
       <div id="car-el" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" width="200" height="83">
-          <defs>
-            <linearGradient id="car-body-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C42"/><stop offset="100%" stop-color="#d44a1a"/></linearGradient>
-            <linearGradient id="car-roof-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFB347"/><stop offset="100%" stop-color="#FF6B35"/></linearGradient>
-            <radialGradient id="wheel-rg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#555"/><stop offset="100%" stop-color="#111"/></radialGradient>
-            <radialGradient id="headlight-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffde0"/><stop offset="100%" stop-color="#FFD166"/></radialGradient>
-          </defs>
-          <ellipse cx="120" cy="92" rx="95" ry="6" fill="rgba(0,0,0,0.15)"/><rect x="20" y="52" width="200" height="30" rx="8" fill="url(#car-body-g)"/><path d="M60 52 Q72 24 100 20 Q140 15 170 20 Q192 25 200 52 Z" fill="url(#car-roof-g)"/><path d="M170 52 Q182 30 198 24 L200 52 Z" fill="#c8e8f8" opacity="0.82"/><path d="M62 52 Q58 32 70 26 L80 52 Z" fill="#c8e8f8" opacity="0.72"/><path d="M84 51 Q82 22 105 18 Q138 14 162 19 L165 51 Z" fill="#d8f0fc" opacity="0.75"/><rect x="20" y="76" width="200" height="6" rx="3" fill="#b03808" opacity="0.5"/><circle cx="172" cy="82" r="18" fill="#1a1a1a"/><circle cx="172" cy="82" r="14" fill="url(#wheel-rg)"/><circle cx="172" cy="82" r="7" fill="#444"/><circle cx="68" cy="82" r="18" fill="#1a1a1a"/><circle cx="68" cy="82" r="14" fill="url(#wheel-rg)"/><circle cx="68" cy="82" r="7" fill="#444"/><ellipse cx="216" cy="63" rx="9" ry="6" fill="url(#headlight-g)" opacity="0.95"/><ellipse cx="24" cy="63" rx="7" ry="5" fill="#FF3CAC" opacity="0.85"/><rect x="195" y="72" width="22" height="8" rx="2" fill="#f0f0f0" opacity="0.8"/><text x="206" y="79" font-size="4" text-anchor="middle" fill="#333" font-family="monospace">31 JT</text>
-        </svg>
+        <img src="https://i.ibb.co/VWcfZmbt/IMG-7201.jpg" alt="Voiture des mariés" />
       </div>
     </div>
   </div>
