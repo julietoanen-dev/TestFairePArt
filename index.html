@@ -426,27 +426,39 @@
       <p class="rsvp-subtitle reveal">Répondez-nous avant le 1er juin 2027 — on compte sur vous.</p>
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
-          <input type="hidden" name="fvv" value="1"/><input type="hidden" name="draftResponse" value="[]"/><input type="hidden" name="pageHistory" value="0"/>
+          <input type="hidden" name="fvv" value="1"/>
+          <input type="hidden" name="draftResponse" value="[]"/>
+          <input type="hidden" name="pageHistory" value="0"/>
+          
           <div class="form-group">
             <label for="rsvp-name">Nom complet *</label>
             <input type="text" id="rsvp-name" name="entry.634494262" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
             <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
           </div>
+          
           <div class="form-group">
             <fieldset style="border:none;padding:0">
-                <legend>Serez-vous présent(e) ? *</legend>
-                <div class="radio-row" aria-describedby="error-attending">
-                <label class="radio-btn"><input type="radio" name="entry.1684549153" value="Oui, j'y serai !" required aria-required="true"/><span class="radio-btn-text">Oui, j'y serai !</span></label>
-                <label class="radio-btn"><input type="radio" name="entry.1684549153" value="Malheureusement non..." /><span class="radio-btn-text">Malheureusement non...</span></label>
-                </div>
-                <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
+              <legend>Serez-vous présent(e) ? *</legend>
+              <div class="radio-row" aria-describedby="error-attending">
+                <label class="radio-btn">
+                  <input type="radio" name="entry.1684549153" value="Oui, j'y serai !" required aria-required="true"/>
+                  <span class="radio-btn-text">Oui, j'y serai !</span>
+                </label>
+                <label class="radio-btn">
+                  <input type="radio" name="entry.1684549153" value="Malheureusement non..."/>
+                  <span class="radio-btn-text">Malheureusement non...</span>
+                </label>
+              </div>
+              <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
             </fieldset>
           </div>
+          
           <div class="form-group">
             <label for="rsvp-message">Un mot pour les mariés</label>
             <textarea id="rsvp-message" name="entry.1167258628" placeholder="Écrivez-nous quelques mots..."></textarea>
             <span class="optional-hint">Optionnel</span>
           </div>
+          
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
         </form>
         <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
@@ -690,7 +702,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
 // RADIO
 (function() { document.querySelectorAll('.radio-btn input[type="radio"]').forEach(r => { r.addEventListener('change', () => { document.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('selected')); if (r.checked) r.closest('.radio-btn').classList.add('selected'); }); }); })();
 
-// RSVP
+// RSVP - Gestion du formulaire Google Forms
 (function() {
   const form = document.getElementById('rsvp-form');
   const btn = document.getElementById('btn-submit');
@@ -698,16 +710,65 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   const iframe = document.getElementById('hidden_iframe');
   const errorName = document.getElementById('error-name');
   const errorAtt = document.getElementById('error-attending');
+  const nameInput = document.getElementById('rsvp-name');
+  const messageInput = document.getElementById('rsvp-message');
+  const radioInputs = document.querySelectorAll('input[name="entry.1684549153"]');
+  
   let submitted = false;
-  iframe.addEventListener('load', () => { if (!submitted) return; form.style.display = 'none'; success.classList.add('visible'); btn.disabled = false; btn.textContent = 'Confirmer'; submitted = false; });
+
+  // Écouter le chargement du formulaire Google Forms
+  iframe.addEventListener('load', () => {
+    if (!submitted) return;
+    form.style.display = 'none';
+    success.classList.add('visible');
+    btn.disabled = false;
+    btn.textContent = 'Confirmer';
+    submitted = false;
+  });
+
+  // Gestion de la soumission du formulaire
   form.addEventListener('submit', (e) => {
     let valid = true;
-    const nameVal = form.querySelector('#rsvp-name').value.trim();
-    if (!nameVal) { errorName.classList.add('visible'); if (valid) form.querySelector('#rsvp-name').focus(); valid = false; } else { errorName.classList.remove('visible'); }
-    const radioChecked = form.querySelector('input[name="ENTRY_ATTENDING_TODO"]:checked');
-    if (!radioChecked) { errorAtt.classList.add('visible'); if (valid) document.querySelector('.radio-btn input').focus(); valid = false; } else { errorAtt.classList.remove('visible'); }
-    if (!valid) { e.preventDefault(); return; }
-    submitted = true; btn.disabled = true; btn.textContent = 'Envoi en cours...';
+
+    // Validation du nom
+    const nameVal = nameInput.value.trim();
+    if (!nameVal) {
+      errorName.classList.add('visible');
+      if (valid) nameInput.focus();
+      valid = false;
+    } else {
+      errorName.classList.remove('visible');
+    }
+
+    // Validation de la présence
+    const radioChecked = Array.from(radioInputs).find(r => r.checked);
+    if (!radioChecked) {
+      errorAtt.classList.add('visible');
+      if (valid) radioInputs[0].focus();
+      valid = false;
+    } else {
+      errorAtt.classList.remove('visible');
+    }
+
+    if (!valid) {
+      e.preventDefault();
+      return;
+    }
+
+    // Marquer comme soumis et désactiver le bouton
+    submitted = true;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+  });
+
+  // Mettre à jour les styles des boutons radio au changement
+  radioInputs.forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('selected'));
+      if (radio.checked) {
+        radio.closest('.radio-btn').classList.add('selected');
+      }
+    });
   });
 })();
 </script>
