@@ -67,22 +67,116 @@
     @keyframes float-d { 0%,100% { transform: translate3d(0,0,0) rotate(2deg); } 50% { transform: translate3d(0,-5px,0) rotate(-1.5deg); } }
     @keyframes float-e { 0%,100% { transform: translate3d(0,0,0) rotate(-2deg); } 50% { transform: translate3d(0,-4px,0) rotate(1.5deg); } }
 
-    /* Animation de clignotement doux */
-    @keyframes soft-blink {
-      0%, 100% { color: var(--blanc); text-shadow: 0 0 20px rgba(255, 107, 53, 0.8), 0 0 40px rgba(255, 107, 53, 0.5); }
-      50% { color: rgba(255, 255, 255, 0.6); text-shadow: 0 0 10px rgba(255, 107, 53, 0.4), 0 0 20px rgba(255, 107, 53, 0.2); }
+    /* Animation 1 - Rose vif avec glow intense */
+    @keyframes blink-1 {
+      0%, 100% { 
+        color: var(--rose);
+        text-shadow: 0 0 30px rgba(255, 60, 172, 1), 0 0 60px rgba(255, 60, 172, 0.8);
+        font-weight: 700;
+      }
+      50% { 
+        color: rgba(255, 60, 172, 0.3);
+        text-shadow: 0 0 10px rgba(255, 60, 172, 0.3), 0 0 20px rgba(255, 60, 172, 0.1);
+        font-weight: 400;
+      }
     }
 
-    .highlight-blink {
-      animation: soft-blink 2.5s ease-in-out infinite;
+    /* Animation 2 - Violet intense avec pulsation */
+    @keyframes blink-2 {
+      0%, 100% { 
+        color: var(--violet);
+        text-shadow: 0 0 40px rgba(139, 92, 246, 1), 0 0 80px rgba(139, 92, 246, 0.7);
+        font-weight: 700;
+      }
+      50% { 
+        color: rgba(139, 92, 246, 0.2);
+        text-shadow: 0 0 5px rgba(139, 92, 246, 0.2);
+        font-weight: 400;
+      }
+    }
+
+    /* Animation 3 - Rose dégradé vers blanc */
+    @keyframes blink-3 {
+      0% { 
+        color: var(--rose);
+        text-shadow: 0 0 25px rgba(255, 60, 172, 0.9);
+      }
+      50% { 
+        color: var(--blanc);
+        text-shadow: 0 0 40px rgba(255, 60, 172, 0.6), 0 0 20px rgba(255, 60, 172, 0.3);
+      }
+      100% { 
+        color: var(--rose);
+        text-shadow: 0 0 25px rgba(255, 60, 172, 0.9);
+      }
+    }
+
+    /* Animation 4 - Violet dégradé vers blanc */
+    @keyframes blink-4 {
+      0% { 
+        color: var(--violet);
+        text-shadow: 0 0 25px rgba(139, 92, 246, 0.9);
+      }
+      50% { 
+        color: var(--blanc);
+        text-shadow: 0 0 40px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.3);
+      }
+      100% { 
+        color: var(--violet);
+        text-shadow: 0 0 25px rgba(139, 92, 246, 0.9);
+      }
+    }
+
+    /* Animation 5 - Rose et Violet alternés */
+    @keyframes blink-5 {
+      0%, 100% { 
+        color: var(--rose);
+        text-shadow: 0 0 35px rgba(255, 60, 172, 0.9), 0 0 70px rgba(255, 60, 172, 0.5);
+      }
+      25% { 
+        color: rgba(255, 60, 172, 0.4);
+        text-shadow: 0 0 15px rgba(255, 60, 172, 0.4);
+      }
+      50% { 
+        color: var(--violet);
+        text-shadow: 0 0 35px rgba(139, 92, 246, 0.9), 0 0 70px rgba(139, 92, 246, 0.5);
+      }
+      75% { 
+        color: rgba(139, 92, 246, 0.4);
+        text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+      }
+    }
+
+    .highlight-blink-1 {
+      animation: blink-1 1.8s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .highlight-blink-2 {
+      animation: blink-2 1.6s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .highlight-blink-3 {
+      animation: blink-3 2s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .highlight-blink-4 {
+      animation: blink-4 2s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .highlight-blink-5 {
+      animation: blink-5 2.4s ease-in-out infinite;
       display: inline-block;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .highlight-blink {
+      .highlight-blink-1, .highlight-blink-2, .highlight-blink-3, .highlight-blink-4, .highlight-blink-5 {
         animation: none;
         color: var(--blanc);
-        text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+        text-shadow: 0 0 30px rgba(255, 60, 172, 0.8);
       }
     }
 
@@ -227,6 +321,15 @@
     }
     .ios-perf svg [filter], .ios-perf svg filter { filter: none !important; }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+    /* Numéros des variations */
+    .blink-number {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-top: 8px;
+      display: block;
+    }
   </style>
 </head>
 
@@ -450,7 +553,26 @@
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
       <h2 class="reveal">Vous serez là ?</h2>
-      <p class="rsvp-subtitle reveal">Répondez-nous <span class="highlight-blink">avant le 1er juin 2027</span> — on compte sur vous.</p>
+      
+      <div style="margin-bottom: 50px;">
+        <p class="rsvp-subtitle reveal">
+          <span class="highlight-blink-1">Répondez-nous avant le 1er juin 2027<span class="blink-number">① Rose vif intense</span></span>
+        </p>
+        <p class="rsvp-subtitle reveal">
+          <span class="highlight-blink-2">Répondez-nous avant le 1er juin 2027<span class="blink-number">② Violet intense</span></span>
+        </p>
+        <p class="rsvp-subtitle reveal">
+          <span class="highlight-blink-3">Répondez-nous avant le 1er juin 2027<span class="blink-number">③ Rose vers blanc</span></span>
+        </p>
+        <p class="rsvp-subtitle reveal">
+          <span class="highlight-blink-4">Répondez-nous avant le 1er juin 2027<span class="blink-number">④ Violet vers blanc</span></span>
+        </p>
+        <p class="rsvp-subtitle reveal">
+          <span class="highlight-blink-5">Répondez-nous avant le 1er juin 2027<span class="blink-number">⑤ Rose et Violet alternés</span></span>
+        </p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 30px; font-style: italic;">— on compte sur vous.</p>
+      </div>
+
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
           <input type="hidden" name="fvv" value="1"/>
