@@ -175,31 +175,235 @@
     .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
     .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
 
-    /* RSVP */
-    #rsvp { text-align: center; padding: 80px 20px 100px; position: relative; z-index: 2; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,159,114,0.2) 30%, rgba(255,159,114,0.5) 60%, #ff9f72 100%); }
-    #rsvp h2 { font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
-    .rsvp-subtitle { color: rgba(255,255,255,0.9); margin-bottom: 50px; font-size: 0.9rem; }
-    .rsvp-form-wrap { background: rgba(250,247,243,0.96); border: 1.5px solid rgba(181,52,26,0.18); border-radius: 20px; padding: clamp(24px, 5vw, 48px); max-width: 540px; margin-inline: auto; text-align: left; box-shadow: 0 8px 40px rgba(46,18,0,0.07); backdrop-filter: blur(12px); }
-    .form-group { margin-bottom: 26px; }
-    .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
-    .form-group input[type="text"], .form-group textarea { width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18); border-radius: 50px; font-family: var(--font-texte); font-size: 0.95rem; color: var(--texte); background: rgba(255,255,255,0.9); transition: border-color var(--transition-base), box-shadow var(--transition-base); resize: none; }
-    .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
-    .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
-    .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base); background: rgba(255,255,255,0.85); user-select: none; min-width: 0; }
-    .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-    .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
-    .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
-    .radio-btn-text { font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
-    .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
-    .field-error.visible { display: block; }
-    .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base); box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; }
-    .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
-    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
-    .rsvp-success.visible { display: block; }
-    .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
-    .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
+    /* RSVP - CORRECTION iOS */
+    #rsvp { 
+      text-align: center; 
+      padding: 80px 20px 100px; 
+      position: relative; 
+      z-index: 2; 
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,159,114,0.2) 30%, rgba(255,159,114,0.5) 60%, #ff9f72 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #rsvp h2 { 
+      font-weight: 600; 
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem); 
+      color: var(--blanc); 
+      letter-spacing: 0.04em; 
+      text-transform: uppercase; 
+      margin-bottom: 8px; 
+    }
+
+    .rsvp-subtitle { 
+      color: rgba(255,255,255,0.9); 
+      margin-bottom: 50px; 
+      font-size: 0.9rem; 
+    }
+
+    .rsvp-form-wrap { 
+      background: rgba(250,247,243,0.96); 
+      border: 1.5px solid rgba(181,52,26,0.18); 
+      border-radius: 20px; 
+      padding: clamp(24px, 5vw, 48px); 
+      max-width: 540px; 
+      margin-inline: auto; 
+      text-align: left; 
+      box-shadow: 0 8px 40px rgba(46,18,0,0.07); 
+      backdrop-filter: blur(12px);
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+
+    .form-group { 
+      margin-bottom: 26px; 
+    }
+
+    .form-group label, .form-group legend { 
+      display: block; 
+      font-weight: 600; 
+      font-size: 0.72rem; 
+      margin-bottom: 10px; 
+      color: var(--rouge); 
+      text-transform: uppercase; 
+      letter-spacing: 0.12em; 
+    }
+
+    .form-group input[type="text"], .form-group textarea { 
+      width: 100%; 
+      padding: 14px 18px; 
+      border: 1.5px solid rgba(181,52,26,0.18); 
+      border-radius: 50px; 
+      font-family: var(--font-texte); 
+      font-size: 0.95rem; 
+      color: var(--texte); 
+      background: rgba(255,255,255,0.9); 
+      transition: border-color var(--transition-base), box-shadow var(--transition-base); 
+      resize: none;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-font-size-adjust: 100%;
+      font-size-adjust: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea { 
+      border-radius: 16px; 
+      min-height: 110px; 
+      resize: vertical; 
+    }
+
+    .form-group input[type="text"]:focus, .form-group textarea:focus { 
+      outline: none; 
+      border-color: var(--corail); 
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+      scroll-margin-top: 60px;
+    }
+
+    .radio-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+    }
+
+    .radio-btn { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      padding: 12px 8px; 
+      border: 1.5px solid rgba(181,52,26,0.22); 
+      border-radius: 12px; 
+      transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base); 
+      background: rgba(255,255,255,0.85); 
+      user-select: none; 
+      min-width: 0;
+      -webkit-user-select: none;
+    }
+
+    .radio-btn input[type="radio"] { 
+      position: absolute; 
+      opacity: 0; 
+      width: 0; 
+      height: 0; 
+    }
+
+    .radio-btn:hover { 
+      border-color: var(--corail); 
+      background: rgba(255,107,53,0.04); 
+    }
+
+    .radio-btn.selected { 
+      border-color: var(--corail); 
+      background: rgba(255,107,53,0.07); 
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.12); 
+    }
+
+    .radio-btn-text { 
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem); 
+      color: var(--texte); 
+      text-align: center; 
+      line-height: 1.3; 
+      word-break: break-word; 
+    }
+
+    .field-error { 
+      color: var(--rouge); 
+      font-size: 0.78rem; 
+      margin-top: 6px; 
+      display: none; 
+    }
+
+    .field-error.visible { 
+      display: block; 
+    }
+
+    .btn-submit { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 10px; 
+      background: linear-gradient(135deg, var(--rose), var(--corail)); 
+      color: var(--blanc); 
+      border: none; 
+      border-radius: 12px; 
+      padding: 17px 40px; 
+      font-family: var(--font-texte); 
+      font-size: 0.95rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base); 
+      box-shadow: 0 4px 20px rgba(255,60,172,0.28); 
+      width: 100%; 
+      margin-top: 8px; 
+      letter-spacing: 0.06em;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-font-size-adjust: 100%;
+      font-size-adjust: 100%;
+      min-height: 44px;
+    }
+
+    .btn-submit:hover:not(:disabled) { 
+      opacity: 0.9; 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 28px rgba(255,60,172,0.38); 
+    }
+
+    .btn-submit:disabled { 
+      opacity: 0.5; 
+      cursor: not-allowed; 
+      transform: none; 
+    }
+
+    .rsvp-success { 
+      display: none; 
+      text-align: center; 
+      padding: 36px; 
+      background: rgba(255,107,53,0.06); 
+      border-radius: var(--radius); 
+      border: 1px solid rgba(255,107,53,0.2); 
+      margin-top: 20px; 
+    }
+
+    .rsvp-success.visible { 
+      display: block; 
+    }
+
+    .rsvp-success p { 
+      font-family: var(--font-titre); 
+      font-style: italic; 
+      font-size: 1.3rem; 
+      color: var(--corail); 
+    }
+
+    .optional-hint { 
+      font-size: 0.72rem; 
+      font-style: italic; 
+      color: rgba(46,18,0,0.38); 
+      margin-top: 4px; 
+      display: block; 
+    }
+
+    @supports (padding: max(0px)) {
+      .rsvp-form-wrap {
+        padding-bottom: max(48px, env(safe-area-inset-bottom));
+      }
+    }
+
+    @media (max-height: 600px) {
+      #rsvp {
+        padding: 40px 20px 60px;
+        min-height: auto;
+      }
+      .rsvp-form-wrap {
+        padding: clamp(16px, 3vw, 32px);
+      }
+    }
 
     /* Final Scene */
     #final-scene { position: relative; height: 300vh; z-index: 2; }
@@ -959,6 +1163,70 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
   });
 
   updateCar();
+})();
+
+// FIX iOS : Gestion du clavier virtuel
+(function() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (!isIOS) return;
+
+  const form = document.getElementById('rsvp-form');
+  if (!form) return;
+  
+  const inputs = form.querySelectorAll('input[type="text"], textarea');
+  const body = document.body;
+  const html = document.documentElement;
+
+  let keyboardHeight = 0;
+  let originalScrollY = 0;
+
+  inputs.forEach(input => {
+    input.addEventListener('focus', (e) => {
+      originalScrollY = window.scrollY;
+      
+      setTimeout(() => {
+        const inputRect = input.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        if (inputRect.bottom > viewportHeight * 0.7) {
+          const scrollAmount = inputRect.bottom - (viewportHeight * 0.4);
+          window.scrollBy({
+            top: scrollAmount,
+            behavior: 'smooth'
+          });
+        }
+      }, 300);
+    });
+
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        window.scrollTo(0, originalScrollY);
+      }, 100);
+    });
+  });
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.target.matches('input[type="text"], textarea, button')) {
+      e.target.style.fontSize = '16px';
+    }
+  }, { passive: true });
+
+  let lastHeight = window.innerHeight;
+  window.addEventListener('resize', () => {
+    const currentHeight = window.innerHeight;
+    const heightDiff = lastHeight - currentHeight;
+    
+    if (heightDiff > 100) {
+      const activeInput = document.activeElement;
+      if (activeInput && (activeInput.tagName === 'INPUT' || activeInput.tagName === 'TEXTAREA')) {
+        setTimeout(() => {
+          activeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+    
+    lastHeight = currentHeight;
+  }, { passive: true });
 })();
 
 // RADIO & RSVP
