@@ -429,22 +429,23 @@
           <input type="hidden" name="fvv" value="1"/><input type="hidden" name="draftResponse" value="[]"/><input type="hidden" name="pageHistory" value="0"/>
           <div class="form-group">
             <label for="rsvp-name">Nom complet *</label>
-            <input type="text" id="rsvp-name" name="entry.1234567890" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
+            <input type="text" id="rsvp-name" name="entry.634494262" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
             <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
           </div>
           <div class="form-group">
             <fieldset style="border:none;padding:0">
               <legend>Serez-vous présent(e) ? *</legend>
-              <div class="radio-row" aria-describedby="error-attending">
-                <label class="radio-btn"><input type="radio" name="entry.1234567891" value="Oui je serai là !" required aria-required="true"/><span class="radio-btn-text">Oui, j'y serai !</span></label>
-                <label class="radio-btn"><input type="radio" name="entry.1234567891" value="Malheureusement non…"/><span class="radio-btn-text">Malheureusement non...</span></label>
-              </div>
+               <legend>Serez-vous présent(e) ? *</legend>
+                <div class="radio-row" aria-describedby="error-attending">
+                    <label class="radio-btn"><input type="radio" name="entry.1684549153" value="Oui, j'y serai !" required aria-required="true"/><span class="radio-btn-text">Oui, j'y serai !</span></label>
+                    <label class="radio-btn"><input type="radio" name="entry.1684549153" value="Malheureusement non..." /><span class="radio-btn-text">Malheureusement non...</span></label>
+                </div>
               <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
             </fieldset>
           </div>
           <div class="form-group">
             <label for="rsvp-message">Un mot pour les mariés</label>
-            <textarea id="rsvp-message" name="entry.1234567892" placeholder="Écrivez-nous quelques mots..."></textarea>
+            <textarea id="rsvp-message" name="entry.1167258628" placeholder="Écrivez-nous quelques mots..."></textarea>
             <span class="optional-hint">Optionnel</span>
           </div>
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
@@ -466,7 +467,7 @@
             <stop offset="0%" stop-color="#fbbf24"/><stop offset="25%" stop-color="#ff87a8"/><stop offset="50%" stop-color="#b78fdd"/><stop offset="75%" stop-color="#5a7fc8"/><stop offset="100%" stop-color="#020159"/>
           </linearGradient>
         </defs>
-        <rect width="1440" height="600" fill="url(#sky-final)"/><path d="M0 330 Q220 240 420 310 Q640 190 840 300 Q1080 200 1440 290 L1440 600 L0 600 Z" fill="#7aa55a" opacity="0.75"/><path d="M0 400 Q360 350 720 385 Q1080 340 1440 380 L1440 600 L0 600 Z" fill="#355f37" opacity="0.85"/><rect x="0" y="448" width="1440" height="82" fill="#c8b89a" opacity="0.88"/>
+        <rect width="1440" height="600" fill="url(#sky-final)"/>
       </svg>
       <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
       <div class="final-text">
@@ -510,10 +511,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', H);
     svg.style.height = H + 'px';
-    const mountainY = H * 0.60;
-    const forestY = H * 0.72;
-    const deepForestY = H * 0.80;
-    svg.innerHTML = `<defs><filter id="soft-grain"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="3" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><filter id="blur-bg"><feGaussianBlur stdDeviation="18"/></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient><linearGradient id="mountain-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a9d681"/><stop offset="55%" stop-color="#6fa65a"/><stop offset="100%" stop-color="#456f3a"/></linearGradient><linearGradient id="mountain-back-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c6e3a0" stop-opacity="0.72"/><stop offset="100%" stop-color="#7da96a" stop-opacity="0.78"/></linearGradient><linearGradient id="forest-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5c8f50"/><stop offset="100%" stop-color="#284f2e"/></linearGradient><linearGradient id="deep-forest-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#355f37"/><stop offset="100%" stop-color="#18301f"/></linearGradient><radialGradient id="sun-glow" cx="50%" cy="23%" r="45%"><stop offset="0%" stop-color="#ffd389" stop-opacity="0.52"/><stop offset="45%" stop-color="#020159" stop-opacity="0.22"/><stop offset="100%" stop-color="#020159" stop-opacity="0"/></radialGradient></defs><rect width="${W}" height="${H}" fill="url(#bg-grad)"/><rect width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/><ellipse cx="720" cy="${H * 0.18}" rx="760" ry="${H * 0.30}" fill="url(#sun-glow)" filter="url(#blur-bg)"/><path d="M0 ${H*0.18} C260 ${H*0.14}, 430 ${H*0.21}, 700 ${H*0.17} C980 ${H*0.13}, 1180 ${H*0.19}, 1440 ${H*0.15} L1440 ${H*0.25} C1080 ${H*0.30}, 790 ${H*0.22}, 530 ${H*0.27} C260 ${H*0.32}, 120 ${H*0.24}, 0 ${H*0.28} Z" fill="#ffb07a" opacity="0.24" filter="url(#soft-grain)"/><path d="M0 ${H*0.35} C260 ${H*0.30}, 430 ${H*0.39}, 720 ${H*0.34} C980 ${H*0.30}, 1200 ${H*0.40}, 1440 ${H*0.34} L1440 ${H*0.48} C1120 ${H*0.52}, 920 ${H*0.43}, 660 ${H*0.49} C380 ${H*0.55}, 190 ${H*0.46}, 0 ${H*0.51} Z" fill="#5f9ed1" opacity="0.32" filter="url(#soft-grain)"/><path d="M -40 ${mountainY} C 120 ${mountainY-38}, 220 ${mountainY-20}, 330 ${mountainY-58} C 460 ${mountainY-100}, 580 ${mountainY-32}, 720 ${mountainY-86} C 850 ${mountainY-136}, 970 ${mountainY-44}, 1120 ${mountainY-96} C 1260 ${mountainY-142}, 1350 ${mountainY-70}, 1480 ${mountainY-118} L 1480 ${H} L -40 ${H} Z" fill="url(#mountain-back-grad)" opacity="0.72" filter="url(#soft-grain)"/><path d="M -40 ${mountainY + 62} C 120 ${mountainY+4}, 250 ${mountainY+48}, 390 ${mountainY-16} C 560 ${mountainY-96}, 690 ${mountainY+20}, 840 ${mountainY-48} C 1000 ${mountainY-122}, 1120 ${mountainY+8}, 1280 ${mountainY-72} C 1370 ${mountainY-115}, 1420 ${mountainY-82}, 1480 ${mountainY-104} L 1480 ${H} L -40 ${H} Z" fill="url(#mountain-grad)" opacity="0.88" filter="url(#soft-grain)"/><path d="M 0 ${forestY} C 180 ${forestY-28}, 310 ${forestY-10}, 470 ${forestY-36} C 650 ${forestY-66}, 850 ${forestY-20}, 1030 ${forestY-48} C 1200 ${forestY-76}, 1340 ${forestY-36}, 1440 ${forestY-58} L 1440 ${H} L 0 ${H} Z" fill="url(#forest-grad)" opacity="0.94"/><path d="M 0 ${deepForestY} C 210 ${deepForestY-22}, 380 ${deepForestY-5}, 560 ${deepForestY-28} C 780 ${deepForestY-58}, 970 ${deepForestY-12}, 1160 ${deepForestY-40} C 1320 ${deepForestY-62}, 1400 ${deepForestY-32}, 1440 ${deepForestY-46} L 1440 ${H} L 0 ${H} Z" fill="url(#deep-forest-grad)" opacity="0.96"/>`;
+    svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#bg-grad)"/><rect width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
   }
   draw();
   window.addEventListener('resize', Utils.debounce(draw, 300));
@@ -707,7 +705,7 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
     let valid = true;
     const nameVal = form.querySelector('#rsvp-name').value.trim();
     if (!nameVal) { errorName.classList.add('visible'); if (valid) form.querySelector('#rsvp-name').focus(); valid = false; } else { errorName.classList.remove('visible'); }
-    const radioChecked = form.querySelector('input[name="entry.1234567891"]:checked');
+    const radioChecked = form.querySelector('input[name="ENTRY_ATTENDING_TODO"]:checked');
     if (!radioChecked) { errorAtt.classList.add('visible'); if (valid) document.querySelector('.radio-btn input').focus(); valid = false; } else { errorAtt.classList.remove('visible'); }
     if (!valid) { e.preventDefault(); return; }
     submitted = true; btn.disabled = true; btn.textContent = 'Envoi en cours...';
