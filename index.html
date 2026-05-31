@@ -53,10 +53,10 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
     }
 
-    #page-wrapper { position: relative; min-height: 100dvh; }
+    #page-wrapper { position: relative; min-height: 100vh; }
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
-    #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
+    #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
     #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
     .lantern { animation-fill-mode: both; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
     .lantern image { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18)); }
@@ -102,7 +102,7 @@
     }
 
     /* Hero */
-    #hero { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
+    #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
     .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
     .hero-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
     .hero-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.92); max-width: 480px; text-shadow: 0 2px 16px rgba(0,0,0,0.12); }
@@ -160,7 +160,7 @@
     #tl-mobile-path-bg { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
     #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
     .tl-step { position: relative; height: 200vh; }
-    .tl-step-sticky { position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
+    .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
     .tl-step-day { font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.75); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,107,53,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
     .tl-step-day.show { opacity: 1; transform: translateY(0); }
     .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
@@ -203,7 +203,7 @@
 
     /* Final Scene */
     #final-scene { position: relative; height: 300vh; z-index: 2; }
-    .final-sticky { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
+    .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
     .final-bg-container { position: absolute; inset: 0; width: 100%; height: 100%; }
     .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
     .final-bg-mountains { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; object-fit: cover; object-position: bottom center; }
@@ -243,45 +243,6 @@
     .ios-perf svg [filter], .ios-perf svg filter { filter: none !important; }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
     
-    /* ✅ FIX clavier mobile */
-html, body {
-  height: 100%;
-}
-
-body {
-  position: relative;
-}
-
-@supports (-webkit-touch-callout: none) {
-  body {
-    min-height: -webkit-fill-available;
-  }
-
-  #page-wrapper {
-    min-height: -webkit-fill-available;
-  }
-}
-
-/* ✅ remplacer vh dynamique */
-#hero {
-  min-height: 100dvh;
-}
-
-#lanterns-layer {
-  height: 100dvh;
-}
-
-.tl-step-sticky {
-  height: 100dvh;
-}
-
-/* ✅ éviter bug fixed sur mobile */
-@media (max-width: 768px) {
-  #lanterns-layer {
-    position: absolute;
-  }
-}
-
   </style>
 </head>
 
@@ -1062,15 +1023,6 @@ if (isIOS) document.documentElement.classList.add('ios-perf');
     });
   });
 })();
-// ✅ FIX scroll quand clavier ouvert
-document.querySelectorAll('input, textarea').forEach(el => {
-  el.addEventListener('focus', () => {
-    setTimeout(() => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-  });
-});
-
 </script>
 
 </body>
