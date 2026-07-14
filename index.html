@@ -28,7 +28,7 @@
       --transition-base: 0.3s ease;
     }
 
-    /* ===== RESET & BASE ===== */
+    /* ===== RESET ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; }
     body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
@@ -37,10 +37,12 @@
     a:hover { text-decoration: underline; }
     a:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 3px; }
 
+    /* ===== TYPOGRAPHIE ===== */
     h1, h2, h3 { font-family: var(--font-titre); line-height: 1.15; }
     h1 { font-size: clamp(3rem, 9vw, 7rem); color: var(--blanc); }
     p { line-height: 1.7; }
 
+    /* ===== LAYOUT ===== */
     .container { width: min(90%, 960px); margin-inline: auto; }
     section { padding: 90px 0; position: relative; z-index: 2; }
 
@@ -55,7 +57,7 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
     }
 
-    /* ===== STRUCTURE PRINCIPALE ===== */
+    /* ===== PAGE WRAPPER & PANORAMA ===== */
     #page-wrapper { position: relative; min-height: 100vh; }
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
@@ -79,6 +81,7 @@
       75% { color: rgba(139, 92, 246, 0.4); text-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
     }
     .highlight-blink { animation: blink-rose-violet 2.4s ease-in-out infinite; display: inline-block; }
+
     @media (prefers-reduced-motion: reduce) {
       .highlight-blink { animation: none; color: var(--blanc); text-shadow: 0 0 30px rgba(255, 60, 172, 0.8); }
     }
@@ -189,8 +192,7 @@
       box-shadow: 0 8px 40px rgba(46,18,0,0.07);
       backdrop-filter: blur(12px);
       width: 100%;
-      -webkit-user-select: text;
-      user-select: text;
+      box-sizing: border-box;
     }
     .form-group { margin-bottom: 26px; }
     .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
@@ -208,6 +210,7 @@
       resize: none;
       -webkit-appearance: none;
       appearance: none;
+      box-sizing: border-box;
     }
     .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
     .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
@@ -268,13 +271,6 @@
     @media (max-height: 600px) {
       #rsvp { padding: 40px 20px 60px; min-height: auto; }
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
-    }
-
-    /* ===== iOS BODY LOCK (pour fix clavier) ===== */
-    body.ios-keyboard-open {
-      position: fixed;
-      width: 100%;
-      overflow: hidden;
     }
 
     /* ===== FINAL SCENE ===== */
@@ -349,20 +345,20 @@
       <g class="lantern" style="animation:float-b 9.5s ease-in-out infinite; animation-delay:-7s; transform-origin:76px 385px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Grosse lanterne déplacée vers le haut (anciennement y=420) -->
+      <!-- Grosse lanterne déplacée vers le haut -->
       <g class="lantern" style="animation:float-a 8.3s ease-in-out infinite; animation-delay:-4.5s; transform-origin:198px 200px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="135" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
       </g>
       <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite; animation-delay:-1.5s; transform-origin:304px 520px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Lanterne descendue pour espacer du duo (anciennement y=520) -->
-      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:52px 653px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="30" y="620" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-      <!-- Nouvelle petite lanterne (remplace la grosse déplacée, décalée gauche + bas) -->
-      <g class="lantern" style="animation:float-e 8.4s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 535px;">
+      <!-- Nouvelle petite lanterne (remplace l'ancienne position de la grosse) -->
+      <g class="lantern" style="animation:float-d 8.9s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 540px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="90" y="500" width="50" height="70" preserveAspectRatio="xMidYMid meet"/>
+      </g>
+      <!-- Lanterne descendue pour espacer du duo -->
+      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:55px 655px;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="30" y="620" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
       </g>
       <g class="lantern" style="animation:float-e 8.9s ease-in-out infinite; animation-delay:-5.5s; transform-origin:356px 610px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="560" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
@@ -555,7 +551,7 @@
   <!-- RSVP -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
-      <h2 class="reveal">Vous serez là ?</h2>
+      <h2 class="reveal" id="rsvp-heading">Vous serez là ?</h2>
       <p class="rsvp-subtitle reveal">Répondez-nous avant <span class="highlight-blink">le 1er juin 2027</span> — on compte sur vous.</p>
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
@@ -632,440 +628,415 @@
 
 <script>
 'use strict';
-(function() {
-  /* ===== CONFIG & UTILITAIRES ===== */
-  const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
-  const Utils = {
-    pad: (n) => String(n).padStart(2, '0'),
-    debounce: (fn, delay) => {
-      let timeout;
-      return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); };
-    },
-    getElement: (id) => document.getElementById(id),
-    queryAll: (selector) => document.querySelectorAll(selector)
-  };
+/* ===== CONFIG & UTILS ===== */
+const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
-  /* ===== DÉTECTION iOS ===== */
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-    || (CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
-  if (isIOS) document.documentElement.classList.add('ios-perf');
+const Utils = {
+  pad: (n) => String(n).padStart(2, '0'),
+  debounce: (fn, delay) => {
+    let timeout;
+    return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); };
+  },
+  getElement: (id) => document.getElementById(id),
+  queryAll: (selector) => document.querySelectorAll(selector)
+};
 
-  /* ===== SCROLL MANAGER CENTRALISÉ ===== */
-  const ScrollManager = {
-    handlers: [],
-    rafId: null,
-    register(fn) { this.handlers.push(fn); },
-    tick() {
-      ScrollManager.rafId = null;
-      for (const fn of ScrollManager.handlers) fn();
-    },
-    onScroll() {
-      if (ScrollManager.rafId) return;
+/* ===== iOS DETECTION ===== */
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+if (isIOS) document.documentElement.classList.add('ios-perf');
+
+/* ===== SCROLL MANAGER (un seul RAF pour tous les effets) ===== */
+const ScrollManager = {
+  handlers: [],
+  rafId: null,
+  register(fn) { this.handlers.push(fn); },
+  tick() {
+    ScrollManager.rafId = null;
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    for (let i = 0; i < ScrollManager.handlers.length; i++) {
+      ScrollManager.handlers[i](scrollY, vh);
+    }
+  },
+  onScroll() {
+    if (!ScrollManager.rafId) {
       ScrollManager.rafId = requestAnimationFrame(ScrollManager.tick);
-    },
-    init() {
-      window.addEventListener('scroll', ScrollManager.onScroll, { passive: true });
     }
-  };
-  ScrollManager.init();
+  },
+  init() {
+    window.addEventListener('scroll', ScrollManager.onScroll, { passive: true });
+  }
+};
+ScrollManager.init();
 
-  /* ===== PANORAMA ===== */
-  (function() {
-    if (document.documentElement.classList.contains('ios-perf')) return;
-    const svg = Utils.getElement('panorama');
-    const W = 1440;
-    let rects = null;
+/* ===== PANORAMA ===== */
+(function() {
+  if (document.documentElement.classList.contains('ios-perf')) return;
+  const svg = Utils.getElement('panorama');
+  const wrapper = Utils.getElement('page-wrapper');
+  const W = 1440;
+  let rects = null;
 
-    function init() {
-      const H = Utils.getElement('page-wrapper').scrollHeight;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      svg.setAttribute('width', '100%');
-      svg.setAttribute('height', H);
-      svg.style.height = H + 'px';
-      svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect id="pano-rect-bg" width="${W}" height="${H}" fill="url(#bg-grad)"/><rect id="pano-rect-grain" width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
-      rects = { bg: Utils.getElement('pano-rect-bg'), grain: Utils.getElement('pano-rect-grain') };
+  function init() {
+    const H = wrapper.scrollHeight;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', H);
+    svg.style.height = H + 'px';
+    svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect id="pano-bg" width="${W}" height="${H}" fill="url(#bg-grad)"/><rect id="pano-grain" width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
+    rects = { bg: Utils.getElement('pano-bg'), grain: Utils.getElement('pano-grain') };
+  }
+
+  function resize() {
+    const H = wrapper.scrollHeight;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('height', H);
+    svg.style.height = H + 'px';
+    if (rects) {
+      rects.bg.setAttribute('height', H);
+      rects.grain.setAttribute('height', H);
     }
+  }
 
-    function resize() {
-      const H = Utils.getElement('page-wrapper').scrollHeight;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      svg.setAttribute('height', H);
-      svg.style.height = H + 'px';
-      if (rects) {
-        rects.bg.setAttribute('height', H);
-        rects.grain.setAttribute('height', H);
-      }
-    }
+  init();
+  window.addEventListener('resize', Utils.debounce(resize, 300));
+})();
 
-    init();
-    window.addEventListener('resize', Utils.debounce(resize, 300));
-  })();
+/* ===== LANTERNES PARALLAX ===== */
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = Utils.getElement('lanterns-layer');
+  if (!layer) return;
+  layer.style.transform = 'translate3d(0, 0px, 0)';
+  ScrollManager.register((scrollY) => {
+    layer.style.transform = `translate3d(0, -${scrollY * 0.32}px, 0)`;
+  });
+})();
 
-  /* ===== PARALLAX LANTERNES ===== */
-  (function() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const layer = Utils.getElement('lanterns-layer');
-    if (!layer) return;
-    layer.style.transform = 'translate3d(0, 0px, 0)';
-    ScrollManager.register(() => {
-      layer.style.transform = `translate3d(0, -${window.scrollY * 0.32}px, 0)`;
-    });
-  })();
-
-  /* ===== COUNTDOWN ===== */
-  (function() {
-    const target = new Date(CONFIG.weddingDate).getTime();
-    const grid = Utils.getElement('countdown-grid');
-    const done = Utils.getElement('countdown-done');
-    const tag = Utils.getElement('countdown-tagline');
-    const els = { d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'), m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds') };
-
-    function tick() {
-      const diff = target - Date.now();
-      if (diff <= 0) {
-        grid.style.display = 'none';
-        if (tag) tag.style.display = 'none';
-        done.style.display = 'block';
-        return;
-      }
-      els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
-      els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
-      els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
-      els.s.textContent = Utils.pad(Math.floor((diff % 60000) / 1000));
-    }
-    tick();
-    setInterval(tick, 1000);
-  })();
-
-  /* ===== REVEAL (IntersectionObserver) ===== */
-  (function() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const obs = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-      }
-    }, { threshold: 0.12 });
-    Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
-  })();
-
-  /* ===== TIMELINE DESKTOP ===== */
-  (function() {
-    if (window.innerWidth <= 700) return;
-    const section = Utils.getElement('timeline-desktop');
-    const wrapper = Utils.getElement('timeline-wrapper');
-    const lineSvg = Utils.getElement('timeline-line-svg');
-    const pathBg = Utils.getElement('timeline-path-bg');
-    const pathDraw = Utils.getElement('timeline-path-draw');
-    if (!section || !wrapper || !lineSvg) return;
-
-    function wavyPath(cx, H) {
-      const amp = 10, period = 100;
-      let d = `M ${cx} 0`, y = 0, dir = 1;
-      while (y < H) {
-        const nextY = Math.min(y + period, H);
-        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-        y = nextY; dir *= -1;
-      }
-      return d;
-    }
-
-    let isSetup = false;
-    function setup() {
-      const firstDot = wrapper.querySelector('.event-dot');
-      if (!firstDot) return;
-      const wRect = wrapper.getBoundingClientRect();
-      const dRect = firstDot.getBoundingClientRect();
-      const cx = dRect.left + dRect.width / 2 - wRect.left;
-      const H = wrapper.offsetHeight;
-      const svgW = 40;
-      lineSvg.style.left = (cx - svgW / 2) + 'px';
-      lineSvg.style.width = svgW + 'px';
-      lineSvg.style.height = H + 'px';
-      lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
-      const d = wavyPath(svgW / 2, H);
-      pathBg.setAttribute('d', d);
-      pathDraw.setAttribute('d', d);
-      const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
-      pathDraw.style.transition = 'none';
-      pathDraw.style.strokeDasharray = len;
-      pathDraw.style.strokeDashoffset = len;
-      pathDraw._len = len;
-      requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
-      isSetup = true;
-    }
-
-    setTimeout(setup, 200);
-    window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300);
+/* ===== COUNTDOWN ===== */
+(function() {
+  const target = new Date(CONFIG.weddingDate).getTime();
+  const grid = Utils.getElement('countdown-grid');
+  const done = Utils.getElement('countdown-done');
+  const tag = Utils.getElement('countdown-tagline');
+  const els = { d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'), m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds') };
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      grid.style.display = 'none';
+      if (tag) tag.style.display = 'none';
+      done.style.display = 'block';
       return;
     }
+    els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
+    els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
+    els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
+    els.s.textContent = Utils.pad(Math.floor((diff % 60000) / 1000));
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 
-    ScrollManager.register(() => {
-      if (window.innerWidth <= 700 || !isSetup) return;
-      const rect = section.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-      const total = section.offsetHeight - window.innerHeight;
-      const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
-      pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
-    });
-  })();
-
-  /* ===== TIMELINE MOBILE ===== */
-  (function() {
-    if (window.innerWidth > 700) return;
-    const wrapper = Utils.getElement('tl-mobile-wrapper');
-    const lineSvg = Utils.getElement('tl-mobile-line-svg');
-    const pathBg = Utils.getElement('tl-mobile-path-bg');
-    const pathDraw = Utils.getElement('tl-mobile-path-draw');
-    const steps = Utils.queryAll('.tl-step');
-    if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
-
-    function wavyPath(cx, H) {
-      const amp = 8, period = 80;
-      let d = `M ${cx} 0`, y = 0, dir = 1;
-      while (y < H) {
-        const nextY = Math.min(y + period, H);
-        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-        y = nextY; dir *= -1;
-      }
-      return d;
+/* ===== REVEAL (IntersectionObserver) ===== */
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const obs = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
     }
+  }, { threshold: 0.12 });
+  Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+})();
 
-    function setupLine() {
-      const H = wrapper.offsetHeight;
-      lineSvg.style.height = H + 'px';
-      lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
-      const d = wavyPath(20, H);
-      pathBg.setAttribute('d', d);
-      pathDraw.setAttribute('d', d);
-      const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
-      pathDraw.style.transition = 'none';
-      pathDraw.style.strokeDasharray = len;
-      pathDraw.style.strokeDashoffset = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : len;
-      pathDraw._len = len;
-      requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
-    }
+/* ===== TIMELINE DESKTOP ===== */
+(function() {
+  if (window.innerWidth <= 700) return;
+  const section = Utils.getElement('timeline-desktop');
+  const wrapper = Utils.getElement('timeline-wrapper');
+  const lineSvg = Utils.getElement('timeline-line-svg');
+  const pathBg = Utils.getElement('timeline-path-bg');
+  const pathDraw = Utils.getElement('timeline-path-draw');
+  if (!section || !wrapper || !lineSvg) return;
 
-    setTimeout(setupLine, 300);
-    window.addEventListener('resize', Utils.debounce(setupLine, 250));
+  function wavyPath(cx, H) {
+    const amp = 10, period = 100;
+    let d = `M ${cx} 0`, y = 0, dir = 1;
+    while (y < H) { const nextY = Math.min(y + period, H); d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`; y = nextY; dir *= -1; }
+    return d;
+  }
 
+  let isSetup = false;
+  function setup() {
+    const firstDot = wrapper.querySelector('.event-dot');
+    if (!firstDot) return;
+    const wRect = wrapper.getBoundingClientRect();
+    const dRect = firstDot.getBoundingClientRect();
+    const cx = dRect.left + dRect.width / 2 - wRect.left;
+    const H = wrapper.offsetHeight;
+    const svgW = 40;
+    lineSvg.style.left = (cx - svgW / 2) + 'px';
+    lineSvg.style.width = svgW + 'px';
+    lineSvg.style.height = H + 'px';
+    lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
+    const d = wavyPath(svgW / 2, H);
+    pathBg.setAttribute('d', d);
+    pathDraw.setAttribute('d', d);
+    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
+    pathDraw.style.transition = 'none';
+    pathDraw.style.strokeDasharray = len;
+    pathDraw.style.strokeDashoffset = len;
+    pathDraw._len = len;
+    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
+    isSetup = true;
+  }
+
+  setTimeout(setup, 200);
+  window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300);
+    return;
+  }
+
+  ScrollManager.register((scrollY, vh) => {
+    if (window.innerWidth <= 700 || !isSetup) return;
+    const rect = section.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > vh) return;
+    const total = section.offsetHeight - vh;
+    const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
+    pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
+  });
+})();
+
+/* ===== TIMELINE MOBILE ===== */
+(function() {
+  if (window.innerWidth > 700) return;
+  const wrapper = Utils.getElement('tl-mobile-wrapper');
+  const lineSvg = Utils.getElement('tl-mobile-line-svg');
+  const pathBg = Utils.getElement('tl-mobile-path-bg');
+  const pathDraw = Utils.getElement('tl-mobile-path-draw');
+  const steps = Utils.queryAll('.tl-step');
+  if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
+
+  function wavyPath(cx, H) {
+    const amp = 8, period = 80;
+    let d = `M ${cx} 0`, y = 0, dir = 1;
+    while (y < H) { const nextY = Math.min(y + period, H); d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`; y = nextY; dir *= -1; }
+    return d;
+  }
+
+  function setupLine() {
+    const H = wrapper.offsetHeight;
+    lineSvg.style.height = H + 'px';
+    lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
+    const d = wavyPath(20, H);
+    pathBg.setAttribute('d', d);
+    pathDraw.setAttribute('d', d);
+    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
+    pathDraw.style.transition = 'none';
+    pathDraw.style.strokeDasharray = len;
+    pathDraw.style.strokeDashoffset = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : len;
+    pathDraw._len = len;
+    requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
+  }
+
+  setTimeout(setupLine, 300);
+  window.addEventListener('resize', Utils.debounce(setupLine, 250));
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     ScrollManager.register(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const wrapperRect = wrapper.getBoundingClientRect();
       const wrapperH = wrapper.offsetHeight;
       const totalScroll = Math.max(1, wrapperH - window.innerHeight);
       const scrolled = Math.max(0, -wrapperRect.top);
       const globalProg = Math.min(1, scrolled / totalScroll);
-      pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - globalProg);
+      const len = pathDraw._len || 1000;
+      pathDraw.style.strokeDashoffset = len * (1 - globalProg);
     });
+  }
 
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        const i = entry.target.dataset.i;
-        const day = Utils.getElement(`tl-day-${i}`);
-        const dot = Utils.getElement(`tl-dot-${i}`);
-        const card = Utils.getElement(`tl-card-${i}`);
-        const img = Utils.getElement(`tl-img-${i}`);
-        if (entry.isIntersecting) {
-          day?.classList.add('show');
-          dot?.classList.add('show');
-          setTimeout(() => card?.classList.add('show'), 120);
-          setTimeout(() => img?.classList.add('show'), 240);
-        } else {
-          day?.classList.remove('show');
-          dot?.classList.remove('show');
-          card?.classList.remove('show');
-          img?.classList.remove('show');
-        }
-      }
-    }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
-
-    steps.forEach((step, i) => { step.dataset.i = String(i); io.observe(step); });
-    Utils.getElement('tl-day-0')?.classList.add('show');
-    Utils.getElement('tl-dot-0')?.classList.add('show');
-    Utils.getElement('tl-card-0')?.classList.add('show');
-    Utils.getElement('tl-img-0')?.classList.add('show');
-  })();
-
-  /* ===== VOITURE + FEUX D'ARTIFICE ===== */
-  (function() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const section = Utils.getElement('final-scene');
-    const car = Utils.getElement('car-el');
-    const canvas = Utils.getElement('fireworks-canvas');
-    if (!section || !car || !canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    const perfIOS = document.documentElement.classList.contains('ios-perf');
-    const carW = 200;
-
-    function resizeCanvas() {
-      const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
-      canvas.width = Math.floor(canvas.offsetWidth * dpr);
-      canvas.height = Math.floor(canvas.offsetHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
-
-    const particles = [];
-    let fwActive = false, fwRafId = null;
-    const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
-
-    function burst(x, y) {
-      const count = (perfIOS ? 28 : 60) + (Math.random() * (perfIOS ? 18 : 40)) | 0;
-      const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
-      const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
-        const speed = 2 + Math.random() * 5;
-        const life = 60 + Math.random() * 60;
-        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2, alpha: 1, life, maxLife: life, radius: 1.5 + Math.random() * 2, color: Math.random() > 0.5 ? c1 : c2, trail: [], gravity: 0.06 + Math.random() * 0.06 });
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const step = entry.target;
+      const i = step.dataset.i;
+      const day = Utils.getElement(`tl-day-${i}`);
+      const dot = Utils.getElement(`tl-dot-${i}`);
+      const card = Utils.getElement(`tl-card-${i}`);
+      const img = Utils.getElement(`tl-img-${i}`);
+      if (entry.isIntersecting) {
+        day?.classList.add('show');
+        dot?.classList.add('show');
+        setTimeout(() => card?.classList.add('show'), 120);
+        setTimeout(() => img?.classList.add('show'), 240);
+      } else {
+        day?.classList.remove('show');
+        dot?.classList.remove('show');
+        card?.classList.remove('show');
+        img?.classList.remove('show');
       }
     }
+  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
 
-    function animateFW() {
-      if (!fwActive) return;
-      fwRafId = requestAnimationFrame(animateFW);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
-        if (p.trail.length > 6) p.trail.shift();
-        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--; p.alpha = p.life / p.maxLife;
-        for (let t = 0; t < p.trail.length; t++) {
-          const tp = p.trail[t];
-          ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill();
-        }
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); ctx.globalAlpha = 1;
-        if (p.life <= 0) particles.splice(i, 1);
-      }
+  steps.forEach((step, i) => { step.dataset.i = String(i); io.observe(step); });
+  Utils.getElement('tl-day-0')?.classList.add('show');
+  Utils.getElement('tl-dot-0')?.classList.add('show');
+  Utils.getElement('tl-card-0')?.classList.add('show');
+  Utils.getElement('tl-img-0')?.classList.add('show');
+})();
+
+/* ===== VOITURE + FEUX D'ARTIFICE ===== */
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const section = Utils.getElement('final-scene');
+  const car = Utils.getElement('car-el');
+  const canvas = Utils.getElement('fireworks-canvas');
+  if (!section || !car || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const perfIOS = document.documentElement.classList.contains('ios-perf');
+  const carW = 200;
+
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
+    canvas.width = Math.floor(canvas.offsetWidth * dpr);
+    canvas.height = Math.floor(canvas.offsetHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
+
+  const particles = [];
+  let fwActive = false, fwRafId = null;
+  const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
+
+  function burst(x, y) {
+    const count = (perfIOS ? 28 : 60) + (Math.random() * (perfIOS ? 18 : 40)) | 0;
+    const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+    const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
+      const speed = 2 + Math.random() * 5;
+      const life = 60 + Math.random() * 60;
+      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2, alpha: 1, life, maxLife: life, radius: 1.5 + Math.random() * 2, color: Math.random() > 0.5 ? c1 : c2, trail: [], gravity: 0.06 + Math.random() * 0.06 });
     }
+  }
 
-    let burstTOs = [];
-    function launchFW() {
-      burstTOs.forEach(clearTimeout); burstTOs = [];
-      const W = canvas.width, H = canvas.height;
-      const pos = [{ x: W*0.2, y: H*0.18 }, { x: W*0.5, y: H*0.12 }, { x: W*0.78, y: H*0.2 }, { x: W*0.35, y: H*0.28 }, { x: W*0.65, y: H*0.25 }];
-      pos.forEach((p, i) => { burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280)); });
-      burstTOs.push(setTimeout(launchFW, pos.length * 280 + 1000));
+  function animateFW() {
+    if (!fwActive) return;
+    fwRafId = requestAnimationFrame(animateFW);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
+      if (p.trail.length > 6) p.trail.shift();
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--; p.alpha = p.life / p.maxLife;
+      p.trail.forEach((tp, t) => { ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill(); });
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); ctx.globalAlpha = 1;
+      if (p.life <= 0) particles.splice(i, 1);
     }
+  }
 
-    function startFW() { if (fwActive) return; fwActive = true; canvas.classList.add('visible'); launchFW(); animateFW(); }
-    function stopFW() {
-      if (!fwActive) return; fwActive = false; canvas.classList.remove('visible');
-      burstTOs.forEach(clearTimeout); burstTOs = [];
-      if (fwRafId) cancelAnimationFrame(fwRafId);
-      ctx.clearRect(0, 0, canvas.width, canvas.height); particles.length = 0;
+  let burstTOs = [];
+  function launchFW() {
+    burstTOs.forEach(clearTimeout); burstTOs = [];
+    const W = canvas.width, H = canvas.height;
+    const pos = [{ x: W*0.2, y: H*0.18 },{ x: W*0.5, y: H*0.12 },{ x: W*0.78, y: H*0.2 },{ x: W*0.35, y: H*0.28 },{ x: W*0.65, y: H*0.25 }];
+    pos.forEach((p, i) => { burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280)); });
+    burstTOs.push(setTimeout(launchFW, pos.length * 280 + 1000));
+  }
+
+  function startFW() { if (fwActive) return; fwActive = true; canvas.classList.add('visible'); launchFW(); animateFW(); }
+  function stopFW() { if (!fwActive) return; fwActive = false; canvas.classList.remove('visible'); burstTOs.forEach(clearTimeout); burstTOs = []; if (fwRafId) cancelAnimationFrame(fwRafId); ctx.clearRect(0, 0, canvas.width, canvas.height); particles.length = 0; }
+
+  let lastProgress = -1;
+  ScrollManager.register((scrollY, vh) => {
+    const rect = section.getBoundingClientRect();
+    const total = section.offsetHeight - vh;
+    if (rect.bottom <= 0 || rect.top >= vh) {
+      if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`; stopFW(); }
+      lastProgress = -1;
+      return;
     }
+    const progress = Math.min(1, Math.max(0, -rect.top / total));
+    if (Math.abs(progress - lastProgress) < 0.0005) return;
+    lastProgress = progress;
+    const startX = -carW - 20;
+    const endX = window.innerWidth + 20;
+    car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
+    if (progress >= 0.85) startFW(); else stopFW();
+  });
 
-    let lastProgress = -1;
-    function updateCar() {
-      const rect = section.getBoundingClientRect();
-      const total = section.offsetHeight - window.innerHeight;
-      if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
-        if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`; stopFW(); }
-        lastProgress = -1; return;
-      }
-      const progress = Math.min(1, Math.max(0, -rect.top / total));
-      if (Math.abs(progress - lastProgress) < 0.0005) return;
-      lastProgress = progress;
-      const startX = -carW - 20, endX = window.innerWidth + 20;
-      car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
-      if (progress >= 0.85) startFW(); else stopFW();
-    }
+  window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; });
+})();
 
-    ScrollManager.register(updateCar);
-    window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; updateCar(); });
-    updateCar();
-  })();
+/* ===== FIX iOS : Scroll après fermeture du clavier ===== */
+(function() {
+  if (!isIOS) return;
+  const form = document.getElementById('rsvp-form');
+  const heading = document.getElementById('rsvp-heading');
+  if (!form || !heading) return;
 
-  /* ===== FIX iOS : CLAVIER VIRTUEL ===== */
-  (function() {
-    if (!isIOS) return;
-    const form = Utils.getElement('rsvp-form');
-    if (!form) return;
+  const inputs = form.querySelectorAll('input[type="text"], textarea');
+  let isInputFocused = false;
 
-    const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let savedScrollY = 0;
+  inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      isInputFocused = true;
+    }, { passive: true });
 
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => {
-        savedScrollY = window.scrollY;
-        // Petit délai pour laisser Safari faire son scroll initial puis corriger
-        setTimeout(() => {
-          document.body.classList.add('ios-keyboard-open');
-          document.body.style.top = `-${savedScrollY}px`;
-        }, 50);
-      });
+    input.addEventListener('blur', () => {
+      if (!isInputFocused) return;
+      isInputFocused = false;
+      // Attendre que Safari repositionne le viewport après fermeture clavier
+      setTimeout(() => {
+        heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }, { passive: true });
+  });
+})();
 
-      input.addEventListener('blur', () => {
-        if (!document.body.classList.contains('ios-keyboard-open')) return;
-        document.body.classList.remove('ios-keyboard-open');
-        document.body.style.top = '';
-        window.scrollTo(0, savedScrollY);
-      });
+/* ===== RADIO & RSVP ===== */
+(function() {
+  const form = Utils.getElement('rsvp-form');
+  const btn = Utils.getElement('btn-submit');
+  const success = Utils.getElement('rsvp-success');
+  const iframe = Utils.getElement('hidden_iframe');
+  const errorName = Utils.getElement('error-name');
+  const errorAtt = Utils.getElement('error-attending');
+  const nameInput = Utils.getElement('rsvp-name');
+  const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
+  let submitted = false;
+
+  iframe.addEventListener('load', () => {
+    if (!submitted) return;
+    form.style.display = 'none';
+    success.classList.add('visible');
+    btn.disabled = false;
+    btn.textContent = 'Confirmer';
+    submitted = false;
+  });
+
+  form.addEventListener('submit', (e) => {
+    let valid = true;
+    const nameVal = nameInput.value.trim();
+    if (!nameVal) { errorName.classList.add('visible'); if (valid) nameInput.focus(); valid = false; } else { errorName.classList.remove('visible'); }
+    const radioChecked = Array.from(radioInputs).find(r => r.checked);
+    if (!radioChecked) { errorAtt.classList.add('visible'); if (valid) radioInputs[0].focus(); valid = false; } else { errorAtt.classList.remove('visible'); }
+    if (!valid) { e.preventDefault(); return; }
+    submitted = true;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+  });
+
+  radioInputs.forEach(radio => {
+    radio.addEventListener('change', () => {
+      Utils.queryAll('.radio-btn').forEach(b => b.classList.remove('selected'));
+      if (radio.checked) radio.closest('.radio-btn').classList.add('selected');
     });
-  })();
-
-  /* ===== RADIO & FORMULAIRE RSVP ===== */
-  (function() {
-    const form = Utils.getElement('rsvp-form');
-    const btn = Utils.getElement('btn-submit');
-    const success = Utils.getElement('rsvp-success');
-    const iframe = Utils.getElement('hidden_iframe');
-    const errorName = Utils.getElement('error-name');
-    const errorAtt = Utils.getElement('error-attending');
-    const nameInput = Utils.getElement('rsvp-name');
-    const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
-    let submitted = false;
-
-    iframe.addEventListener('load', () => {
-      if (!submitted) return;
-      form.style.display = 'none';
-      success.classList.add('visible');
-      btn.disabled = false;
-      btn.textContent = 'Confirmer';
-      submitted = false;
-    });
-
-    form.addEventListener('submit', (e) => {
-      let valid = true;
-      if (!nameInput.value.trim()) {
-        errorName.classList.add('visible');
-        if (valid) nameInput.focus();
-        valid = false;
-      } else { errorName.classList.remove('visible'); }
-
-      const radioChecked = Array.from(radioInputs).find(r => r.checked);
-      if (!radioChecked) {
-        errorAtt.classList.add('visible');
-        if (valid) radioInputs[0].focus();
-        valid = false;
-      } else { errorAtt.classList.remove('visible'); }
-
-      if (!valid) { e.preventDefault(); return; }
-      submitted = true;
-      btn.disabled = true;
-      btn.textContent = 'Envoi en cours...';
-    });
-
-    radioInputs.forEach(radio => {
-      radio.addEventListener('change', () => {
-        Utils.queryAll('.radio-btn').forEach(b => b.classList.remove('selected'));
-        if (radio.checked) radio.closest('.radio-btn').classList.add('selected');
-      });
-    });
-  })();
-
+  });
 })();
 </script>
 
