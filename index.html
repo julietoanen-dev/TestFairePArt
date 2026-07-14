@@ -109,13 +109,43 @@
     @keyframes chevron { 0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; } 50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; } }
 
     /* ═══════════════════════════════════════════════════════════
-       COUNTDOWN
+       COUNTDOWN — Taille augmentée
     ═══════════════════════════════════════════════════════════ */
     #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
-    .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
-    .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(139,92,246,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
-    .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
-    .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
+    .countdown-grid { display: flex; justify-content: center; gap: clamp(10px, 3vw, 24px); flex-wrap: nowrap; margin-bottom: 20px; }
+    .countdown-unit {
+      background: rgba(255,255,255,0.78);
+      border: 1.5px solid rgba(139,92,246,0.28);
+      border-radius: 14px;
+      width: clamp(80px, 20vw, 130px);
+      height: clamp(90px, 22vw, 130px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 1;
+      backdrop-filter: blur(8px);
+      min-width: 0;
+    }
+    .countdown-number {
+      font-family: var(--font-titre);
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      color: var(--violet);
+      line-height: 1;
+      display: block;
+      width: 2.2ch;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .countdown-label {
+      font-size: clamp(0.6rem, 1.8vw, 0.75rem);
+      color: var(--texte-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+      display: block;
+      white-space: nowrap;
+    }
     .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
 
@@ -183,6 +213,27 @@
     .tl-step-title { font-family: var(--font-titre); font-size: 1.2rem; color: var(--texte); margin-bottom: 6px; }
     .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
     .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
+
+    /* ═══════════════════════════════════════════════════════════
+       INFO HINT (petite note dans les event cards)
+    ═══════════════════════════════════════════════════════════ */
+    .event-hint {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--corail);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .tl-step-hint {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--corail);
+      font-style: italic;
+      line-height: 1.5;
+    }
 
     /* ═══════════════════════════════════════════════════════════
        RSVP
@@ -312,9 +363,21 @@
     .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
+    .rsvp-success {
+      display: none;
+      text-align: center;
+      padding: 36px;
+      background: rgba(255,107,53,0.06);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,107,53,0.2);
+      margin-top: 20px;
+    }
     .rsvp-success.visible { display: block; }
-    .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
+    .rsvp-success p {
+      font-family: var(--font-titre);
+      font-size: 1.3rem;
+      color: var(--corail);
+    }
 
     .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
 
@@ -325,6 +388,19 @@
     @media (max-height: 600px) {
       #rsvp { padding: 40px 20px 60px; min-height: auto; }
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CONFETTIS
+    ═══════════════════════════════════════════════════════════ */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -367,12 +443,10 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       IOS PERFORMANCE — SÉLECTEURS CORRIGÉS
+       IOS PERFORMANCE
     ═══════════════════════════════════════════════════════════ */
-    /* CORRECTION : html.ios-perf au lieu de .ios-perf html */
     html.ios-perf { scroll-behavior: auto !important; }
     html.ios-perf body { -webkit-overflow-scrolling: touch; }
-
     .ios-perf #panorama { display: none !important; }
     .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
     .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label,
@@ -384,21 +458,16 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    /*
-     * FIX iOS CLAVIER — Pendant le focus sur un input du formulaire,
-     * on neutralise les éléments qui causent des "ancres" de scroll parasites :
-     * - Les sticky de la timeline mobile passent en position: relative
-     * - Le RSVP section perd son min-height et son centering flex
-     */
-    .ios-perf.ios-keyboard-open .tl-step-sticky {
+    /* iOS keyboard open — neutralise les sticky elements */
+    html.ios-perf.ios-keyboard-open .tl-step-sticky {
       position: relative !important;
       height: auto !important;
     }
-    .ios-perf.ios-keyboard-open #rsvp {
+    html.ios-perf.ios-keyboard-open #rsvp {
       min-height: auto !important;
       justify-content: flex-start !important;
     }
-    .ios-perf.ios-keyboard-open .final-sticky {
+    html.ios-perf.ios-keyboard-open .final-sticky {
       position: relative !important;
     }
   </style>
@@ -510,7 +579,7 @@
               <div class="event-side reveal-left">
                 <div class="event-card">
                   <div class="event-time">16h30</div>
-                  <div class="event-title">Cérémonie civile</div>
+                  <div class="event-title">Mariage à la mairie</div>
                   <div class="event-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
                   <a href="https://www.google.com/maps/search/?api=1&query=Mairie+Pin-Balma+31130" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
@@ -551,6 +620,7 @@
                   <div class="event-time">À partir de 12h00</div>
                   <div class="event-title">Brunch</div>
                   <div class="event-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
+                  <span class="event-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</span>
                   <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
@@ -586,7 +656,7 @@
           <div class="tl-step-dot" id="tl-dot-0"></div>
           <div class="tl-step-card" id="tl-card-0">
             <div class="tl-step-time">16h30</div>
-            <div class="tl-step-title">Cérémonie civile</div>
+            <div class="tl-step-title">Mariage à la mairie</div>
             <div class="tl-step-address">Mairie de Pin-Balma<br>Pl. de la Mairie, 31130 Pin-Balma</div>
             <a href="https://www.google.com/maps/search/?api=1&query=Mairie+Pin-Balma+31130" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
@@ -620,6 +690,7 @@
             <div class="tl-step-time tl-step-time--amber">À partir de 12h00</div>
             <div class="tl-step-title">Brunch</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
+            <span class="tl-step-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</span>
             <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-2">
@@ -633,7 +704,7 @@
   <!-- RSVP -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
-      <h2 class="reveal" id="rsvp-heading">Vous serez là ?</h2>
+      <h2 class="reveal" id="rsvp-heading">Serez-vous là ?</h2>
       <p class="rsvp-subtitle reveal">Répondez-nous avant <span class="highlight-blink">le 1er juin 2027</span> — on compte sur vous.</p>
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
@@ -673,13 +744,16 @@
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
         </form>
         <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
-          <p>Merci ! On a bien enregistré ta réponse.</p>
+          <p>Merci ! On a bien enregistré ta réponse 🎉</p>
         </div>
       </div>
     </div>
   </section>
 
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
+
+  <!-- Canvas pour les confettis (position fixed, au-dessus de tout) -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <!-- FINAL SCENE -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
@@ -1118,165 +1192,249 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     FIX iOS — CLAVIER VIRTUEL (NOUVELLE APPROCHE)
-     
-     Stratégie :
-     1. Au focus : on sauvegarde la position relative de l'input
-        par rapport au viewport, et on ajoute .ios-keyboard-open
-        pour neutraliser les sticky/flex qui causent des ancres parasites.
-     2. Pendant que le clavier est ouvert : on utilise visualViewport.resize
-        pour repositionner si Safari nous déplace.
-     3. Au blur : on attend la stabilisation complète du viewport
-        via un polling rAF (max 800ms) puis on scroll instantanément
-        vers la position correcte de l'input.
-     
-     Pourquoi ça fonctionne :
-     - scroll-behavior: auto (sélecteur CSS corrigé) empêche les animations
-     - .ios-keyboard-open désactive les sticky qui servaient d'ancres
-     - Le polling rAF attend que Safari AIT FINI son scroll avant de corriger
+     CONFETTIS — Animation de célébration au submit RSVP
+     Se déclenche une seule fois à la confirmation du formulaire.
+  ═══════════════════════════════════════════════════════════ */
+  const Confetti = (function() {
+    const canvas = Utils.getElement('confetti-canvas');
+    if (!canvas) return { launch() {} };
+    const ctx = canvas.getContext('2d');
+    const pieces = [];
+    let animId = null;
+    let launched = false;
+
+    const COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#8B5CF6', '#FFD166', '#ff87a8', '#fbbf24', '#ffffff'];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createPiece() {
+      return {
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 40,
+        w: 6 + Math.random() * 8,
+        h: 4 + Math.random() * 6,
+        color: COLORS[(Math.random() * COLORS.length) | 0],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 12,
+        vx: (Math.random() - 0.5) * 4,
+        vy: 2 + Math.random() * 4,
+        gravity: 0.08 + Math.random() * 0.04,
+        drag: 0.98 + Math.random() * 0.015,
+        wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.03 + Math.random() * 0.05,
+        alpha: 1
+      };
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = 0;
+
+      for (let i = pieces.length - 1; i >= 0; i--) {
+        const p = pieces[i];
+        p.vy += p.gravity;
+        p.vx *= p.drag;
+        p.vy *= p.drag;
+        p.x += p.vx + Math.sin(p.wobble) * 0.8;
+        p.y += p.vy;
+        p.rotation += p.rotSpeed;
+        p.wobble += p.wobbleSpeed;
+
+        // Fade out quand on approche du bas
+        if (p.y > canvas.height * 0.75) {
+          p.alpha -= 0.015;
+        }
+
+        if (p.alpha <= 0 || p.y > canvas.height + 20) {
+          pieces.splice(i, 1);
+          continue;
+        }
+
+        alive++;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+
+      if (alive > 0) {
+        animId = requestAnimationFrame(animate);
+      } else {
+        // Nettoyage final
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        animId = null;
+      }
+    }
+
+    function launch() {
+      if (launched) return; // Une seule fois !
+      launched = true;
+
+      resize();
+      // Créer ~150 confettis en plusieurs vagues
+      const totalPieces = 150;
+      const waves = 5;
+      const perWave = totalPieces / waves;
+
+      for (let w = 0; w < waves; w++) {
+        setTimeout(() => {
+          for (let i = 0; i < perWave; i++) {
+            pieces.push(createPiece());
+          }
+          if (!animId) {
+            animId = requestAnimationFrame(animate);
+          }
+        }, w * 200);
+      }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    return { launch };
+  })();
+
+  /* ═══════════════════════════════════════════════════════════
+     FIX iOS — CLAVIER VIRTUEL
+     Utilise visualViewport API + polling RAF pour détecter
+     la stabilisation du viewport avant de corriger le scroll.
   ═══════════════════════════════════════════════════════════ */
   (function() {
     if (!isIOS) return;
-
-    const html = document.documentElement;
     const form = document.getElementById('rsvp-form');
     if (!form) return;
 
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    if (!inputs.length) return;
+    let activeInput = null;
+    let isFocused = false;
 
-    let activeInput = null;       // L'input actuellement focusé
-    let savedOffsetTop = 0;       // Position absolue de l'input dans la page
-    let keyboardOpen = false;     // État du clavier
-    let stabilizeRAF = null;      // ID du rAF de polling
-
-    // Calcule où l'input DEVRAIT être : son offsetTop dans le document,
-    // positionné à ~1/3 du viewport visible depuis le haut
-    function getIdealScrollY(input) {
-      const rect = input.getBoundingClientRect();
-      const absoluteTop = window.scrollY + rect.top;
-      const viewportH = window.visualViewport
-        ? window.visualViewport.height
-        : window.innerHeight;
-      // On veut l'input au 1er tiers du viewport visible
-      const targetOffset = Math.min(viewportH * 0.33, 150);
-      return Math.max(0, absoluteTop - targetOffset);
+    // Positionne l'input actif à ~1/3 du viewport visible
+    function scrollToInput(el) {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const vpH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const targetTop = vpH * 0.3;
+      const delta = rect.top - targetTop;
+      if (Math.abs(delta) > 10) {
+        window.scrollBy(0, delta);
+      }
     }
 
-    // Scroll instantané (scroll-behavior: auto est forcé en CSS)
-    function scrollToInstant(y) {
-      window.scrollTo(0, y);
-    }
-
-    // Attend la stabilisation du viewport après fermeture du clavier,
-    // puis corrige le scroll. Utilise un polling qui détecte quand
-    // le scrollY arrête de bouger.
-    function stabilizeAfterBlur(targetInput) {
-      if (stabilizeRAF) cancelAnimationFrame(stabilizeRAF);
-
-      const startTime = performance.now();
-      const maxWait = 800; // 800ms max d'attente
-      let lastScrollY = window.scrollY;
+    // Attend la stabilisation du scroll puis corrige
+    function waitStableAndCorrect(el) {
+      let lastY = window.scrollY;
       let stableFrames = 0;
-      const requiredStable = 3; // 3 frames consécutives sans mouvement
+      const requiredStable = 4;
+      const maxWait = 60; // ~1 seconde max
+      let frames = 0;
 
       function check() {
-        const elapsed = performance.now() - startTime;
-        const currentScrollY = window.scrollY;
-
-        if (Math.abs(currentScrollY - lastScrollY) < 1) {
+        frames++;
+        const currentY = window.scrollY;
+        if (Math.abs(currentY - lastY) < 2) {
           stableFrames++;
         } else {
           stableFrames = 0;
         }
-        lastScrollY = currentScrollY;
+        lastY = currentY;
 
-        if (stableFrames >= requiredStable || elapsed > maxWait) {
-          // Safari a fini de bouger → on corrige
-          // On veut que le formulaire RSVP soit centré dans le viewport
-          const rsvpSection = document.getElementById('rsvp');
-          if (rsvpSection) {
-            const formWrap = rsvpSection.querySelector('.rsvp-form-wrap');
-            const target = formWrap || rsvpSection;
-            const targetRect = target.getBoundingClientRect();
-            const targetAbsoluteTop = window.scrollY + targetRect.top;
-            const viewportH = window.innerHeight;
-            // Centrer le formulaire dans le viewport
-            const idealY = targetAbsoluteTop - (viewportH - target.offsetHeight) / 2;
-            // Mais ne pas remonter plus haut que le début de la section RSVP
-            const rsvpAbsoluteTop = window.scrollY + rsvpSection.getBoundingClientRect().top;
-            const finalY = Math.max(rsvpAbsoluteTop - 40, Math.min(idealY, rsvpAbsoluteTop));
-            scrollToInstant(finalY);
-          }
-          stabilizeRAF = null;
+        if (stableFrames >= requiredStable || frames >= maxWait) {
+          // Viewport stabilisé, corriger la position
+          if (el) scrollToInput(el);
           return;
         }
-
-        stabilizeRAF = requestAnimationFrame(check);
+        requestAnimationFrame(check);
       }
-
-      // Petit délai initial pour laisser Safari commencer son scroll
-      setTimeout(() => {
-        stabilizeRAF = requestAnimationFrame(check);
-      }, 80);
+      requestAnimationFrame(check);
     }
 
-    // Gestion des événements focus/blur
+    // Positionne le formulaire en vue après fermeture clavier
+    function scrollToFormWrap() {
+      const wrap = document.querySelector('.rsvp-form-wrap');
+      if (!wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      const vpH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const targetTop = vpH * 0.2;
+      const delta = rect.top - targetTop;
+      if (Math.abs(delta) > 10) {
+        window.scrollBy(0, delta);
+      }
+    }
+
+    function waitStableAndRestoreView() {
+      let lastY = window.scrollY;
+      let stableFrames = 0;
+      const requiredStable = 5;
+      const maxWait = 80;
+      let frames = 0;
+
+      function check() {
+        frames++;
+        const currentY = window.scrollY;
+        if (Math.abs(currentY - lastY) < 2) {
+          stableFrames++;
+        } else {
+          stableFrames = 0;
+        }
+        lastY = currentY;
+
+        if (stableFrames >= requiredStable || frames >= maxWait) {
+          scrollToFormWrap();
+          return;
+        }
+        requestAnimationFrame(check);
+      }
+      requestAnimationFrame(check);
+    }
+
     inputs.forEach(input => {
-      // font-size: 16px empêche le zoom Safari (déjà en CSS mais on renforce)
       input.style.fontSize = '16px';
 
       input.addEventListener('focus', () => {
+        isFocused = true;
         activeInput = input;
-        keyboardOpen = true;
+        document.documentElement.classList.add('ios-keyboard-open');
 
-        // Ajouter la classe qui neutralise les sticky et le flex centering
-        html.classList.add('ios-keyboard-open');
-
-        // Sauvegarder la position actuelle
-        savedOffsetTop = window.scrollY;
-
-        // Pour le textarea : Safari le déplace au focus.
-        // On corrige après un court délai (le temps que Safari fasse son scroll initial)
-        const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
+        // Délai pour laisser le clavier s'ouvrir
+        const delay = input.tagName === 'TEXTAREA' ? 450 : 300;
         setTimeout(() => {
-          if (activeInput === input && keyboardOpen) {
-            scrollToInstant(getIdealScrollY(input));
+          if (isFocused && activeInput === input) {
+            scrollToInput(input);
           }
         }, delay);
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        const wasInput = activeInput;
+        isFocused = false;
         activeInput = null;
-        keyboardOpen = false;
 
-        // Retirer la classe APRÈS un léger délai pour éviter un reflow
-        // pendant que Safari repositionne
+        // Attendre un peu avant de retirer la classe
+        // (permet au viewport de se stabiliser)
         setTimeout(() => {
-          // Ne retirer que si on n'a pas re-focusé un autre input entre-temps
-          if (!activeInput) {
-            html.classList.remove('ios-keyboard-open');
+          if (!isFocused) {
+            document.documentElement.classList.remove('ios-keyboard-open');
+            waitStableAndRestoreView();
           }
         }, 100);
-
-        // Lancer la stabilisation post-clavier
-        stabilizeAfterBlur(wasInput);
       }, { passive: true });
     });
 
-    // Écouter les changements de taille du visualViewport pendant le focus
-    // pour repositionner si Safari nous déplace pendant la saisie
+    // Écoute les changements de viewport pour recorriger pendant la saisie
     if (window.visualViewport) {
-      let vpResizeTimeout = null;
+      let resizeTimer = null;
       window.visualViewport.addEventListener('resize', () => {
-        if (!keyboardOpen || !activeInput) return;
-        clearTimeout(vpResizeTimeout);
-        vpResizeTimeout = setTimeout(() => {
-          if (keyboardOpen && activeInput) {
-            scrollToInstant(getIdealScrollY(activeInput));
-          }
-        }, 150);
+        if (isFocused && activeInput) {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            if (isFocused && activeInput) scrollToInput(activeInput);
+          }, 150);
+        }
       });
     }
   })();
@@ -1303,6 +1461,8 @@
       btn.disabled = false;
       btn.textContent = 'Confirmer';
       submitted = false;
+      // Lancer les confettis une seule fois !
+      Confetti.launch();
     });
 
     form.addEventListener('submit', (e) => {
