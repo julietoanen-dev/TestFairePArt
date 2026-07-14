@@ -367,7 +367,14 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       IOS PERFORMANCE
+       IOS PERFORMANCE + FIX CLAVIER
+       
+       Le fix clavier iOS est ICI : on retire min-height et le
+       centrage flex sur la section RSVP. C'est la CAUSE du bug :
+       Safari recalcule le scroll quand le clavier s'ouvre/ferme
+       et le min-height:100vh + justify-content:center crée un
+       énorme décalage. Sans ça, Safari scrolle normalement
+       vers l'input sans faire de grand saut.
     ═══════════════════════════════════════════════════════════ */
     .ios-perf html { scroll-behavior: auto !important; }
     .ios-perf #panorama { display: none !important; }
@@ -380,6 +387,14 @@
       box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+    /* FIX CLAVIER iOS : retirer le centrage vertical qui cause les sauts */
+    .ios-perf #rsvp {
+      min-height: auto;
+      display: block;
+      padding-top: 60px;
+      padding-bottom: 80px;
+    }
   </style>
 </head>
 
@@ -1101,71 +1116,24 @@
 
   /* ═══════════════════════════════════════════════════════════
      FIX iOS — CLAVIER VIRTUEL
-     Utilise visualViewport API pour détecter précisément
-     l'ouverture/fermeture du clavier et corriger le scroll.
-     scroll-behavior: auto est forcé sur iOS via CSS (.ios-perf)
-     pour que les corrections soient instantanées.
+     
+     Approche structurelle : le CSS (.ios-perf #rsvp) retire
+     min-height:100vh et justify-content:center. Ça élimine
+     la CAUSE du bug : Safari n'a plus besoin de faire de
+     grands sauts pour centrer l'input dans le viewport réduit.
+     
+     Aucune manipulation JS du scroll n'est nécessaire.
+     On garde juste le font-size:16px pour éviter le zoom auto.
   ═══════════════════════════════════════════════════════════ */
   (function() {
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
-    const heading = document.getElementById('rsvp-heading');
-    if (!form || !heading) return;
+    if (!form) return;
 
+    // Font-size 16px minimum pour éviter le zoom automatique iOS
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let isFocused = false;
-    let savedScrollY = 0;
-    let viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-
-    // Position cible : le heading "Vous serez là ?" en haut du viewport
-    function getTargetScrollY() {
-      const rect = heading.getBoundingClientRect();
-      return window.scrollY + rect.top - 20;
-    }
-
-    // Correction instantanée du scroll
-    function correctScroll() {
-      window.scrollTo(0, getTargetScrollY());
-    }
-
-    // Écoute le resize du visualViewport (= clavier s'ouvre ou se ferme)
-    if (window.visualViewport) {
-      let resizeTimer = null;
-      window.visualViewport.addEventListener('resize', () => {
-        const newHeight = window.visualViewport.height;
-        const heightDiff = newHeight - viewportHeight;
-        viewportHeight = newHeight;
-
-        // Le viewport grandit = le clavier se FERME
-        if (heightDiff > 50 && isFocused === false) {
-          // Clavier vient de se fermer, corriger après stabilisation
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(correctScroll, 120);
-        }
-      });
-    }
-
-    inputs.forEach(input => {
+    inputs.forEach(function(input) {
       input.style.fontSize = '16px';
-
-      input.addEventListener('focus', () => {
-        isFocused = true;
-        savedScrollY = window.scrollY;
-
-        // Pour le textarea qui envoie en bas de page au focus
-        if (input.tagName === 'TEXTAREA') {
-          setTimeout(() => {
-            if (isFocused) correctScroll();
-          }, 400);
-        }
-      }, { passive: true });
-
-      input.addEventListener('blur', () => {
-        isFocused = false;
-        // Attendre que Safari + visualViewport se stabilisent
-        // puis corriger la position
-        setTimeout(correctScroll, 450);
-      }, { passive: true });
     });
   })();
 
