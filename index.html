@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -368,9 +367,12 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       IOS PERFORMANCE
+       IOS PERFORMANCE — SÉLECTEURS CORRIGÉS
     ═══════════════════════════════════════════════════════════ */
-    .ios-perf html { scroll-behavior: auto !important; }
+    /* CORRECTION : html.ios-perf au lieu de .ios-perf html */
+    html.ios-perf { scroll-behavior: auto !important; }
+    html.ios-perf body { -webkit-overflow-scrolling: touch; }
+
     .ios-perf #panorama { display: none !important; }
     .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
     .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label,
@@ -381,6 +383,24 @@
       box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+    /*
+     * FIX iOS CLAVIER — Pendant le focus sur un input du formulaire,
+     * on neutralise les éléments qui causent des "ancres" de scroll parasites :
+     * - Les sticky de la timeline mobile passent en position: relative
+     * - Le RSVP section perd son min-height et son centering flex
+     */
+    .ios-perf.ios-keyboard-open .tl-step-sticky {
+      position: relative !important;
+      height: auto !important;
+    }
+    .ios-perf.ios-keyboard-open #rsvp {
+      min-height: auto !important;
+      justify-content: flex-start !important;
+    }
+    .ios-perf.ios-keyboard-open .final-sticky {
+      position: relative !important;
+    }
   </style>
 </head>
 
@@ -410,18 +430,15 @@
       <g class="lantern" style="animation:float-b 9.5s ease-in-out infinite; animation-delay:-7s; transform-origin:76px 385px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Grosse lanterne déplacée vers le haut -->
       <g class="lantern" style="animation:float-a 8.3s ease-in-out infinite; animation-delay:-4.5s; transform-origin:198px 200px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="135" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
       </g>
       <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite; animation-delay:-1.5s; transform-origin:304px 520px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Petite lanterne ajoutée (remplace l'ancienne position de la grosse) -->
       <g class="lantern" style="animation:float-d 8.9s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 535px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="90" y="500" width="50" height="70" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Lanterne descendue pour espacer du duo -->
       <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:55px 655px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="30" y="620" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -1101,73 +1118,167 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     FIX iOS — CLAVIER VIRTUEL
-     Utilise visualViewport API pour détecter précisément
-     l'ouverture/fermeture du clavier et corriger le scroll.
-     scroll-behavior: auto est forcé sur iOS via CSS (.ios-perf)
-     pour que les corrections soient instantanées.
+     FIX iOS — CLAVIER VIRTUEL (NOUVELLE APPROCHE)
+     
+     Stratégie :
+     1. Au focus : on sauvegarde la position relative de l'input
+        par rapport au viewport, et on ajoute .ios-keyboard-open
+        pour neutraliser les sticky/flex qui causent des ancres parasites.
+     2. Pendant que le clavier est ouvert : on utilise visualViewport.resize
+        pour repositionner si Safari nous déplace.
+     3. Au blur : on attend la stabilisation complète du viewport
+        via un polling rAF (max 800ms) puis on scroll instantanément
+        vers la position correcte de l'input.
+     
+     Pourquoi ça fonctionne :
+     - scroll-behavior: auto (sélecteur CSS corrigé) empêche les animations
+     - .ios-keyboard-open désactive les sticky qui servaient d'ancres
+     - Le polling rAF attend que Safari AIT FINI son scroll avant de corriger
   ═══════════════════════════════════════════════════════════ */
   (function() {
     if (!isIOS) return;
+
+    const html = document.documentElement;
     const form = document.getElementById('rsvp-form');
-    const heading = document.getElementById('rsvp-heading');
-    if (!form || !heading) return;
+    if (!form) return;
 
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let isFocused = false;
-    let savedScrollY = 0;
-    let viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    if (!inputs.length) return;
 
-    // Position cible : le heading "Vous serez là ?" en haut du viewport
-    function getTargetScrollY() {
-      const rect = heading.getBoundingClientRect();
-      return window.scrollY + rect.top - 20;
+    let activeInput = null;       // L'input actuellement focusé
+    let savedOffsetTop = 0;       // Position absolue de l'input dans la page
+    let keyboardOpen = false;     // État du clavier
+    let stabilizeRAF = null;      // ID du rAF de polling
+
+    // Calcule où l'input DEVRAIT être : son offsetTop dans le document,
+    // positionné à ~1/3 du viewport visible depuis le haut
+    function getIdealScrollY(input) {
+      const rect = input.getBoundingClientRect();
+      const absoluteTop = window.scrollY + rect.top;
+      const viewportH = window.visualViewport
+        ? window.visualViewport.height
+        : window.innerHeight;
+      // On veut l'input au 1er tiers du viewport visible
+      const targetOffset = Math.min(viewportH * 0.33, 150);
+      return Math.max(0, absoluteTop - targetOffset);
     }
 
-    // Correction instantanée du scroll
-    function correctScroll() {
-      window.scrollTo(0, getTargetScrollY());
+    // Scroll instantané (scroll-behavior: auto est forcé en CSS)
+    function scrollToInstant(y) {
+      window.scrollTo(0, y);
     }
 
-    // Écoute le resize du visualViewport (= clavier s'ouvre ou se ferme)
-    if (window.visualViewport) {
-      let resizeTimer = null;
-      window.visualViewport.addEventListener('resize', () => {
-        const newHeight = window.visualViewport.height;
-        const heightDiff = newHeight - viewportHeight;
-        viewportHeight = newHeight;
+    // Attend la stabilisation du viewport après fermeture du clavier,
+    // puis corrige le scroll. Utilise un polling qui détecte quand
+    // le scrollY arrête de bouger.
+    function stabilizeAfterBlur(targetInput) {
+      if (stabilizeRAF) cancelAnimationFrame(stabilizeRAF);
 
-        // Le viewport grandit = le clavier se FERME
-        if (heightDiff > 50 && isFocused === false) {
-          // Clavier vient de se fermer, corriger après stabilisation
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(correctScroll, 120);
+      const startTime = performance.now();
+      const maxWait = 800; // 800ms max d'attente
+      let lastScrollY = window.scrollY;
+      let stableFrames = 0;
+      const requiredStable = 3; // 3 frames consécutives sans mouvement
+
+      function check() {
+        const elapsed = performance.now() - startTime;
+        const currentScrollY = window.scrollY;
+
+        if (Math.abs(currentScrollY - lastScrollY) < 1) {
+          stableFrames++;
+        } else {
+          stableFrames = 0;
         }
-      });
+        lastScrollY = currentScrollY;
+
+        if (stableFrames >= requiredStable || elapsed > maxWait) {
+          // Safari a fini de bouger → on corrige
+          // On veut que le formulaire RSVP soit centré dans le viewport
+          const rsvpSection = document.getElementById('rsvp');
+          if (rsvpSection) {
+            const formWrap = rsvpSection.querySelector('.rsvp-form-wrap');
+            const target = formWrap || rsvpSection;
+            const targetRect = target.getBoundingClientRect();
+            const targetAbsoluteTop = window.scrollY + targetRect.top;
+            const viewportH = window.innerHeight;
+            // Centrer le formulaire dans le viewport
+            const idealY = targetAbsoluteTop - (viewportH - target.offsetHeight) / 2;
+            // Mais ne pas remonter plus haut que le début de la section RSVP
+            const rsvpAbsoluteTop = window.scrollY + rsvpSection.getBoundingClientRect().top;
+            const finalY = Math.max(rsvpAbsoluteTop - 40, Math.min(idealY, rsvpAbsoluteTop));
+            scrollToInstant(finalY);
+          }
+          stabilizeRAF = null;
+          return;
+        }
+
+        stabilizeRAF = requestAnimationFrame(check);
+      }
+
+      // Petit délai initial pour laisser Safari commencer son scroll
+      setTimeout(() => {
+        stabilizeRAF = requestAnimationFrame(check);
+      }, 80);
     }
 
+    // Gestion des événements focus/blur
     inputs.forEach(input => {
+      // font-size: 16px empêche le zoom Safari (déjà en CSS mais on renforce)
       input.style.fontSize = '16px';
 
       input.addEventListener('focus', () => {
-        isFocused = true;
-        savedScrollY = window.scrollY;
+        activeInput = input;
+        keyboardOpen = true;
 
-        // Pour le textarea qui envoie en bas de page au focus
-        if (input.tagName === 'TEXTAREA') {
-          setTimeout(() => {
-            if (isFocused) correctScroll();
-          }, 400);
-        }
+        // Ajouter la classe qui neutralise les sticky et le flex centering
+        html.classList.add('ios-keyboard-open');
+
+        // Sauvegarder la position actuelle
+        savedOffsetTop = window.scrollY;
+
+        // Pour le textarea : Safari le déplace au focus.
+        // On corrige après un court délai (le temps que Safari fasse son scroll initial)
+        const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
+        setTimeout(() => {
+          if (activeInput === input && keyboardOpen) {
+            scrollToInstant(getIdealScrollY(input));
+          }
+        }, delay);
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        isFocused = false;
-        // Attendre que Safari + visualViewport se stabilisent
-        // puis corriger la position
-        setTimeout(correctScroll, 450);
+        const wasInput = activeInput;
+        activeInput = null;
+        keyboardOpen = false;
+
+        // Retirer la classe APRÈS un léger délai pour éviter un reflow
+        // pendant que Safari repositionne
+        setTimeout(() => {
+          // Ne retirer que si on n'a pas re-focusé un autre input entre-temps
+          if (!activeInput) {
+            html.classList.remove('ios-keyboard-open');
+          }
+        }, 100);
+
+        // Lancer la stabilisation post-clavier
+        stabilizeAfterBlur(wasInput);
       }, { passive: true });
     });
+
+    // Écouter les changements de taille du visualViewport pendant le focus
+    // pour repositionner si Safari nous déplace pendant la saisie
+    if (window.visualViewport) {
+      let vpResizeTimeout = null;
+      window.visualViewport.addEventListener('resize', () => {
+        if (!keyboardOpen || !activeInput) return;
+        clearTimeout(vpResizeTimeout);
+        vpResizeTimeout = setTimeout(() => {
+          if (keyboardOpen && activeInput) {
+            scrollToInstant(getIdealScrollY(activeInput));
+          }
+        }, 150);
+      });
+    }
   })();
 
   /* ═══════════════════════════════════════════════════════════
