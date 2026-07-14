@@ -31,8 +31,8 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
-    body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
+    html { scroll-behavior: smooth; font-size: 16px; background-color: #020159; }
+    body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; background-color: #020159; }
     img, svg { display: block; max-width: 100%; }
     a { color: var(--corail); text-decoration: none; transition: color var(--transition-base), border-color var(--transition-base); }
     a:hover { text-decoration: underline; }
@@ -109,16 +109,16 @@
     @keyframes chevron { 0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; } 50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; } }
 
     /* ═══════════════════════════════════════════════════════════
-       COUNTDOWN — Taille augmentée
+       COUNTDOWN
     ═══════════════════════════════════════════════════════════ */
     #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
-    .countdown-grid { display: flex; justify-content: center; gap: clamp(10px, 3vw, 24px); flex-wrap: nowrap; margin-bottom: 20px; }
+    .countdown-grid { display: flex; justify-content: center; gap: clamp(8px, 3vw, 20px); flex-wrap: nowrap; margin-bottom: 20px; }
     .countdown-unit {
       background: rgba(255,255,255,0.78);
       border: 1.5px solid rgba(139,92,246,0.28);
       border-radius: 14px;
       width: clamp(80px, 20vw, 130px);
-      height: clamp(90px, 22vw, 130px);
+      height: clamp(80px, 20vw, 130px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -127,27 +127,33 @@
       backdrop-filter: blur(8px);
       min-width: 0;
     }
-    .countdown-number {
-      font-family: var(--font-titre);
-      font-size: clamp(2rem, 7vw, 3.5rem);
-      color: var(--violet);
-      line-height: 1;
-      display: block;
-      width: 2.2ch;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-    }
-    .countdown-label {
-      font-size: clamp(0.6rem, 1.8vw, 0.75rem);
-      color: var(--texte-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 8px;
-      display: block;
-      white-space: nowrap;
-    }
+    .countdown-number { font-family: var(--font-titre); font-size: clamp(2rem, 7vw, 3.5rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
+    .countdown-label { font-size: clamp(0.55rem, 1.8vw, 0.72rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; display: block; white-space: nowrap; }
     .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
+
+    /* Bouton calendrier */
+    .btn-calendar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 50px;
+      color: var(--blanc);
+      font-family: var(--font-texte);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background var(--transition-base), border-color var(--transition-base), transform 0.2s;
+      backdrop-filter: blur(6px);
+      text-decoration: none;
+    }
+    .btn-calendar:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7); transform: translateY(-2px); text-decoration: none; }
+    .btn-calendar:active { transform: translateY(0); }
 
     /* ═══════════════════════════════════════════════════════════
        TIMELINE DESKTOP
@@ -179,6 +185,7 @@
     .event-time--orange { color: #FF6B35; }
     .event-title { font-family: var(--font-titre); font-size: 1.15rem; color: var(--texte); margin-bottom: 8px; }
     .event-address { font-size: 0.8rem; color: var(--texte-soft); line-height: 1.6; }
+    .event-hint { font-size: 0.78rem; color: var(--violet); font-style: italic; margin-top: 8px; line-height: 1.5; }
     .event-map-link { display: inline-block; margin-top: 10px; font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
     .event-map-link:hover { color: var(--rose); border-color: var(--rose); text-decoration: none; }
     .event-img-col { display: flex; align-items: flex-start; padding-top: 4px; }
@@ -212,28 +219,8 @@
     .tl-step-time--amber { color: #FFB347; }
     .tl-step-title { font-family: var(--font-titre); font-size: 1.2rem; color: var(--texte); margin-bottom: 6px; }
     .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
+    .tl-step-hint { font-size: 0.75rem; color: var(--violet); font-style: italic; margin-top: 8px; line-height: 1.5; }
     .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
-
-    /* ═══════════════════════════════════════════════════════════
-       INFO HINT (petite note dans les event cards)
-    ═══════════════════════════════════════════════════════════ */
-    .event-hint {
-      display: block;
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: var(--corail);
-      font-style: italic;
-      line-height: 1.5;
-    }
-
-    .tl-step-hint {
-      display: block;
-      margin-top: 8px;
-      font-size: 0.72rem;
-      color: var(--corail);
-      font-style: italic;
-      line-height: 1.5;
-    }
 
     /* ═══════════════════════════════════════════════════════════
        RSVP
@@ -363,21 +350,9 @@
     .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    .rsvp-success {
-      display: none;
-      text-align: center;
-      padding: 36px;
-      background: rgba(255,107,53,0.06);
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,107,53,0.2);
-      margin-top: 20px;
-    }
+    .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
     .rsvp-success.visible { display: block; }
-    .rsvp-success p {
-      font-family: var(--font-titre);
-      font-size: 1.3rem;
-      color: var(--corail);
-    }
+    .rsvp-success p { font-family: var(--font-titre); font-size: 1.3rem; color: var(--corail); }
 
     .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
 
@@ -391,7 +366,7 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       CONFETTIS
+       CONFETTIS CANVAS
     ═══════════════════════════════════════════════════════════ */
     #confetti-canvas {
       position: fixed;
@@ -458,7 +433,7 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    /* iOS keyboard open — neutralise les sticky elements */
+    /* iOS keyboard open — neutralise les sticky qui perturbent le scroll */
     html.ios-perf.ios-keyboard-open .tl-step-sticky {
       position: relative !important;
       height: auto !important;
@@ -555,6 +530,9 @@
         <span class="countdown-tagline reveal" id="countdown-tagline">jusqu'au grand jour</span>
         <p class="countdown-done" id="countdown-done">C'est le grand jour !</p>
       </div>
+      <div class="reveal" style="text-align:center;">
+        <button class="btn-calendar" id="btn-calendar" type="button">📅 Ajouter à mon calendrier</button>
+      </div>
     </div>
   </section>
 
@@ -620,7 +598,7 @@
                   <div class="event-time">À partir de 12h00</div>
                   <div class="event-title">Brunch</div>
                   <div class="event-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-                  <span class="event-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</span>
+                  <p class="event-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</p>
                   <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
@@ -690,7 +668,7 @@
             <div class="tl-step-time tl-step-time--amber">À partir de 12h00</div>
             <div class="tl-step-title">Brunch</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
-            <span class="tl-step-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</span>
+            <p class="tl-step-hint">🏊 Piscine et 🎾 tennis sur place — pensez à prendre maillot de bain et tenue de sport !</p>
             <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-2">
@@ -704,7 +682,7 @@
   <!-- RSVP -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
-      <h2 class="reveal" id="rsvp-heading">Serez-vous là ?</h2>
+      <h2 class="reveal" id="rsvp-heading">Serez-vous disponible ?</h2>
       <p class="rsvp-subtitle reveal">Répondez-nous avant <span class="highlight-blink">le 1er juin 2027</span> — on compte sur vous.</p>
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
@@ -752,7 +730,7 @@
 
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
 
-  <!-- Canvas pour les confettis (position fixed, au-dessus de tout) -->
+  <!-- CONFETTIS -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <!-- FINAL SCENE -->
@@ -921,6 +899,48 @@
     }
     tick();
     setInterval(tick, 1000);
+  })();
+
+  /* ═══════════════════════════════════════════════════════════
+     BOUTON CALENDRIER (.ics)
+  ═══════════════════════════════════════════════════════════ */
+  (function() {
+    const btn = Utils.getElement('btn-calendar');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Julie&Thomas//Mariage//FR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'DTSTART:20270724T143000Z',
+        'DTEND:20270724T215900Z',
+        'SUMMARY:Mariage Julie & Thomas',
+        'DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nCocktail & soirée à 18h00 au Domaine de Gailhaguet\\, Verfeil',
+        'LOCATION:Mairie de Pin-Balma\\, Pl. de la Mairie\\, 31130 Pin-Balma',
+        'STATUS:CONFIRMED',
+        'BEGIN:VALARM',
+        'TRIGGER:-P1D',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Mariage Julie & Thomas demain !',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'mariage-julie-thomas.ics';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
   })();
 
   /* ═══════════════════════════════════════════════════════════
@@ -1192,118 +1212,108 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     CONFETTIS — Animation de célébration au submit RSVP
-     Se déclenche une seule fois à la confirmation du formulaire.
+     CONFETTIS (lancés une seule fois à la soumission RSVP)
   ═══════════════════════════════════════════════════════════ */
   const Confetti = (function() {
     const canvas = Utils.getElement('confetti-canvas');
-    if (!canvas) return { launch() {} };
+    if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    const pieces = [];
-    let animId = null;
+    const particles = [];
+    let animating = false;
     let launched = false;
 
-    const COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#8B5CF6', '#FFD166', '#ff87a8', '#fbbf24', '#ffffff'];
+    const COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#8B5CF6', '#FFD166', '#ffffff', '#ff87a8', '#fbbf24'];
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
+    resize();
+    window.addEventListener('resize', resize);
 
-    function createPiece() {
+    function createParticle(x, y) {
       return {
-        x: Math.random() * canvas.width,
-        y: -10 - Math.random() * 40,
-        w: 6 + Math.random() * 8,
-        h: 4 + Math.random() * 6,
-        color: COLORS[(Math.random() * COLORS.length) | 0],
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 16,
+        vy: -(Math.random() * 12 + 4),
+        gravity: 0.25 + Math.random() * 0.15,
         rotation: Math.random() * 360,
         rotSpeed: (Math.random() - 0.5) * 12,
-        vx: (Math.random() - 0.5) * 4,
-        vy: 2 + Math.random() * 4,
-        gravity: 0.08 + Math.random() * 0.04,
-        drag: 0.98 + Math.random() * 0.015,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.03 + Math.random() * 0.05,
-        alpha: 1
+        width: 6 + Math.random() * 8,
+        height: 4 + Math.random() * 4,
+        color: COLORS[(Math.random() * COLORS.length) | 0],
+        alpha: 1,
+        decay: 0.008 + Math.random() * 0.006
       };
     }
 
     function animate() {
+      if (!animating) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      let alive = 0;
 
-      for (let i = pieces.length - 1; i >= 0; i--) {
-        const p = pieces[i];
-        p.vy += p.gravity;
-        p.vx *= p.drag;
-        p.vy *= p.drag;
-        p.x += p.vx + Math.sin(p.wobble) * 0.8;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
         p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.99;
         p.rotation += p.rotSpeed;
-        p.wobble += p.wobbleSpeed;
+        p.alpha -= p.decay;
 
-        // Fade out quand on approche du bas
-        if (p.y > canvas.height * 0.75) {
-          p.alpha -= 0.015;
-        }
-
-        if (p.alpha <= 0 || p.y > canvas.height + 20) {
-          pieces.splice(i, 1);
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
           continue;
         }
 
-        alive++;
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate((p.rotation * Math.PI) / 180);
         ctx.globalAlpha = p.alpha;
         ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
         ctx.restore();
       }
 
-      if (alive > 0) {
-        animId = requestAnimationFrame(animate);
+      if (particles.length > 0) {
+        requestAnimationFrame(animate);
       } else {
-        // Nettoyage final
+        animating = false;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        animId = null;
       }
     }
 
     function launch() {
-      if (launched) return; // Une seule fois !
+      if (launched) return;
       launched = true;
 
-      resize();
-      // Créer ~150 confettis en plusieurs vagues
-      const totalPieces = 150;
+      const count = 150;
       const waves = 5;
-      const perWave = totalPieces / waves;
+      const perWave = Math.ceil(count / waves);
 
       for (let w = 0; w < waves; w++) {
         setTimeout(() => {
+          const cx = canvas.width * (0.2 + Math.random() * 0.6);
+          const cy = canvas.height * 0.3;
           for (let i = 0; i < perWave; i++) {
-            pieces.push(createPiece());
+            particles.push(createParticle(cx, cy));
           }
-          if (!animId) {
-            animId = requestAnimationFrame(animate);
+          if (!animating) {
+            animating = true;
+            requestAnimationFrame(animate);
           }
         }, w * 200);
       }
     }
 
-    window.addEventListener('resize', resize);
-    resize();
-
-    return { launch };
+    return { launch: launch };
   })();
 
   /* ═══════════════════════════════════════════════════════════
      FIX iOS — CLAVIER VIRTUEL
-     Utilise visualViewport API + polling RAF pour détecter
-     la stabilisation du viewport avant de corriger le scroll.
+     Corrige le scroll parasite à l'ouverture/fermeture du
+     clavier sur iOS Safari. Approche par polling rAF pour
+     attendre la stabilisation du viewport.
   ═══════════════════════════════════════════════════════════ */
   (function() {
     if (!isIOS) return;
@@ -1314,125 +1324,117 @@
     let activeInput = null;
     let isFocused = false;
 
-    // Positionne l'input actif à ~1/3 du viewport visible
-    function scrollToInput(el) {
-      if (!el) return;
+    // Calcule la position idéale : input à ~1/3 du viewport
+    function getIdealScrollForInput(el) {
       const rect = el.getBoundingClientRect();
-      const vpH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      const targetTop = vpH * 0.3;
-      const delta = rect.top - targetTop;
-      if (Math.abs(delta) > 10) {
-        window.scrollBy(0, delta);
-      }
+      const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const targetOffset = viewH * 0.3;
+      return window.scrollY + rect.top - targetOffset;
     }
 
-    // Attend la stabilisation du scroll puis corrige
-    function waitStableAndCorrect(el) {
-      let lastY = window.scrollY;
+    // Attends que le scroll se stabilise puis corrige la position
+    function waitAndCorrect(targetEl) {
+      let lastScrollY = window.scrollY;
       let stableFrames = 0;
       const requiredStable = 4;
-      const maxWait = 60; // ~1 seconde max
-      let frames = 0;
+      const startTime = Date.now();
+      const maxWait = 800;
 
       function check() {
-        frames++;
-        const currentY = window.scrollY;
-        if (Math.abs(currentY - lastY) < 2) {
+        if (Date.now() - startTime > maxWait) {
+          doCorrection(targetEl);
+          return;
+        }
+        const currentScrollY = window.scrollY;
+        if (Math.abs(currentScrollY - lastScrollY) < 2) {
           stableFrames++;
         } else {
           stableFrames = 0;
         }
-        lastY = currentY;
+        lastScrollY = currentScrollY;
 
-        if (stableFrames >= requiredStable || frames >= maxWait) {
-          // Viewport stabilisé, corriger la position
-          if (el) scrollToInput(el);
-          return;
-        }
-        requestAnimationFrame(check);
-      }
-      requestAnimationFrame(check);
-    }
-
-    // Positionne le formulaire en vue après fermeture clavier
-    function scrollToFormWrap() {
-      const wrap = document.querySelector('.rsvp-form-wrap');
-      if (!wrap) return;
-      const rect = wrap.getBoundingClientRect();
-      const vpH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      const targetTop = vpH * 0.2;
-      const delta = rect.top - targetTop;
-      if (Math.abs(delta) > 10) {
-        window.scrollBy(0, delta);
-      }
-    }
-
-    function waitStableAndRestoreView() {
-      let lastY = window.scrollY;
-      let stableFrames = 0;
-      const requiredStable = 5;
-      const maxWait = 80;
-      let frames = 0;
-
-      function check() {
-        frames++;
-        const currentY = window.scrollY;
-        if (Math.abs(currentY - lastY) < 2) {
-          stableFrames++;
+        if (stableFrames >= requiredStable) {
+          doCorrection(targetEl);
         } else {
-          stableFrames = 0;
+          requestAnimationFrame(check);
         }
-        lastY = currentY;
-
-        if (stableFrames >= requiredStable || frames >= maxWait) {
-          scrollToFormWrap();
-          return;
-        }
-        requestAnimationFrame(check);
       }
       requestAnimationFrame(check);
+    }
+
+    function doCorrection(targetEl) {
+      if (!targetEl) return;
+      const idealY = getIdealScrollForInput(targetEl);
+      const currentY = window.scrollY;
+      if (Math.abs(currentY - idealY) > 10) {
+        window.scrollTo(0, idealY);
+      }
     }
 
     inputs.forEach(input => {
-      input.style.fontSize = '16px';
-
       input.addEventListener('focus', () => {
         isFocused = true;
         activeInput = input;
         document.documentElement.classList.add('ios-keyboard-open');
 
-        // Délai pour laisser le clavier s'ouvrir
-        const delay = input.tagName === 'TEXTAREA' ? 450 : 300;
+        const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
         setTimeout(() => {
           if (isFocused && activeInput === input) {
-            scrollToInput(input);
+            waitAndCorrect(input);
           }
         }, delay);
       }, { passive: true });
 
       input.addEventListener('blur', () => {
+        const blurredInput = activeInput;
         isFocused = false;
         activeInput = null;
 
-        // Attendre un peu avant de retirer la classe
-        // (permet au viewport de se stabiliser)
+        // Attendre que Safari finisse son repositionnement
         setTimeout(() => {
-          if (!isFocused) {
-            document.documentElement.classList.remove('ios-keyboard-open');
-            waitStableAndRestoreView();
+          document.documentElement.classList.remove('ios-keyboard-open');
+          if (blurredInput) {
+            // Scroller vers la section RSVP
+            const rsvpSection = document.getElementById('rsvp');
+            if (rsvpSection) {
+              const rect = rsvpSection.getBoundingClientRect();
+              const targetY = window.scrollY + rect.top - 40;
+              let lastY = window.scrollY;
+              let stable = 0;
+              const start = Date.now();
+
+              function waitStable() {
+                if (Date.now() - start > 800) {
+                  window.scrollTo(0, targetY);
+                  return;
+                }
+                const cur = window.scrollY;
+                if (Math.abs(cur - lastY) < 2) stable++;
+                else stable = 0;
+                lastY = cur;
+                if (stable >= 4) {
+                  window.scrollTo(0, targetY);
+                } else {
+                  requestAnimationFrame(waitStable);
+                }
+              }
+              requestAnimationFrame(waitStable);
+            }
           }
         }, 100);
       }, { passive: true });
     });
 
-    // Écoute les changements de viewport pour recorriger pendant la saisie
+    // Écoute le resize du visualViewport pour corriger pendant la saisie
     if (window.visualViewport) {
-      let resizeTimer = null;
+      let vpResizeTimer = null;
       window.visualViewport.addEventListener('resize', () => {
         if (isFocused && activeInput) {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            if (isFocused && activeInput) scrollToInput(activeInput);
+          clearTimeout(vpResizeTimer);
+          vpResizeTimer = setTimeout(() => {
+            if (isFocused && activeInput) {
+              doCorrection(activeInput);
+            }
           }, 150);
         }
       });
@@ -1461,7 +1463,7 @@
       btn.disabled = false;
       btn.textContent = 'Confirmer';
       submitted = false;
-      // Lancer les confettis une seule fois !
+      // Lancer les confettis une seule fois
       Confetti.launch();
     });
 
