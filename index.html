@@ -5,13 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Julie & Thomas — 24 juillet 2027</title>
   <meta name="description" content="Julie & Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
-  
+
+  <!-- Polices : preconnect + swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <!-- Preload de l'image lanterne (utilisée 14x via <use>) -->
   <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
 
   <style>
+    /* ============================================================
+       VARIABLES & RESET
+       ============================================================ */
     :root {
       --rose: #FF3CAC;
       --corail: #FF6B35;
@@ -20,20 +26,46 @@
       --rouge: #b5341a;
       --blanc: #ffffff;
       --texte: #2e1200;
-      --texte-soft: rgba(46,18,0,0.5);
+      --texte-soft: rgba(46, 18, 0, 0.5);
       --font-titre: 'Playfair Display', Georgia, serif;
       --font-texte: 'Montserrat', system-ui, sans-serif;
       --radius: 14px;
       --transition-base: 0.3s ease;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
-    body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-texte);
+      color: var(--texte);
+      overflow-x: hidden;
+      background: transparent;
+    }
+
     img, svg { display: block; max-width: 100%; }
-    a { color: var(--corail); text-decoration: none; transition: color var(--transition-base), border-color var(--transition-base); }
+
+    a {
+      color: var(--corail);
+      text-decoration: none;
+      transition: color var(--transition-base), border-color var(--transition-base);
+    }
     a:hover { text-decoration: underline; }
-    a:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 3px; }
+    a:focus-visible {
+      outline: 3px solid var(--corail);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
 
     h1, h2, h3 { font-family: var(--font-titre); line-height: 1.15; }
     h1 { font-size: clamp(3rem, 9vw, 7rem); color: var(--blanc); }
@@ -42,47 +74,104 @@
     .container { width: min(90%, 960px); margin-inline: auto; }
     section { padding: 90px 0; position: relative; z-index: 2; }
 
-    /* Animations de révélation */
-    .reveal, .reveal-left, .reveal-right { opacity: 0; transition: opacity 0.7s ease, transform 0.7s ease; }
+    /* ============================================================
+       ANIMATIONS DE RÉVÉLATION
+       ============================================================ */
+    .reveal,
+    .reveal-left,
+    .reveal-right {
+      opacity: 0;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
     .reveal { transform: translateY(40px); }
     .reveal-left { transform: translateX(-40px); }
     .reveal-right { transform: translateX(40px); }
-    .reveal.visible, .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: none; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
+    .reveal.visible,
+    .reveal-left.visible,
+    .reveal-right.visible {
+      opacity: 1;
+      transform: none;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ============================================================
+       STRUCTURE GLOBALE & PANORAMA
+       ============================================================ */
     #page-wrapper { position: relative; min-height: 100vh; }
-    #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
-    #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
-    #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
-    .lantern { animation-fill-mode: both; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
-    .lantern image { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18)); }
+    #panorama {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-    /* Animations de flottement amplifiées */
+    /* ============================================================
+       LANTERNES (layer fixe + parallax)
+       ============================================================ */
+    #lanterns-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+    }
+
+    #lanterns-layer svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .lantern {
+      animation-fill-mode: both;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    .lantern image {
+      filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18));
+    }
+
     @keyframes float-a { 0%,100% { transform: translate3d(0,0,0) rotate(-4deg); } 50% { transform: translate3d(0,-18px,0) rotate(4deg); } }
     @keyframes float-b { 0%,100% { transform: translate3d(0,0,0) rotate(3.5deg); } 50% { transform: translate3d(0,-22px,0) rotate(-3.5deg); } }
     @keyframes float-c { 0%,100% { transform: translate3d(0,0,0) rotate(-3deg); } 50% { transform: translate3d(0,-16px,0) rotate(3.5deg); } }
     @keyframes float-d { 0%,100% { transform: translate3d(0,0,0) rotate(4deg); } 50% { transform: translate3d(0,-20px,0) rotate(-3deg); } }
     @keyframes float-e { 0%,100% { transform: translate3d(0,0,0) rotate(-3.5deg); } 50% { transform: translate3d(0,-19px,0) rotate(3deg); } }
 
-    /* Animation clignotement Rose et Violet alternés */
+    /* ============================================================
+       CLIGNOTEMENT ROSE / VIOLET (texte highlight)
+       ============================================================ */
     @keyframes blink-rose-violet {
-      0%, 100% { 
+      0%, 100% {
         color: var(--rose);
         text-shadow: 0 0 35px rgba(255, 60, 172, 0.9), 0 0 70px rgba(255, 60, 172, 0.5);
       }
-      25% { 
+      25% {
         color: rgba(255, 60, 172, 0.4);
         text-shadow: 0 0 15px rgba(255, 60, 172, 0.4);
       }
-      50% { 
+      50% {
         color: var(--violet);
         text-shadow: 0 0 35px rgba(139, 92, 246, 0.9), 0 0 70px rgba(139, 92, 246, 0.5);
       }
-      75% { 
+      75% {
         color: rgba(139, 92, 246, 0.4);
         text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
       }
@@ -101,86 +190,521 @@
       }
     }
 
-    /* Hero */
-    #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
-    .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-    .hero-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
-    .hero-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.92); max-width: 480px; text-shadow: 0 2px 16px rgba(0,0,0,0.12); }
-    .hero-scroll-hint { margin-top: 50px; color: rgba(255,255,255,0.68); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; display: inline-flex; flex-direction: column; align-items: center; gap: 10px; }
+    /* ============================================================
+       HERO
+       ============================================================ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .hero-date {
+      font-weight: 400;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      color: rgba(255, 255, 255, 0.84);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: rgba(255, 255, 255, 0.92);
+      max-width: 480px;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .hero-scroll-hint {
+      margin-top: 50px;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
     .chevrons { display: grid; gap: 4px; opacity: 0.9; }
-    .chevrons span { width: 16px; height: 16px; border-right: 2px solid rgba(255,255,255,0.8); border-bottom: 2px solid rgba(255,255,255,0.8); transform: rotate(45deg); border-radius: 2px; animation: chevron 1.4s ease-in-out infinite; }
+    .chevrons span {
+      width: 16px;
+      height: 16px;
+      border-right: 2px solid rgba(255, 255, 255, 0.8);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+      transform: rotate(45deg);
+      border-radius: 2px;
+      animation: chevron 1.4s ease-in-out infinite;
+    }
     .chevrons span:nth-child(2) { animation-delay: 0.18s; opacity: 0.8; }
-    @keyframes chevron { 0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; } 50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; } }
 
-    /* Countdown */
-    #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
-    .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
-    .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(139,92,246,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
-    .countdown-number { font-family: var(--font-titre); font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
-    .countdown-label { font-size: clamp(0.5rem, 1.5vw, 0.6rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px; display: block; white-space: nowrap; }
-    .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
-    .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
+    @keyframes chevron {
+      0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; }
+      50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; }
+    }
 
-    /* Timeline Desktop */
-    #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
-    #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
-    .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
-    .timeline-line-svg { position: absolute; top: 0; pointer-events: none; z-index: 0; overflow: visible; }
-    #timeline-path-bg { stroke: rgba(255,107,53,0.15); stroke-width: 3; fill: none; stroke-linecap: round; }
-    #timeline-path-draw { stroke: url(#pathGrad); stroke-width: 3; fill: none; stroke-linecap: round; }
-    .timeline-day { width: 100%; margin-bottom: 40px; position: relative; z-index: 1; }
-    .timeline-day-label { text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; background: rgba(255,255,255,0.92); display: inline-block; padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(255,107,53,0.25); position: relative; left: 50%; transform: translateX(-50%); backdrop-filter: blur(6px); }
-    .timeline-events { display: flex; flex-direction: column; gap: 28px; }
-    .timeline-event { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: start; gap: 0 16px; }
+    /* ============================================================
+       COUNTDOWN
+       ============================================================ */
+    #countdown {
+      text-align: center;
+      padding: 60px 20px 70px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: clamp(6px, 2vw, 18px);
+      flex-wrap: nowrap;
+      margin-bottom: 20px;
+    }
+
+    .countdown-unit {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1.5px solid rgba(139, 92, 246, 0.28);
+      border-radius: 10px;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 1;
+      backdrop-filter: blur(8px);
+      min-width: 0;
+    }
+
+    .countdown-number {
+      font-family: var(--font-titre);
+      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      color: var(--violet);
+      line-height: 1;
+      display: block;
+      width: 2.2ch;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-size: clamp(0.5rem, 1.5vw, 0.6rem);
+      color: var(--texte-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 5px;
+      display: block;
+      white-space: nowrap;
+    }
+
+    .countdown-tagline {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--blanc);
+      margin-top: 16px;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .countdown-done {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      color: var(--violet);
+      margin-top: 20px;
+      display: none;
+    }
+
+    /* ============================================================
+       TIMELINE DESKTOP
+       ============================================================ */
+    #timeline-desktop {
+      padding: 90px 0 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #timeline-desktop h2 {
+      text-align: center;
+      margin-bottom: 70px;
+      font-weight: 600;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--corail);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .timeline-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .timeline-line-svg {
+      position: absolute;
+      top: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: visible;
+    }
+
+    #timeline-path-bg {
+      stroke: rgba(255, 107, 53, 0.15);
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    #timeline-path-draw {
+      stroke: url(#pathGrad);
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .timeline-day {
+      width: 100%;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-day-label {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--corail);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      background: rgba(255, 255, 255, 0.92);
+      display: inline-block;
+      padding: 7px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 107, 53, 0.25);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      backdrop-filter: blur(6px);
+    }
+
+    .timeline-events {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .timeline-event {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      align-items: start;
+      gap: 0 16px;
+    }
+
     .timeline-event:nth-child(odd) .event-side { grid-column: 1; text-align: right; }
     .timeline-event:nth-child(odd) .event-dot { grid-column: 2; }
     .timeline-event:nth-child(odd) .event-img-col { grid-column: 3; }
     .timeline-event:nth-child(even) .event-img-col { grid-column: 1; }
     .timeline-event:nth-child(even) .event-dot { grid-column: 2; }
     .timeline-event:nth-child(even) .event-side { grid-column: 3; text-align: left; }
-    .event-side { display: flex; flex-direction: column; gap: 12px; }
-    .event-dot { display: flex; align-items: flex-start; justify-content: center; padding-top: 16px; }
-    .event-dot-inner { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 4px rgba(255,60,172,0.15), 0 0 14px rgba(255,60,172,0.35); flex-shrink: 0; position: relative; z-index: 2; }
-    .event-card { background: rgba(255,255,255,0.85); border-radius: var(--radius); padding: 22px 26px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.08); backdrop-filter: blur(10px); transition: box-shadow var(--transition-base); }
-    .event-card:hover { box-shadow: 0 10px 40px rgba(46,18,0,0.14); }
-    .event-time { font-size: 0.72rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
-    .event-title { font-family: var(--font-titre); font-size: 1.15rem; color: var(--texte); margin-bottom: 8px; }
-    .event-address { font-size: 0.8rem; color: var(--texte-soft); line-height: 1.6; }
-    .event-map-link { display: inline-block; margin-top: 10px; font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
+
+    .event-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .event-dot {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 16px;
+    }
+
+    .event-dot-inner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--corail));
+      box-shadow: 0 0 0 4px rgba(255, 60, 172, 0.15), 0 0 14px rgba(255, 60, 172, 0.35);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Variantes de couleur pour les dots */
+    .event-dot-inner--orange {
+      background: linear-gradient(135deg, #FF6B35, #FFB347);
+      box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.2), 0 0 14px rgba(255, 107, 53, 0.4);
+    }
+
+    .event-dot-inner--amber {
+      background: linear-gradient(135deg, #FFB347, #FF6B35);
+      box-shadow: 0 0 0 4px rgba(255, 179, 71, 0.2), 0 0 14px rgba(255, 179, 71, 0.4);
+    }
+
+    .event-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      border: 1px solid rgba(255, 107, 53, 0.15);
+      box-shadow: 0 4px 24px rgba(46, 18, 0, 0.08);
+      backdrop-filter: blur(10px);
+      transition: box-shadow var(--transition-base);
+    }
+    .event-card:hover { box-shadow: 0 10px 40px rgba(46, 18, 0, 0.14); }
+
+    .event-time {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--corail);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .event-time--orange { color: #FF6B35; }
+
+    .event-title {
+      font-family: var(--font-titre);
+      font-size: 1.15rem;
+      color: var(--texte);
+      margin-bottom: 8px;
+    }
+
+    .event-address {
+      font-size: 0.8rem;
+      color: var(--texte-soft);
+      line-height: 1.6;
+    }
+
+    .event-map-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--corail);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+      padding-bottom: 1px;
+    }
     .event-map-link:hover { color: var(--rose); border-color: var(--rose); text-decoration: none; }
-    .event-img-col { display: flex; align-items: flex-start; padding-top: 4px; }
-    .event-img-wrap { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 4/3; position: relative; background: linear-gradient(135deg,#ffb27a,#86bde8); }
-    .event-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* Timeline Mobile */
-    #timeline-mobile { display: none; position: relative; z-index: 2; }
-    #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .event-img-col {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 4px;
+    }
+
+    .event-img-wrap {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 6px 28px rgba(46, 18, 0, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      aspect-ratio: 4/3;
+      position: relative;
+      background: linear-gradient(135deg, #ffb27a, #86bde8);
+    }
+    .event-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ============================================================
+       TIMELINE MOBILE
+       ============================================================ */
+    #timeline-mobile {
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    #timeline-mobile h2 {
+      text-align: center;
+      padding: 60px 20px 40px;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--blanc);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
     .tl-mobile-wrapper { position: relative; }
-    #tl-mobile-line-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; pointer-events: none; z-index: 0; overflow: visible; }
-    #tl-mobile-path-bg { stroke: rgba(255,255,255,0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
-    #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
-    .tl-step { position: relative; height: 200vh; }
-    .tl-step-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow: hidden; z-index: 2; }
-    .tl-step-day { font-size: 0.7rem; font-weight: 600; color: var(--corail); letter-spacing: 0.15em; text-transform: uppercase; background: rgba(255,255,255,0.75); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(255,107,53,0.45); backdrop-filter: blur(8px); margin-bottom: 16px; opacity: 0; transform: translateY(-10px); transition: opacity 0.5s ease, transform 0.5s ease; position: relative; z-index: 3; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-    .tl-step-day.show { opacity: 1; transform: translateY(0); }
-    .tl-step-dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--rose), var(--corail)); box-shadow: 0 0 0 5px rgba(255,60,172,0.2), 0 0 18px rgba(255,60,172,0.4); margin-bottom: 20px; flex-shrink: 0; opacity: 0; transform: scale(0.5); transition: opacity 0.4s ease, transform 0.4s ease; position: relative; z-index: 3; }
-    .tl-step-dot.show { opacity: 1; transform: scale(1); }
-    .tl-step-card { background: rgba(255,255,255,0.92); border-radius: var(--radius); padding: 20px 22px; border: 1px solid rgba(255,107,53,0.15); box-shadow: 0 4px 24px rgba(46,18,0,0.12); backdrop-filter: blur(10px); width: 100%; max-width: 360px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s; position: relative; z-index: 3; }
-    .tl-step-card.show { opacity: 1; transform: translateY(0); }
-    .tl-step-img { width: 100%; max-width: 360px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 16/9; position: relative; margin-top: 14px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s; z-index: 3; background: linear-gradient(135deg,#ffb27a,#86bde8); }
-    .tl-step-img.show { opacity: 1; transform: translateY(0); }
-    .tl-step-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .tl-step-time { font-size: 0.7rem; font-weight: 600; color: var(--corail); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 5px; }
-    .tl-step-title { font-family: var(--font-titre); font-size: 1.2rem; color: var(--texte); margin-bottom: 6px; }
-    .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
-    .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
 
-    /* RSVP - CORRECTION iOS */
-    #rsvp { 
-      text-align: center; 
-      padding: 80px 20px 100px; 
-      position: relative; 
-      z-index: 2; 
+    #tl-mobile-line-svg {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      pointer-events: none;
+      z-index: 0;
+      overflow: visible;
+    }
+
+    #tl-mobile-path-bg { stroke: rgba(255, 255, 255, 0.25); stroke-width: 3; fill: none; stroke-linecap: round; }
+    #tl-mobile-path-draw { stroke: url(#pathGradMobile); stroke-width: 3; fill: none; stroke-linecap: round; }
+
+    .tl-step { position: relative; height: 200vh; }
+
+    .tl-step-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .tl-step-day {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--corail);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 5px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 107, 53, 0.45);
+      backdrop-filter: blur(8px);
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      position: relative;
+      z-index: 3;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+    .tl-step-day.show { opacity: 1; transform: translateY(0); }
+
+    .tl-step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--corail));
+      box-shadow: 0 0 0 5px rgba(255, 60, 172, 0.2), 0 0 18px rgba(255, 60, 172, 0.4);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: relative;
+      z-index: 3;
+    }
+    .tl-step-dot.show { opacity: 1; transform: scale(1); }
+
+    /* Variantes mobile */
+    .tl-step-dot--orange {
+      background: linear-gradient(135deg, #FF6B35, #FFB347);
+      box-shadow: 0 0 0 5px rgba(255, 107, 53, 0.2), 0 0 18px rgba(255, 107, 53, 0.4);
+    }
+    .tl-step-dot--amber {
+      background: linear-gradient(135deg, #FFB347, #FF6B35);
+      box-shadow: 0 0 0 5px rgba(255, 179, 71, 0.2), 0 0 18px rgba(255, 179, 71, 0.4);
+    }
+
+    .tl-step-card {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      border: 1px solid rgba(255, 107, 53, 0.15);
+      box-shadow: 0 4px 24px rgba(46, 18, 0, 0.12);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 360px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+      position: relative;
+      z-index: 3;
+    }
+    .tl-step-card.show { opacity: 1; transform: translateY(0); }
+
+    .tl-step-img {
+      width: 100%;
+      max-width: 360px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 6px 28px rgba(46, 18, 0, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      aspect-ratio: 16/9;
+      position: relative;
+      margin-top: 14px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+      z-index: 3;
+      background: linear-gradient(135deg, #ffb27a, #86bde8);
+    }
+    .tl-step-img.show { opacity: 1; transform: translateY(0); }
+    .tl-step-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .tl-step-time {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--corail);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 5px;
+    }
+    .tl-step-time--orange { color: #FF6B35; }
+    .tl-step-time--amber { color: #FFB347; }
+
+    .tl-step-title {
+      font-family: var(--font-titre);
+      font-size: 1.2rem;
+      color: var(--texte);
+      margin-bottom: 6px;
+    }
+
+    .tl-step-address {
+      font-size: 0.78rem;
+      color: var(--texte-soft);
+      line-height: 1.6;
+    }
+
+    .tl-step-map {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--corail);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+      padding-bottom: 1px;
+    }
+
+    /* ============================================================
+       RSVP
+       ============================================================ */
+    #rsvp {
+      text-align: center;
+      padding: 80px 20px 100px;
+      position: relative;
+      z-index: 2;
       background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,159,114,0.2) 30%, rgba(255,159,114,0.5) 60%, #ff9f72 100%);
       min-height: 100vh;
       display: flex;
@@ -188,204 +712,186 @@
       justify-content: center;
     }
 
-    #rsvp h2 { 
-      font-weight: 600; 
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem); 
-      color: var(--blanc); 
-      letter-spacing: 0.04em; 
-      text-transform: uppercase; 
-      margin-bottom: 8px; 
+    #rsvp h2 {
+      font-weight: 600;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--blanc);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .rsvp-subtitle { 
-      color: rgba(255,255,255,0.9); 
-      margin-bottom: 50px; 
-      font-size: 0.9rem; 
+    .rsvp-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 50px;
+      font-size: 0.9rem;
     }
 
-    .rsvp-form-wrap { 
-      background: rgba(250,247,243,0.96); 
-      border: 1.5px solid rgba(181,52,26,0.18); 
-      border-radius: 20px; 
-      padding: clamp(24px, 5vw, 48px); 
-      max-width: 540px; 
-      margin-inline: auto; 
-      text-align: left; 
-      box-shadow: 0 8px 40px rgba(46,18,0,0.07); 
+    .rsvp-form-wrap {
+      background: rgba(250, 247, 243, 0.96);
+      border: 1.5px solid rgba(181, 52, 26, 0.18);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 48px);
+      max-width: 540px;
+      margin-inline: auto;
+      text-align: left;
+      box-shadow: 0 8px 40px rgba(46, 18, 0, 0.07);
       backdrop-filter: blur(12px);
       width: 100%;
-      box-sizing: border-box;
-      -webkit-user-select: text;
-      user-select: text;
     }
 
-    .form-group { 
-      margin-bottom: 26px; 
+    .form-group { margin-bottom: 26px; }
+
+    .form-group label,
+    .form-group legend {
+      display: block;
+      font-weight: 600;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+      color: var(--rouge);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
     }
 
-    .form-group label, .form-group legend { 
-      display: block; 
-      font-weight: 600; 
-      font-size: 0.72rem; 
-      margin-bottom: 10px; 
-      color: var(--rouge); 
-      text-transform: uppercase; 
-      letter-spacing: 0.12em; 
+    .form-group fieldset {
+      border: none;
+      padding: 0;
     }
 
-    .form-group input[type="text"], .form-group textarea { 
-      width: 100%; 
-      padding: 14px 18px; 
-      border: 1.5px solid rgba(181,52,26,0.18); 
-      border-radius: 50px; 
-      font-family: var(--font-texte); 
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(181, 52, 26, 0.18);
+      border-radius: 50px;
+      font-family: var(--font-texte);
       font-size: 16px;
-      color: var(--texte); 
-      background: rgba(255,255,255,0.9); 
-      transition: border-color var(--transition-base), box-shadow var(--transition-base); 
+      color: var(--texte);
+      background: rgba(255, 255, 255, 0.9);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
       resize: none;
       -webkit-appearance: none;
       appearance: none;
-      -webkit-font-size-adjust: 100%;
-      font-size-adjust: 100%;
-      box-sizing: border-box;
     }
 
-    .form-group textarea { 
-      border-radius: 16px; 
-      min-height: 110px; 
-      resize: vertical; 
+    .form-group textarea {
+      border-radius: 16px;
+      min-height: 110px;
+      resize: vertical;
     }
 
-    .form-group input[type="text"]:focus, .form-group textarea:focus { 
-      outline: none; 
-      border-color: var(--corail); 
-      box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--corail);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
     }
 
-    .radio-row { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 10px; 
+    .radio-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .radio-btn { 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      padding: 12px 8px; 
-      border: 1.5px solid rgba(181,52,26,0.22); 
-      border-radius: 12px; 
-      transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base); 
-      background: rgba(255,255,255,0.85); 
-      user-select: none; 
-      min-width: 0;
+    .radio-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 12px 8px;
+      border: 1.5px solid rgba(181, 52, 26, 0.22);
+      border-radius: 12px;
+      transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base);
+      background: rgba(255, 255, 255, 0.85);
+      user-select: none;
       -webkit-user-select: none;
+      min-width: 0;
     }
 
-    .radio-btn input[type="radio"] { 
-      position: absolute; 
-      opacity: 0; 
-      width: 0; 
-      height: 0; 
+    .radio-btn input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
-    .radio-btn:hover { 
-      border-color: var(--corail); 
-      background: rgba(255,107,53,0.04); 
+    .radio-btn:hover { border-color: var(--corail); background: rgba(255, 107, 53, 0.04); }
+    .radio-btn.selected {
+      border-color: var(--corail);
+      background: rgba(255, 107, 53, 0.07);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
     }
 
-    .radio-btn.selected { 
-      border-color: var(--corail); 
-      background: rgba(255,107,53,0.07); 
-      box-shadow: 0 0 0 3px rgba(255,107,53,0.12); 
+    .radio-btn-text {
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+      color: var(--texte);
+      text-align: center;
+      line-height: 1.3;
+      word-break: break-word;
     }
 
-    .radio-btn-text { 
-      font-size: clamp(0.75rem, 2.5vw, 0.9rem); 
-      color: var(--texte); 
-      text-align: center; 
-      line-height: 1.3; 
-      word-break: break-word; 
+    .field-error {
+      color: var(--rouge);
+      font-size: 0.78rem;
+      margin-top: 6px;
+      display: none;
     }
+    .field-error.visible { display: block; }
 
-    .field-error { 
-      color: var(--rouge); 
-      font-size: 0.78rem; 
-      margin-top: 6px; 
-      display: none; 
-    }
-
-    .field-error.visible { 
-      display: block; 
-    }
-
-    .btn-submit { 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 10px; 
-      background: linear-gradient(135deg, var(--rose), var(--corail)); 
-      color: var(--blanc); 
-      border: none; 
-      border-radius: 12px; 
-      padding: 17px 40px; 
-      font-family: var(--font-texte); 
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--rose), var(--corail));
+      color: var(--blanc);
+      border: none;
+      border-radius: 12px;
+      padding: 17px 40px;
+      font-family: var(--font-texte);
       font-size: 16px;
-      font-weight: 600; 
-      cursor: pointer; 
-      transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base); 
-      box-shadow: 0 4px 20px rgba(255,60,172,0.28); 
-      width: 100%; 
-      margin-top: 8px; 
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base);
+      box-shadow: 0 4px 20px rgba(255, 60, 172, 0.28);
+      width: 100%;
+      margin-top: 8px;
       letter-spacing: 0.06em;
       -webkit-appearance: none;
       appearance: none;
-      -webkit-font-size-adjust: 100%;
-      font-size-adjust: 100%;
       min-height: 44px;
     }
 
-    .btn-submit:hover:not(:disabled) { 
-      opacity: 0.9; 
-      transform: translateY(-2px); 
-      box-shadow: 0 8px 28px rgba(255,60,172,0.38); 
+    .btn-submit:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 60, 172, 0.38);
+    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .rsvp-success {
+      display: none;
+      text-align: center;
+      padding: 36px;
+      background: rgba(255, 107, 53, 0.06);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      margin-top: 20px;
+    }
+    .rsvp-success.visible { display: block; }
+    .rsvp-success p {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--corail);
     }
 
-    .btn-submit:disabled { 
-      opacity: 0.5; 
-      cursor: not-allowed; 
-      transform: none; 
-    }
-
-    .rsvp-success { 
-      display: none; 
-      text-align: center; 
-      padding: 36px; 
-      background: rgba(255,107,53,0.06); 
-      border-radius: var(--radius); 
-      border: 1px solid rgba(255,107,53,0.2); 
-      margin-top: 20px; 
-    }
-
-    .rsvp-success.visible { 
-      display: block; 
-    }
-
-    .rsvp-success p { 
-      font-family: var(--font-titre); 
-      font-style: italic; 
-      font-size: 1.3rem; 
-      color: var(--corail); 
-    }
-
-    .optional-hint { 
-      font-size: 0.72rem; 
-      font-style: italic; 
-      color: rgba(46,18,0,0.38); 
-      margin-top: 4px; 
-      display: block; 
+    .optional-hint {
+      font-size: 0.72rem;
+      font-style: italic;
+      color: rgba(46, 18, 0, 0.38);
+      margin-top: 4px;
+      display: block;
     }
 
     @supports (padding: max(0px)) {
@@ -395,39 +901,102 @@
     }
 
     @media (max-height: 600px) {
-      #rsvp {
-        padding: 40px 20px 60px;
-        min-height: auto;
-      }
-      .rsvp-form-wrap {
-        padding: clamp(16px, 3vw, 32px);
-      }
+      #rsvp { padding: 40px 20px 60px; min-height: auto; }
+      .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
-    /* Final Scene */
+    /* ============================================================
+       FINAL SCENE (voiture + feux d'artifice)
+       ============================================================ */
     #final-scene { position: relative; height: 300vh; z-index: 2; }
-    .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-    .final-bg-container { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .final-bg-mountains { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; object-fit: cover; object-position: bottom center; }
-    #fireworks-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.6s ease; }
-    #fireworks-canvas.visible { opacity: 1; }
-    .final-text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; pointer-events: none; width: 90%; max-width: 700px; }
-    .final-title { font-family: var(--font-titre); font-size: clamp(2.5rem, 7vw, 5.5rem); color: var(--blanc); line-height: 1.1; text-shadow: 0 3px 30px rgba(180,60,20,0.5), 0 1px 8px rgba(0,0,0,0.2); margin-bottom: 10px; }
-    .final-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
-    .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
-    #car-el { position: absolute; bottom: 1%; will-change: transform; z-index: 6; }
-    #car-el img { width: 100%; height: auto; display: block; }
 
+    .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .final-bg-container { position: absolute; inset: 0; }
+    .final-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .final-bg-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      object-position: bottom center;
+    }
+
+    #fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    #fireworks-canvas.visible { opacity: 1; }
+
+    .final-text {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 5;
+      pointer-events: none;
+      width: 90%;
+      max-width: 700px;
+    }
+
+    .final-title {
+      font-family: var(--font-titre);
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      color: var(--blanc);
+      line-height: 1.1;
+      text-shadow: 0 3px 30px rgba(180, 60, 20, 0.5), 0 1px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 10px;
+    }
+
+    .final-date {
+      font-weight: 400;
+      font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .final-tagline {
+      font-family: var(--font-titre);
+      font-style: italic;
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 16px rgba(180, 60, 20, 0.4);
+    }
+
+    #car-el {
+      position: absolute;
+      bottom: 1%;
+      will-change: transform;
+      z-index: 6;
+    }
+    #car-el img { width: 100%; height: auto; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media (max-width: 700px) {
       #timeline-desktop { display: none; }
       #timeline-mobile { display: block; }
     }
+
     @media (min-width: 701px) {
       #timeline-desktop { display: block; }
       #timeline-mobile { display: none; }
     }
 
+    /* ============================================================
+       PRINT
+       ============================================================ */
     @media print {
       #lanterns-layer, #panorama, #final-scene { display: none !important; }
       body { background: white; color: black; }
@@ -435,70 +1004,97 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
     }
 
+    /* ============================================================
+       iOS PERFORMANCE FALLBACK
+       ============================================================ */
     .ios-perf #panorama { display: none !important; }
-    .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
-    .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label, .ios-perf .tl-step-day, .ios-perf .tl-step-card, .ios-perf .rsvp-form-wrap {
+
+    .ios-perf body {
+      background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%);
+    }
+
+    .ios-perf .countdown-unit,
+    .ios-perf .event-card,
+    .ios-perf .timeline-day-label,
+    .ios-perf .tl-step-day,
+    .ios-perf .tl-step-card,
+    .ios-perf .rsvp-form-wrap {
       -webkit-backdrop-filter: none !important;
       backdrop-filter: none !important;
-      background: rgba(255,255,255,0.92) !important;
-      box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
+      background: rgba(255, 255, 255, 0.92) !important;
+      box-shadow: 0 2px 14px rgba(46, 18, 0, 0.08) !important;
     }
-    .ios-perf svg [filter], .ios-perf svg filter { filter: none !important; }
-    .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+    .ios-perf #lanterns-layer,
+    .ios-perf #car-el {
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
   </style>
 </head>
 
 <body>
 <div id="page-wrapper">
+
+  <!-- Fond dégradé SVG (non-iOS uniquement) -->
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
+  <!-- Lanternes flottantes (image déclarée une seule fois via <defs>) -->
   <div id="lanterns-layer" aria-hidden="true">
-    <svg id="lanterns-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 414 900" preserveAspectRatio="xMidYMid slice">
-      <g class="lantern" style="animation:float-a 8s ease-in-out infinite; animation-delay:-2s; transform-origin:52px 84px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="20" y="40" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
+    <svg id="lanterns-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         viewBox="0 0 414 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <image id="lantern-img" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png"
+               width="1" height="1" preserveAspectRatio="xMidYMid meet"/>
+      </defs>
+      <g class="lantern" style="animation:float-a 8s ease-in-out infinite -2s; transform-origin:52px 84px">
+        <use href="#lantern-img" x="20" y="40" width="64" height="88"/>
       </g>
-      <g class="lantern" style="animation:float-b 9s ease-in-out infinite; animation-delay:-5s; transform-origin:360px 70px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="320" y="20" width="72" height="100" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-b 9s ease-in-out infinite -5s; transform-origin:360px 70px">
+        <use href="#lantern-img" x="320" y="20" width="72" height="100"/>
       </g>
-      <g class="lantern" style="animation:float-c 8.5s ease-in-out infinite; animation-delay:-4s; transform-origin:392px 185px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="360" y="140" width="44" height="60" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-c 8.5s ease-in-out infinite -4s; transform-origin:392px 185px">
+        <use href="#lantern-img" x="360" y="140" width="44" height="60"/>
       </g>
-      <g class="lantern" style="animation:float-d 8.8s ease-in-out infinite; animation-delay:-6s; transform-origin:32px 260px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="10" y="240" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-d 8.8s ease-in-out infinite -6s; transform-origin:32px 260px">
+        <use href="#lantern-img" x="10" y="240" width="56" height="78"/>
       </g>
-      <g class="lantern" style="animation:float-e 9.2s ease-in-out infinite; animation-delay:-3s; transform-origin:350px 300px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="300" y="260" width="80" height="110" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-e 9.2s ease-in-out infinite -3s; transform-origin:350px 300px">
+        <use href="#lantern-img" x="300" y="260" width="80" height="110"/>
       </g>
-      <g class="lantern" style="animation:float-b 9.5s ease-in-out infinite; animation-delay:-7s; transform-origin:76px 385px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-b 9.5s ease-in-out infinite -7s; transform-origin:76px 385px">
+        <use href="#lantern-img" x="40" y="330" width="74" height="102"/>
       </g>
-      <g class="lantern" style="animation:float-a 8.3s ease-in-out infinite; animation-delay:-4.5s; transform-origin:198px 500px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="420" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-a 8.3s ease-in-out infinite -4.5s; transform-origin:198px 500px">
+        <use href="#lantern-img" x="150" y="420" width="94" height="130"/>
       </g>
-      <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite; animation-delay:-1.5s; transform-origin:304px 520px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite -1.5s; transform-origin:304px 520px">
+        <use href="#lantern-img" x="260" y="470" width="84" height="116"/>
       </g>
-      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:78px 560px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="520" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite -8s; transform-origin:78px 560px">
+        <use href="#lantern-img" x="40" y="520" width="48" height="66"/>
       </g>
-      <g class="lantern" style="animation:float-e 8.9s ease-in-out infinite; animation-delay:-5.5s; transform-origin:356px 610px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="560" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-e 8.9s ease-in-out infinite -5.5s; transform-origin:356px 610px">
+        <use href="#lantern-img" x="330" y="560" width="56" height="78"/>
       </g>
-      <g class="lantern" style="animation:float-a 9.3s ease-in-out infinite; animation-delay:-9s; transform-origin:154px 660px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="180" y="620" width="64" height="88" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-a 9.3s ease-in-out infinite -9s; transform-origin:154px 660px">
+        <use href="#lantern-img" x="180" y="620" width="64" height="88"/>
       </g>
-      <g class="lantern" style="animation:float-b 8.7s ease-in-out infinite; animation-delay:-6.5s; transform-origin:258px 690px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="280" y="700" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-b 8.7s ease-in-out infinite -6.5s; transform-origin:258px 690px">
+        <use href="#lantern-img" x="280" y="700" width="48" height="66"/>
       </g>
-      <g class="lantern" style="animation:float-c 9.4s ease-in-out infinite; animation-delay:-4.2s; transform-origin:40px 760px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="120" y="760" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-c 9.4s ease-in-out infinite -4.2s; transform-origin:40px 760px">
+        <use href="#lantern-img" x="120" y="760" width="48" height="66"/>
       </g>
-      <g class="lantern" style="animation:float-d 9s ease-in-out infinite; animation-delay:-7.2s; transform-origin:370px 780px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="350" y="740" width="44" height="60" preserveAspectRatio="xMidYMid meet"/>
+      <g class="lantern" style="animation:float-d 9s ease-in-out infinite -7.2s; transform-origin:370px 780px">
+        <use href="#lantern-img" x="350" y="740" width="44" height="60"/>
       </g>
     </svg>
   </div>
 
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
   <section id="hero" aria-label="Accueil">
     <div class="hero-content">
       <p class="hero-date reveal">24 juillet 2027</p>
@@ -511,6 +1107,9 @@
     </div>
   </section>
 
+  <!-- ============================================================
+       COUNTDOWN
+       ============================================================ -->
   <section id="countdown" aria-label="Compte à rebours">
     <div class="container">
       <div id="countdown-display" aria-live="polite" aria-atomic="true">
@@ -526,6 +1125,9 @@
     </div>
   </section>
 
+  <!-- ============================================================
+       TIMELINE DESKTOP
+       ============================================================ -->
   <section id="timeline-desktop" aria-label="Programme">
     <div class="container">
       <h2 class="reveal">Le programme</h2>
@@ -533,15 +1135,20 @@
         <svg class="timeline-line-svg" id="timeline-line-svg" aria-hidden="true">
           <defs>
             <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#FFB347"/><stop offset="50%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FF3CAC"/>
+              <stop offset="0%" stop-color="#FFB347"/>
+              <stop offset="50%" stop-color="#FF6B35"/>
+              <stop offset="100%" stop-color="#FF3CAC"/>
             </linearGradient>
           </defs>
-          <path id="timeline-path-bg" d="M20 0"/><path id="timeline-path-draw" d="M20 0"/>
+          <path id="timeline-path-bg" d="M20 0"/>
+          <path id="timeline-path-draw" d="M20 0"/>
         </svg>
 
+        <!-- Samedi -->
         <div class="timeline-day">
           <div class="timeline-day-label reveal">Samedi 24 juillet 2027</div>
           <div class="timeline-events">
+
             <div class="timeline-event">
               <div class="event-side reveal-left">
                 <div class="event-card">
@@ -554,7 +1161,7 @@
               <div class="event-dot"><div class="event-dot-inner"></div></div>
               <div class="event-img-col reveal-right">
                 <div class="event-img-wrap">
-                  <img src="https://i.ibb.co/4RB3qCC5/IMG-7137.png" alt="Mairie de Pin-Balma" loading="lazy"/>
+                  <img src="https://i.ibb.co/4RB3qCC5/IMG-7137.png" alt="Mairie de Pin-Balma" loading="lazy" decoding="async"/>
                 </div>
               </div>
             </div>
@@ -562,22 +1169,24 @@
             <div class="timeline-event">
               <div class="event-img-col reveal-left">
                 <div class="event-img-wrap">
-                  <img src="https://i.ibb.co/27Dgn0HL/IMG-7136.png" alt="Domaine de Gailhaguet" loading="lazy"/>
+                  <img src="https://i.ibb.co/27Dgn0HL/IMG-7136.png" alt="Domaine de Gailhaguet" loading="lazy" decoding="async"/>
                 </div>
               </div>
-              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 4px rgba(255,107,53,0.2),0 0 14px rgba(255,107,53,0.4)"></div></div>
+              <div class="event-dot"><div class="event-dot-inner event-dot-inner--orange"></div></div>
               <div class="event-side reveal-right">
                 <div class="event-card">
-                  <div class="event-time" style="color:#FF6B35">18h00</div>
+                  <div class="event-time event-time--orange">18h00</div>
                   <div class="event-title">Cocktail & Repas & Soirée</div>
                   <div class="event-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
                   <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
+        <!-- Dimanche -->
         <div class="timeline-day">
           <div class="timeline-day-label reveal">Dimanche 25 juillet 2027</div>
           <div class="timeline-events">
@@ -590,29 +1199,36 @@
                   <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
-              <div class="event-dot"><div class="event-dot-inner" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 4px rgba(255,179,71,0.2),0 0 14px rgba(255,179,71,0.4)"></div></div>
+              <div class="event-dot"><div class="event-dot-inner event-dot-inner--amber"></div></div>
               <div class="event-img-col reveal-right">
                 <div class="event-img-wrap">
-                  <img src="https://i.ibb.co/XxpGYdCK/IMG-7134.png" alt="Brunch au domaine" loading="lazy"/>
+                  <img src="https://i.ibb.co/XxpGYdCK/IMG-7134.png" alt="Brunch au domaine" loading="lazy" decoding="async"/>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
+  <!-- ============================================================
+       TIMELINE MOBILE
+       ============================================================ -->
   <div id="timeline-mobile" aria-label="Programme">
     <h2>Le programme</h2>
     <div class="tl-mobile-wrapper" id="tl-mobile-wrapper">
       <svg id="tl-mobile-line-svg" aria-hidden="true">
         <defs>
           <linearGradient id="pathGradMobile" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#FFB347"/><stop offset="50%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FF3CAC"/>
+            <stop offset="0%" stop-color="#FFB347"/>
+            <stop offset="50%" stop-color="#FF6B35"/>
+            <stop offset="100%" stop-color="#FF3CAC"/>
           </linearGradient>
         </defs>
-        <path id="tl-mobile-path-bg" d="M20 0"/><path id="tl-mobile-path-draw" d="M20 0"/>
+        <path id="tl-mobile-path-bg" d="M20 0"/>
+        <path id="tl-mobile-path-draw" d="M20 0"/>
       </svg>
 
       <div class="tl-step" id="tl-step-0">
@@ -626,7 +1242,7 @@
             <a href="https://www.google.com/maps/search/?api=1&query=Mairie+Pin-Balma+31130" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-0">
-            <img src="https://i.ibb.co/4RB3qCC5/IMG-7137.png" alt="Mairie de Pin-Balma" loading="lazy"/>
+            <img src="https://i.ibb.co/4RB3qCC5/IMG-7137.png" alt="Mairie de Pin-Balma" loading="lazy" decoding="async"/>
           </div>
         </div>
       </div>
@@ -634,15 +1250,15 @@
       <div class="tl-step" id="tl-step-1">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-1">Samedi 24 juillet 2027</div>
-          <div class="tl-step-dot" id="tl-dot-1" style="background:linear-gradient(135deg,#FF6B35,#FFB347);box-shadow:0 0 0 5px rgba(255,107,53,0.2),0 0 18px rgba(255,107,53,0.4)"></div>
+          <div class="tl-step-dot tl-step-dot--orange" id="tl-dot-1"></div>
           <div class="tl-step-card" id="tl-card-1">
-            <div class="tl-step-time" style="color:#FF6B35">18h00</div>
+            <div class="tl-step-time tl-step-time--orange">18h00</div>
             <div class="tl-step-title">Cocktail & Repas & Soirée</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>577 chemin de GAILHAGUET, 31590 Verfeil</div>
             <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-1">
-            <img src="https://i.ibb.co/27Dgn0HL/IMG-7136.png" alt="Domaine de Gailhaguet" loading="lazy"/>
+            <img src="https://i.ibb.co/27Dgn0HL/IMG-7136.png" alt="Domaine de Gailhaguet" loading="lazy" decoding="async"/>
           </div>
         </div>
       </div>
@@ -650,21 +1266,24 @@
       <div class="tl-step" id="tl-step-2">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-2">Dimanche 25 juillet 2027</div>
-          <div class="tl-step-dot" id="tl-dot-2" style="background:linear-gradient(135deg,#FFB347,#FF6B35);box-shadow:0 0 0 5px rgba(255,179,71,0.2),0 0 18px rgba(255,179,71,0.4)"></div>
+          <div class="tl-step-dot tl-step-dot--amber" id="tl-dot-2"></div>
           <div class="tl-step-card" id="tl-card-2">
-            <div class="tl-step-time" style="color:#FFB347">À partir de 12h00</div>
+            <div class="tl-step-time tl-step-time--amber">À partir de 12h00</div>
             <div class="tl-step-title">Brunch</div>
             <div class="tl-step-address">Domaine de Gailhaguet<br>31590 Verfeil</div>
             <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-2">
-            <img src="https://i.ibb.co/XxpGYdCK/IMG-7134.png" alt="Brunch au domaine" loading="lazy"/>
+            <img src="https://i.ibb.co/XxpGYdCK/IMG-7134.png" alt="Brunch au domaine" loading="lazy" decoding="async"/>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ============================================================
+       RSVP
+       ============================================================ -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
       <h2 class="reveal">Vous serez là ?</h2>
@@ -674,15 +1293,15 @@
           <input type="hidden" name="fvv" value="1"/>
           <input type="hidden" name="draftResponse" value="[]"/>
           <input type="hidden" name="pageHistory" value="0"/>
-          
+
           <div class="form-group">
             <label for="rsvp-name">Nom complet *</label>
             <input type="text" id="rsvp-name" name="entry.634494262" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
             <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
           </div>
-          
+
           <div class="form-group">
-            <fieldset style="border:none;padding:0">
+            <fieldset>
               <legend>Serez-vous présent(e) ? *</legend>
               <div class="radio-row" aria-describedby="error-attending">
                 <label class="radio-btn">
@@ -697,13 +1316,13 @@
               <span class="field-error" id="error-attending" role="alert">Merci de choisir une réponse.</span>
             </fieldset>
           </div>
-          
+
           <div class="form-group">
             <label for="rsvp-message">Un mot pour les mariés</label>
             <textarea id="rsvp-message" name="entry.1167258628" placeholder="Écrivez-nous quelques mots..."></textarea>
             <span class="optional-hint">Optionnel</span>
           </div>
-          
+
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
         </form>
         <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
@@ -715,18 +1334,25 @@
 
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Réponse formulaire" aria-hidden="true"></iframe>
 
+  <!-- ============================================================
+       FINAL SCENE
+       ============================================================ -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
     <div class="final-sticky">
       <div class="final-bg-container">
         <svg class="final-bg-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <linearGradient id="sky-final" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#fbbf24"/><stop offset="25%" stop-color="#ff87a8"/><stop offset="50%" stop-color="#b78fdd"/><stop offset="75%" stop-color="#5a7fc8"/><stop offset="100%" stop-color="#020159"/>
+              <stop offset="0%" stop-color="#fbbf24"/>
+              <stop offset="25%" stop-color="#ff87a8"/>
+              <stop offset="50%" stop-color="#b78fdd"/>
+              <stop offset="75%" stop-color="#5a7fc8"/>
+              <stop offset="100%" stop-color="#020159"/>
             </linearGradient>
           </defs>
           <rect width="1440" height="600" fill="url(#sky-final)"/>
         </svg>
-        <img src="Montagnes.png" alt="Montagnes" class="final-bg-mountains" loading="lazy"/>
+        <img src="Montagnes.png" alt="" class="final-bg-mountains" loading="lazy" decoding="async"/>
       </div>
       <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
       <div class="final-text">
@@ -735,518 +1361,550 @@
         <div class="final-tagline">En route pour Verfeil</div>
       </div>
       <div id="car-el" aria-hidden="true">
-        <img src="voiture.png" alt="Voiture des mariés" />
+        <img src="voiture.png" alt="" loading="lazy" decoding="async"/>
       </div>
     </div>
   </div>
+
 </div>
 
+<!-- ============================================================
+     JAVASCRIPT (module unique, optimisé)
+     ============================================================ -->
 <script>
-const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
-
-const Utils = {
-  pad: (n) => String(n).padStart(2, '0'),
-  debounce: (fn, delay) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => fn(...args), delay);
-    };
-  },
-  getElement: (id) => document.getElementById(id),
-  queryAll: (selector) => document.querySelectorAll(selector)
-};
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-if (isIOS) document.documentElement.classList.add('ios-perf');
-
-// PANORAMA
 (function() {
-  if (document.documentElement.classList.contains('ios-perf')) return;
-  const svg = Utils.getElement('panorama');
-  function draw() {
-    const H = Utils.getElement('page-wrapper').scrollHeight;
-    const W = 1440;
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', H);
-    svg.style.height = H + 'px';
-    svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#bg-grad)"/><rect width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
+  'use strict';
+
+  /* --- Configuration --- */
+  const WEDDING_DATE = '2027-07-24T16:30:00+02:00';
+
+  /* --- Utilitaires --- */
+  const $ = (id) => document.getElementById(id);
+  const $$ = (sel) => document.querySelectorAll(sel);
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function debounce(fn, ms) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
   }
-  draw();
-  window.addEventListener('resize', Utils.debounce(draw, 300));
-})();
 
-// LANTERNES
-(function() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const layer = Utils.getElement('lanterns-layer');
-  if (!layer) return;
-  let rafId = null;
-  layer.style.transform = 'translate3d(0, 0px, 0)';
-  window.addEventListener('scroll', () => {
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      rafId = null;
-      layer.style.transform = `translate3d(0, -${window.scrollY * 0.32}px, 0)`;
-    });
-  }, { passive: true });
-})();
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// COUNTDOWN
-(function() {
-  const target = new Date(CONFIG.weddingDate).getTime();
-  const grid = Utils.getElement('countdown-grid');
-  const done = Utils.getElement('countdown-done');
-  const tag = Utils.getElement('countdown-tagline');
-  const els = {
-    d: Utils.getElement('cd-days'),
-    h: Utils.getElement('cd-hours'),
-    m: Utils.getElement('cd-minutes'),
-    s: Utils.getElement('cd-seconds')
-  };
-  function tick() {
-    const diff = target - Date.now();
-    if (diff <= 0) {
-      grid.style.display = 'none';
-      if (tag) tag.style.display = 'none';
-      done.style.display = 'block';
-      return;
+  /* --- Détection iOS (pour fallback perf) --- */
+  const isIOS = CSS.supports('-webkit-touch-callout', 'none') ||
+    (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+  if (isIOS) document.documentElement.classList.add('ios-perf');
+
+  /* ============================================================
+     PANORAMA SVG (fond dégradé)
+     ============================================================ */
+  (function initPanorama() {
+    if (isIOS) return;
+    const svg = $('panorama');
+    if (!svg) return;
+
+    // Construire le contenu SVG une seule fois
+    const defs = `<defs>
+      <filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/>
+      <feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter>
+      <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/>
+        <stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/>
+        <stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/>
+      </linearGradient></defs>`;
+
+    svg.innerHTML = defs +
+      '<rect id="pano-bg" width="1440" height="0" fill="url(#bg-grad)"/>' +
+      '<rect id="pano-grain" width="1440" height="0" filter="url(#paper-grain)" opacity="0.7"/>';
+
+    const bgRect = $('pano-bg');
+    const grainRect = $('pano-grain');
+
+    function resize() {
+      const H = $('page-wrapper').scrollHeight;
+      svg.setAttribute('viewBox', `0 0 1440 ${H}`);
+      svg.setAttribute('width', '100%');
+      svg.setAttribute('height', H);
+      svg.style.height = H + 'px';
+      bgRect.setAttribute('height', H);
+      grainRect.setAttribute('height', H);
     }
-    els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
-    els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
-    els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
-    els.s.textContent = Utils.pad(Math.floor((diff % 60000) / 1000));
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
 
-// REVEAL
-(function() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
-})();
+    resize();
+    window.addEventListener('resize', debounce(resize, 300));
+  })();
 
-// TIMELINE DESKTOP
-(function() {
-  if (window.innerWidth <= 700) return;
-  const section = Utils.getElement('timeline-desktop');
-  const wrapper = Utils.getElement('timeline-wrapper');
-  const lineSvg = Utils.getElement('timeline-line-svg');
-  const pathBg = Utils.getElement('timeline-path-bg');
-  const pathDraw = Utils.getElement('timeline-path-draw');
-  if (!section || !wrapper || !lineSvg) return;
+  /* ============================================================
+     SCROLL CENTRALISÉ (un seul listener pour tous les effets)
+     ============================================================ */
+  let scrollRAF = null;
+  const scrollCallbacks = [];
 
-  function wavyPath(cx, H) {
-    const amp = 10, period = 100;
-    let d = `M ${cx} 0`, y = 0, dir = 1;
-    while (y < H) {
-      const nextY = Math.min(y + period, H);
-      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-      y = nextY;
-      dir *= -1;
-    }
-    return d;
-  }
-
-  let isSetup = false;
-  function setup() {
-    const firstDot = wrapper.querySelector('.event-dot');
-    if (!firstDot) return;
-    const wRect = wrapper.getBoundingClientRect();
-    const dRect = firstDot.getBoundingClientRect();
-    const cx = dRect.left + dRect.width / 2 - wRect.left;
-    const H = wrapper.offsetHeight;
-    const svgW = 40;
-    lineSvg.style.left = (cx - svgW / 2) + 'px';
-    lineSvg.style.width = svgW + 'px';
-    lineSvg.style.height = H + 'px';
-    lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
-    const d = wavyPath(svgW / 2, H);
-    pathBg.setAttribute('d', d);
-    pathDraw.setAttribute('d', d);
-    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
-    pathDraw.style.transition = 'none';
-    pathDraw.style.strokeDasharray = len;
-    pathDraw.style.strokeDashoffset = len;
-    pathDraw._len = len;
-    requestAnimationFrame(() => {
-      pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out';
-    });
-    isSetup = true;
-  }
-
-  setTimeout(setup, 200);
-  window.addEventListener('resize', Utils.debounce(() => {
-    isSetup = false;
-    setup();
-  }, 300));
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    setTimeout(() => {
-      if (pathDraw._len) pathDraw.style.strokeDashoffset = 0;
-    }, 300);
-    return;
+  function registerScrollHandler(fn) {
+    scrollCallbacks.push(fn);
   }
 
   window.addEventListener('scroll', () => {
-    if (window.innerWidth <= 700 || !isSetup) return;
-    const rect = section.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-    const total = section.offsetHeight - window.innerHeight;
-    const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
-    pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - progress);
-  }, { passive: true });
-})();
-
-// TIMELINE MOBILE
-(function() {
-  if (window.innerWidth > 700) return;
-  const wrapper = Utils.getElement('tl-mobile-wrapper');
-  const lineSvg = Utils.getElement('tl-mobile-line-svg');
-  const pathBg = Utils.getElement('tl-mobile-path-bg');
-  const pathDraw = Utils.getElement('tl-mobile-path-draw');
-  const steps = Utils.queryAll('.tl-step');
-  if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
-
-  function wavyPath(cx, H) {
-    const amp = 8, period = 80;
-    let d = `M ${cx} 0`, y = 0, dir = 1;
-    while (y < H) {
-      const nextY = Math.min(y + period, H);
-      d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
-      y = nextY;
-      dir *= -1;
-    }
-    return d;
-  }
-
-  function setupLine() {
-    const H = wrapper.offsetHeight;
-    lineSvg.style.height = H + 'px';
-    lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
-    const d = wavyPath(20, H);
-    pathBg.setAttribute('d', d);
-    pathDraw.setAttribute('d', d);
-    const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
-    pathDraw.style.transition = 'none';
-    pathDraw.style.strokeDasharray = len;
-    pathDraw.style.strokeDashoffset = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : len;
-    pathDraw._len = len;
-    requestAnimationFrame(() => {
-      pathDraw.style.transition = 'stroke-dashoffset 0.12s linear';
-    });
-  }
-
-  setTimeout(setupLine, 300);
-  window.addEventListener('resize', Utils.debounce(() => {
-    setupLine();
-    onScroll();
-  }, 250));
-
-  let raf = null;
-  function updateGlobalPath() {
-    raf = null;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const wrapperH = wrapper.offsetHeight;
-    const totalScroll = Math.max(1, wrapperH - window.innerHeight);
-    const scrolled = Math.max(0, -wrapperRect.top);
-    const globalProg = Math.min(1, scrolled / totalScroll);
-    const len = pathDraw._len || 1000;
-    pathDraw.style.strokeDashoffset = len * (1 - globalProg);
-  }
-
-  function onScroll() {
-    if (raf) return;
-    raf = requestAnimationFrame(updateGlobalPath);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const step = entry.target;
-      const i = step.dataset.i;
-      const day = Utils.getElement(`tl-day-${i}`);
-      const dot = Utils.getElement(`tl-dot-${i}`);
-      const card = Utils.getElement(`tl-card-${i}`);
-      const img = Utils.getElement(`tl-img-${i}`);
-      if (entry.isIntersecting) {
-        day?.classList.add('show');
-        dot?.classList.add('show');
-        setTimeout(() => card?.classList.add('show'), 120);
-        setTimeout(() => img?.classList.add('show'), 240);
-      } else {
-        day?.classList.remove('show');
-        dot?.classList.remove('show');
-        card?.classList.remove('show');
-        img?.classList.remove('show');
+    if (scrollRAF) return;
+    scrollRAF = requestAnimationFrame(() => {
+      scrollRAF = null;
+      const scrollY = window.scrollY;
+      const vh = window.innerHeight;
+      for (let i = 0; i < scrollCallbacks.length; i++) {
+        scrollCallbacks[i](scrollY, vh);
       }
     });
-  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+  }, { passive: true });
 
-  steps.forEach((step, i) => {
-    step.dataset.i = String(i);
-    io.observe(step);
-  });
+  /* ============================================================
+     PARALLAXE LANTERNES
+     ============================================================ */
+  (function initLanterns() {
+    if (prefersReducedMotion) return;
+    const layer = $('lanterns-layer');
+    if (!layer) return;
 
-  Utils.getElement('tl-day-0')?.classList.add('show');
-  Utils.getElement('tl-dot-0')?.classList.add('show');
-  Utils.getElement('tl-card-0')?.classList.add('show');
-  Utils.getElement('tl-img-0')?.classList.add('show');
-})();
+    registerScrollHandler((scrollY) => {
+      layer.style.transform = `translate3d(0, ${-(scrollY * 0.32)}px, 0)`;
+    });
+  })();
 
-// VOITURE + FEUX D'ARTIFICE
-(function() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const section = Utils.getElement('final-scene');
-  const car = Utils.getElement('car-el');
-  const canvas = Utils.getElement('fireworks-canvas');
-  if (!section || !car || !canvas) return;
+  /* ============================================================
+     COUNTDOWN
+     ============================================================ */
+  (function initCountdown() {
+    const target = new Date(WEDDING_DATE).getTime();
+    const grid = $('countdown-grid');
+    const done = $('countdown-done');
+    const tag = $('countdown-tagline');
+    const dEl = $('cd-days'), hEl = $('cd-hours'), mEl = $('cd-minutes'), sEl = $('cd-seconds');
 
-  const ctx = canvas.getContext('2d');
-  const perfIOS = document.documentElement.classList.contains('ios-perf');
-  const carW = 200;
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        grid.style.display = 'none';
+        if (tag) tag.style.display = 'none';
+        done.style.display = 'block';
+        return;
+      }
+      dEl.textContent = pad(Math.floor(diff / 86400000));
+      hEl.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      mEl.textContent = pad(Math.floor((diff % 3600000) / 60000));
+      sEl.textContent = pad(Math.floor((diff % 60000) / 1000));
+    }
 
-  function resizeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
-    canvas.width = Math.floor(canvas.offsetWidth * dpr);
-    canvas.height = Math.floor(canvas.offsetHeight * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
+    tick();
+    setInterval(tick, 1000);
+  })();
 
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  /* ============================================================
+     REVEAL (IntersectionObserver)
+     ============================================================ */
+  (function initReveal() {
+    if (prefersReducedMotion) return;
+    const obs = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.12 });
 
-  car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
+    $$('.reveal,.reveal-left,.reveal-right').forEach((el) => obs.observe(el));
+  })();
 
-  const particles = [];
-  let fwActive = false, fwRafId = null;
-  const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
+  /* ============================================================
+     TIMELINE DESKTOP — tracé SVG progressif
+     ============================================================ */
+  (function initTimelineDesktop() {
+    if (window.innerWidth <= 700) return;
+    const section = $('timeline-desktop');
+    const wrapper = $('timeline-wrapper');
+    const lineSvg = $('timeline-line-svg');
+    const pathBg = $('timeline-path-bg');
+    const pathDraw = $('timeline-path-draw');
+    if (!section || !wrapper || !lineSvg) return;
 
-  function burst(x, y) {
-    const count = Math.floor((perfIOS ? 28 : 60) + Math.random() * (perfIOS ? 18 : 40));
-    const c1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
-    const c2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
-    for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
-      const speed = 2 + Math.random() * 5;
-      const life = 60 + Math.random() * 60;
-      particles.push({
-        x, y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - Math.random() * 2,
-        alpha: 1,
-        life,
-        maxLife: life,
-        radius: 1.5 + Math.random() * 2,
-        color: Math.random() > 0.5 ? c1 : c2,
-        trail: [],
-        gravity: 0.06 + Math.random() * 0.06
+    function wavyPath(cx, H) {
+      const amp = 10, period = 100;
+      let d = `M ${cx} 0`, y = 0, dir = 1;
+      while (y < H) {
+        const nextY = Math.min(y + period, H);
+        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+        y = nextY;
+        dir *= -1;
+      }
+      return d;
+    }
+
+    let pathLen = 0;
+
+    function setup() {
+      const firstDot = wrapper.querySelector('.event-dot');
+      if (!firstDot) return;
+      const wRect = wrapper.getBoundingClientRect();
+      const dRect = firstDot.getBoundingClientRect();
+      const cx = dRect.left + dRect.width / 2 - wRect.left;
+      const H = wrapper.offsetHeight;
+      const svgW = 40;
+
+      lineSvg.style.left = (cx - svgW / 2) + 'px';
+      lineSvg.style.width = svgW + 'px';
+      lineSvg.style.height = H + 'px';
+      lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
+
+      const d = wavyPath(svgW / 2, H);
+      pathBg.setAttribute('d', d);
+      pathDraw.setAttribute('d', d);
+
+      pathLen = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
+      pathDraw.style.transition = 'none';
+      pathDraw.style.strokeDasharray = pathLen;
+      pathDraw.style.strokeDashoffset = prefersReducedMotion ? 0 : pathLen;
+
+      if (!prefersReducedMotion) {
+        requestAnimationFrame(() => {
+          pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out';
+        });
+      }
+    }
+
+    setTimeout(setup, 200);
+    window.addEventListener('resize', debounce(setup, 300));
+
+    if (!prefersReducedMotion) {
+      registerScrollHandler(() => {
+        if (window.innerWidth <= 700 || !pathLen) return;
+        const rect = section.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const total = section.offsetHeight - window.innerHeight;
+        const progress = Math.min(1, Math.max(0, -rect.top / (total * 1.1)));
+        pathDraw.style.strokeDashoffset = pathLen * (1 - progress);
       });
     }
-  }
+  })();
 
-  function animateFW() {
-    if (!fwActive) return;
-    fwRafId = requestAnimationFrame(animateFW);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
-      if (p.trail.length > 6) p.trail.shift();
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += p.gravity;
-      p.vx *= 0.98;
-      p.life--;
-      p.alpha = p.life / p.maxLife;
-      p.trail.forEach((tp, t) => {
-        ctx.beginPath();
-        ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
-        ctx.fill();
-      });
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.alpha;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      if (p.life <= 0) particles.splice(i, 1);
-    }
-  }
+  /* ============================================================
+     TIMELINE MOBILE — sticky cards + tracé progressif
+     ============================================================ */
+  (function initTimelineMobile() {
+    if (window.innerWidth > 700) return;
+    const wrapper = $('tl-mobile-wrapper');
+    const pathBg = $('tl-mobile-path-bg');
+    const pathDraw = $('tl-mobile-path-draw');
+    const lineSvg = $('tl-mobile-line-svg');
+    const steps = $$('.tl-step');
+    if (!wrapper || !lineSvg || !steps.length) return;
 
-  let burstTOs = [];
-  function launchFW() {
-    burstTOs.forEach(clearTimeout);
-    burstTOs = [];
-    const W = canvas.width, H = canvas.height;
-    const pos = [
-      { x: W * 0.2, y: H * 0.18 },
-      { x: W * 0.5, y: H * 0.12 },
-      { x: W * 0.78, y: H * 0.2 },
-      { x: W * 0.35, y: H * 0.28 },
-      { x: W * 0.65, y: H * 0.25 }
-    ];
-    pos.forEach((p, i) => {
-      burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280));
-    });
-    burstTOs.push(setTimeout(launchFW, pos.length * 280 + 1000));
-  }
+    let pathLen = 0;
 
-  function startFW() {
-    if (fwActive) return;
-    fwActive = true;
-    canvas.classList.add('visible');
-    launchFW();
-    animateFW();
-  }
-
-  function stopFW() {
-    if (!fwActive) return;
-    fwActive = false;
-    canvas.classList.remove('visible');
-    burstTOs.forEach(clearTimeout);
-    burstTOs = [];
-    if (fwRafId) cancelAnimationFrame(fwRafId);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.length = 0;
-  }
-
-  let rafCar = null;
-  let lastProgress = -1;
-
-  function updateCar() {
-    const rect = section.getBoundingClientRect();
-    const total = section.offsetHeight - window.innerHeight;
-    if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
-      if (lastProgress > 0 && lastProgress < 1) {
-        car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
-        stopFW();
+    function wavyPath(cx, H) {
+      const amp = 8, period = 80;
+      let d = `M ${cx} 0`, y = 0, dir = 1;
+      while (y < H) {
+        const nextY = Math.min(y + period, H);
+        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+        y = nextY;
+        dir *= -1;
       }
-      lastProgress = -1;
-      return;
+      return d;
     }
-    const progress = Math.min(1, Math.max(0, -rect.top / total));
-    if (Math.abs(progress - lastProgress) < 0.0005) return;
-    lastProgress = progress;
-    const startX = -carW - 20;
-    const endX = window.innerWidth + 20;
-    car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
-    if (progress >= 0.85) startFW();
-    else stopFW();
-  }
 
-  window.addEventListener('scroll', () => {
-    if (rafCar) cancelAnimationFrame(rafCar);
-    rafCar = requestAnimationFrame(updateCar);
-  }, { passive: true });
+    function setupLine() {
+      const H = wrapper.offsetHeight;
+      lineSvg.style.height = H + 'px';
+      lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
+      const d = wavyPath(20, H);
+      pathBg.setAttribute('d', d);
+      pathDraw.setAttribute('d', d);
+      pathLen = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
+      pathDraw.style.transition = 'none';
+      pathDraw.style.strokeDasharray = pathLen;
+      pathDraw.style.strokeDashoffset = prefersReducedMotion ? 0 : pathLen;
+      requestAnimationFrame(() => {
+        pathDraw.style.transition = 'stroke-dashoffset 0.12s linear';
+      });
+    }
 
-  window.addEventListener('resize', () => {
+    setTimeout(setupLine, 300);
+    window.addEventListener('resize', debounce(setupLine, 250));
+
+    if (!prefersReducedMotion) {
+      registerScrollHandler(() => {
+        if (!pathLen) return;
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const totalScroll = Math.max(1, wrapper.offsetHeight - window.innerHeight);
+        const scrolled = Math.max(0, -wrapperRect.top);
+        const globalProg = Math.min(1, scrolled / totalScroll);
+        pathDraw.style.strokeDashoffset = pathLen * (1 - globalProg);
+      });
+    }
+
+    // IntersectionObserver pour les steps
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const i = entry.target.dataset.i;
+        const day = $(`tl-day-${i}`);
+        const dot = $(`tl-dot-${i}`);
+        const card = $(`tl-card-${i}`);
+        const img = $(`tl-img-${i}`);
+        if (entry.isIntersecting) {
+          day?.classList.add('show');
+          dot?.classList.add('show');
+          setTimeout(() => card?.classList.add('show'), 120);
+          setTimeout(() => img?.classList.add('show'), 240);
+        } else {
+          day?.classList.remove('show');
+          dot?.classList.remove('show');
+          card?.classList.remove('show');
+          img?.classList.remove('show');
+        }
+      }
+    }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+
+    steps.forEach((step, i) => {
+      step.dataset.i = String(i);
+      io.observe(step);
+    });
+
+    // Premier step visible par défaut
+    $('tl-day-0')?.classList.add('show');
+    $('tl-dot-0')?.classList.add('show');
+    $('tl-card-0')?.classList.add('show');
+    $('tl-img-0')?.classList.add('show');
+  })();
+
+  /* ============================================================
+     VOITURE + FEUX D'ARTIFICE
+     ============================================================ */
+  (function initFinalScene() {
+    if (prefersReducedMotion) return;
+    const section = $('final-scene');
+    const car = $('car-el');
+    const canvas = $('fireworks-canvas');
+    if (!section || !car || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const carW = 200;
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, isIOS ? 1.25 : 2);
+      canvas.width = Math.floor(canvas.offsetWidth * dpr);
+      canvas.height = Math.floor(canvas.offsetHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
     resizeCanvas();
-    lastProgress = -1;
-    updateCar();
-  });
+    window.addEventListener('resize', debounce(resizeCanvas, 200));
 
-  updateCar();
-})();
+    car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
 
-// FIX iOS : Gestion minimale du clavier virtuel
-(function() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (!isIOS) return;
+    // Feux d'artifice
+    const particles = [];
+    let fwActive = false, fwRafId = null;
+    const FW_COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#FFD166', '#ffffff', '#FF8C42', '#ffaacc', '#ffe0a0'];
 
-  const form = document.getElementById('rsvp-form');
-  if (!form) return;
-  
-  const inputs = form.querySelectorAll('input[type="text"], textarea, button');
-
-  inputs.forEach(input => {
-    input.style.fontSize = '16px';
-  });
-
-  document.addEventListener('touchstart', (e) => {
-    if (e.target.matches('input[type="text"], textarea, button')) {
-      e.target.style.fontSize = '16px';
-    }
-  }, { passive: true });
-})();
-
-// RADIO & RSVP
-(function() {
-  const form = Utils.getElement('rsvp-form');
-  const btn = Utils.getElement('btn-submit');
-  const success = Utils.getElement('rsvp-success');
-  const iframe = Utils.getElement('hidden_iframe');
-  const errorName = Utils.getElement('error-name');
-  const errorAtt = Utils.getElement('error-attending');
-  const nameInput = Utils.getElement('rsvp-name');
-  const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
-
-  let submitted = false;
-
-  iframe.addEventListener('load', () => {
-    if (!submitted) return;
-    form.style.display = 'none';
-    success.classList.add('visible');
-    btn.disabled = false;
-    btn.textContent = 'Confirmer';
-    submitted = false;
-  });
-
-  form.addEventListener('submit', (e) => {
-    let valid = true;
-    const nameVal = nameInput.value.trim();
-    if (!nameVal) {
-      errorName.classList.add('visible');
-      if (valid) nameInput.focus();
-      valid = false;
-    } else {
-      errorName.classList.remove('visible');
-    }
-
-    const radioChecked = Array.from(radioInputs).find(r => r.checked);
-    if (!radioChecked) {
-      errorAtt.classList.add('visible');
-      if (valid) radioInputs[0].focus();
-      valid = false;
-    } else {
-      errorAtt.classList.remove('visible');
-    }
-
-    if (!valid) {
-      e.preventDefault();
-      return;
-    }
-
-    submitted = true;
-    btn.disabled = true;
-    btn.textContent = 'Envoi en cours...';
-  });
-
-  radioInputs.forEach(radio => {
-    radio.addEventListener('change', () => {
-      Utils.queryAll('.radio-btn').forEach(btn => btn.classList.remove('selected'));
-      if (radio.checked) {
-        radio.closest('.radio-btn').classList.add('selected');
+    function burst(x, y) {
+      const count = Math.floor((isIOS ? 28 : 60) + Math.random() * (isIOS ? 18 : 40));
+      const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+      const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
+        const speed = 2 + Math.random() * 5;
+        const life = 60 + Math.random() * 60;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - Math.random() * 2,
+          alpha: 1, life, maxLife: life,
+          radius: 1.5 + Math.random() * 2,
+          color: Math.random() > 0.5 ? c1 : c2,
+          trail: [],
+          gravity: 0.06 + Math.random() * 0.06
+        });
       }
+    }
+
+    function animateFW() {
+      if (!fwActive) return;
+      fwRafId = requestAnimationFrame(animateFW);
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
+        if (p.trail.length > 6) p.trail.shift();
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.98;
+        p.life--;
+        p.alpha = p.life / p.maxLife;
+
+        // Traînées
+        for (let t = 0; t < p.trail.length; t++) {
+          const tp = p.trail[t];
+          ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
+          ctx.beginPath();
+          ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        }
+
+        // Particule principale
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    let burstTOs = [];
+
+    function launchFW() {
+      burstTOs.forEach(clearTimeout);
+      burstTOs = [];
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      const positions = [
+        { x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 },
+        { x: W * 0.78, y: H * 0.2 }, { x: W * 0.35, y: H * 0.28 },
+        { x: W * 0.65, y: H * 0.25 }
+      ];
+      positions.forEach((p, i) => {
+        burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280));
+      });
+      burstTOs.push(setTimeout(launchFW, positions.length * 280 + 1000));
+    }
+
+    function startFW() {
+      if (fwActive) return;
+      fwActive = true;
+      canvas.classList.add('visible');
+      launchFW();
+      animateFW();
+    }
+
+    function stopFW() {
+      if (!fwActive) return;
+      fwActive = false;
+      canvas.classList.remove('visible');
+      burstTOs.forEach(clearTimeout);
+      burstTOs = [];
+      if (fwRafId) cancelAnimationFrame(fwRafId);
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      particles.length = 0;
+    }
+
+    let lastProgress = -1;
+
+    registerScrollHandler(() => {
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
+
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+        if (lastProgress > 0 && lastProgress < 1) {
+          car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
+          stopFW();
+        }
+        lastProgress = -1;
+        return;
+      }
+
+      const progress = Math.min(1, Math.max(0, -rect.top / total));
+      if (Math.abs(progress - lastProgress) < 0.0005) return;
+      lastProgress = progress;
+
+      const startX = -carW - 20;
+      const endX = window.innerWidth + 20;
+      car.style.transform = `translate3d(${startX + (endX - startX) * progress}px, 0, 0)`;
+
+      if (progress >= 0.85) startFW();
+      else stopFW();
     });
-  });
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      lastProgress = -1;
+    });
+  })();
+
+  /* ============================================================
+     FORMULAIRE RSVP
+     ============================================================ */
+  (function initRSVP() {
+    const form = $('rsvp-form');
+    const btn = $('btn-submit');
+    const success = $('rsvp-success');
+    const iframe = $('hidden_iframe');
+    const errorName = $('error-name');
+    const errorAtt = $('error-attending');
+    const nameInput = $('rsvp-name');
+    const radioInputs = $$('input[name="entry.1684549153"]');
+    let submitted = false;
+
+    iframe.addEventListener('load', () => {
+      if (!submitted) return;
+      form.style.display = 'none';
+      success.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Confirmer';
+      submitted = false;
+    });
+
+    form.addEventListener('submit', (e) => {
+      let valid = true;
+
+      if (!nameInput.value.trim()) {
+        errorName.classList.add('visible');
+        if (valid) nameInput.focus();
+        valid = false;
+      } else {
+        errorName.classList.remove('visible');
+      }
+
+      const radioChecked = Array.from(radioInputs).find((r) => r.checked);
+      if (!radioChecked) {
+        errorAtt.classList.add('visible');
+        if (valid) radioInputs[0].focus();
+        valid = false;
+      } else {
+        errorAtt.classList.remove('visible');
+      }
+
+      if (!valid) { e.preventDefault(); return; }
+
+      submitted = true;
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+    });
+
+    // Sélection visuelle des radio buttons
+    radioInputs.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        $$('.radio-btn').forEach((b) => b.classList.remove('selected'));
+        if (radio.checked) radio.closest('.radio-btn').classList.add('selected');
+      });
+    });
+  })();
+
+  /* ============================================================
+     FIX iOS : empêcher le zoom sur focus (font-size >= 16px)
+     ============================================================ */
+  if (isIOS) {
+    const form = $('rsvp-form');
+    if (form) {
+      form.querySelectorAll('input[type="text"], textarea, button').forEach((el) => {
+        el.style.fontSize = '16px';
+      });
+    }
+  }
+
 })();
 </script>
-
 </body>
 </html>
