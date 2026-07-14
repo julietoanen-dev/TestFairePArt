@@ -71,16 +71,14 @@
     @keyframes float-d { 0%,100% { transform: translate3d(0,0,0) rotate(4deg); } 50% { transform: translate3d(0,-20px,0) rotate(-3deg); } }
     @keyframes float-e { 0%,100% { transform: translate3d(0,0,0) rotate(-3.5deg); } 50% { transform: translate3d(0,-19px,0) rotate(3deg); } }
 
-    /* ===== ANIMATION CLIGNOTEMENT ===== */
+    /* ===== CLIGNOTEMENT ROSE/VIOLET ===== */
     @keyframes blink-rose-violet {
       0%, 100% { color: var(--rose); text-shadow: 0 0 35px rgba(255, 60, 172, 0.9), 0 0 70px rgba(255, 60, 172, 0.5); }
       25% { color: rgba(255, 60, 172, 0.4); text-shadow: 0 0 15px rgba(255, 60, 172, 0.4); }
       50% { color: var(--violet); text-shadow: 0 0 35px rgba(139, 92, 246, 0.9), 0 0 70px rgba(139, 92, 246, 0.5); }
       75% { color: rgba(139, 92, 246, 0.4); text-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
     }
-
     .highlight-blink { animation: blink-rose-violet 2.4s ease-in-out infinite; display: inline-block; }
-
     @media (prefers-reduced-motion: reduce) {
       .highlight-blink { animation: none; color: var(--blanc); text-shadow: 0 0 30px rgba(255, 60, 172, 0.8); }
     }
@@ -178,10 +176,8 @@
       flex-direction: column;
       justify-content: center;
     }
-
     #rsvp h2 { font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
     .rsvp-subtitle { color: rgba(255,255,255,0.9); margin-bottom: 50px; font-size: 0.9rem; }
-
     .rsvp-form-wrap {
       background: rgba(250,247,243,0.96);
       border: 1.5px solid rgba(181,52,26,0.18);
@@ -196,11 +192,9 @@
       -webkit-user-select: text;
       user-select: text;
     }
-
     .form-group { margin-bottom: 26px; }
     .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
-    .form-group fieldset { border: none; padding: 0; margin: 0; }
-
+    .form-group fieldset { border: none; padding: 0; }
     .form-group input[type="text"], .form-group textarea {
       width: 100%;
       padding: 14px 18px;
@@ -215,20 +209,29 @@
       -webkit-appearance: none;
       appearance: none;
     }
-
     .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
     .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
-
     .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base); background: rgba(255,255,255,0.85); user-select: none; -webkit-user-select: none; min-width: 0; }
+    .radio-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 12px 8px;
+      border: 1.5px solid rgba(181,52,26,0.22);
+      border-radius: 12px;
+      transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base);
+      background: rgba(255,255,255,0.85);
+      user-select: none;
+      -webkit-user-select: none;
+      min-width: 0;
+    }
     .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
     .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
     .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
     .radio-btn-text { font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
-
     .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
     .field-error.visible { display: block; }
-
     .btn-submit {
       display: flex;
       align-items: center;
@@ -252,10 +255,8 @@
       appearance: none;
       min-height: 44px;
     }
-
     .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
     .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
     .rsvp-success.visible { display: block; }
     .rsvp-success p { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--corail); }
@@ -264,10 +265,16 @@
     @supports (padding: max(0px)) {
       .rsvp-form-wrap { padding-bottom: max(48px, env(safe-area-inset-bottom)); }
     }
-
     @media (max-height: 600px) {
       #rsvp { padding: 40px 20px 60px; min-height: auto; }
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
+    }
+
+    /* ===== iOS BODY LOCK (pour fix clavier) ===== */
+    body.ios-keyboard-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
     }
 
     /* ===== FINAL SCENE ===== */
@@ -303,7 +310,7 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
     }
 
-    /* ===== iOS PERFORMANCE ===== */
+    /* ===== iOS PERF ===== */
     .ios-perf #panorama { display: none !important; }
     .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
     .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label, .ios-perf .tl-step-day, .ios-perf .tl-step-card, .ios-perf .rsvp-form-wrap {
@@ -342,19 +349,20 @@
       <g class="lantern" style="animation:float-b 9.5s ease-in-out infinite; animation-delay:-7s; transform-origin:76px 385px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="330" width="74" height="102" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Lanterne déplacée vers le haut (anciennement x=150 y=420 94x130) -->
+      <!-- Grosse lanterne déplacée vers le haut (anciennement y=420) -->
       <g class="lantern" style="animation:float-a 8.3s ease-in-out infinite; animation-delay:-4.5s; transform-origin:198px 200px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="150" y="135" width="94" height="130" preserveAspectRatio="xMidYMid meet"/>
-      </g>
-      <!-- Nouvelle petite lanterne (remplace l'ancienne position, décalée à gauche et plus bas) -->
-      <g class="lantern" style="animation:float-c 9.6s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 540px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="90" y="500" width="50" height="70" preserveAspectRatio="xMidYMid meet"/>
       </g>
       <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite; animation-delay:-1.5s; transform-origin:304px 520px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:78px 560px;">
-        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="40" y="520" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
+      <!-- Lanterne descendue pour espacer du duo (anciennement y=520) -->
+      <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:52px 653px;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="30" y="620" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
+      </g>
+      <!-- Nouvelle petite lanterne (remplace la grosse déplacée, décalée gauche + bas) -->
+      <g class="lantern" style="animation:float-e 8.4s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 535px;">
+        <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="90" y="500" width="50" height="70" preserveAspectRatio="xMidYMid meet"/>
       </g>
       <g class="lantern" style="animation:float-e 8.9s ease-in-out infinite; animation-delay:-5.5s; transform-origin:356px 610px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="330" y="560" width="56" height="78" preserveAspectRatio="xMidYMid meet"/>
@@ -625,8 +633,7 @@
 <script>
 'use strict';
 (function() {
-
-  /* ===== CONFIG & UTILS ===== */
+  /* ===== CONFIG & UTILITAIRES ===== */
   const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
   const Utils = {
@@ -640,12 +647,10 @@
   };
 
   /* ===== DÉTECTION iOS ===== */
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-    (CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    || (CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
   if (isIOS) document.documentElement.classList.add('ios-perf');
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===== SCROLL MANAGER CENTRALISÉ ===== */
   const ScrollManager = {
@@ -670,33 +675,37 @@
   (function() {
     if (document.documentElement.classList.contains('ios-perf')) return;
     const svg = Utils.getElement('panorama');
-    let initialized = false;
+    const W = 1440;
+    let rects = null;
 
-    function draw() {
+    function init() {
       const H = Utils.getElement('page-wrapper').scrollHeight;
-      const W = 1440;
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', H);
       svg.style.height = H + 'px';
+      svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect id="pano-rect-bg" width="${W}" height="${H}" fill="url(#bg-grad)"/><rect id="pano-rect-grain" width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
+      rects = { bg: Utils.getElement('pano-rect-bg'), grain: Utils.getElement('pano-rect-grain') };
+    }
 
-      if (!initialized) {
-        svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs><rect id="pano-bg" width="${W}" height="${H}" fill="url(#bg-grad)"/><rect id="pano-grain" width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
-        initialized = true;
-      } else {
-        const bg = Utils.getElement('pano-bg');
-        const grain = Utils.getElement('pano-grain');
-        if (bg) { bg.setAttribute('height', H); }
-        if (grain) { grain.setAttribute('height', H); }
+    function resize() {
+      const H = Utils.getElement('page-wrapper').scrollHeight;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.setAttribute('height', H);
+      svg.style.height = H + 'px';
+      if (rects) {
+        rects.bg.setAttribute('height', H);
+        rects.grain.setAttribute('height', H);
       }
     }
-    draw();
-    window.addEventListener('resize', Utils.debounce(draw, 300));
+
+    init();
+    window.addEventListener('resize', Utils.debounce(resize, 300));
   })();
 
-  /* ===== LANTERNES (parallax) ===== */
+  /* ===== PARALLAX LANTERNES ===== */
   (function() {
-    if (prefersReducedMotion) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const layer = Utils.getElement('lanterns-layer');
     if (!layer) return;
     layer.style.transform = 'translate3d(0, 0px, 0)';
@@ -711,12 +720,8 @@
     const grid = Utils.getElement('countdown-grid');
     const done = Utils.getElement('countdown-done');
     const tag = Utils.getElement('countdown-tagline');
-    const els = {
-      d: Utils.getElement('cd-days'),
-      h: Utils.getElement('cd-hours'),
-      m: Utils.getElement('cd-minutes'),
-      s: Utils.getElement('cd-seconds')
-    };
+    const els = { d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'), m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds') };
+
     function tick() {
       const diff = target - Date.now();
       if (diff <= 0) {
@@ -736,13 +741,10 @@
 
   /* ===== REVEAL (IntersectionObserver) ===== */
   (function() {
-    if (prefersReducedMotion) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const obs = new IntersectionObserver((entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
       }
     }, { threshold: 0.12 });
     Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
@@ -797,7 +799,7 @@
     setTimeout(setup, 200);
     window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
 
-    if (prefersReducedMotion) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300);
       return;
     }
@@ -843,7 +845,7 @@
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
       pathDraw.style.transition = 'none';
       pathDraw.style.strokeDasharray = len;
-      pathDraw.style.strokeDashoffset = prefersReducedMotion ? 0 : len;
+      pathDraw.style.strokeDashoffset = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : len;
       pathDraw._len = len;
       requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
     }
@@ -852,20 +854,18 @@
     window.addEventListener('resize', Utils.debounce(setupLine, 250));
 
     ScrollManager.register(() => {
-      if (prefersReducedMotion) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const wrapperRect = wrapper.getBoundingClientRect();
       const wrapperH = wrapper.offsetHeight;
       const totalScroll = Math.max(1, wrapperH - window.innerHeight);
       const scrolled = Math.max(0, -wrapperRect.top);
       const globalProg = Math.min(1, scrolled / totalScroll);
-      const len = pathDraw._len || 1000;
-      pathDraw.style.strokeDashoffset = len * (1 - globalProg);
+      pathDraw.style.strokeDashoffset = (pathDraw._len || 1000) * (1 - globalProg);
     });
 
     const io = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        const step = entry.target;
-        const i = step.dataset.i;
+        const i = entry.target.dataset.i;
         const day = Utils.getElement(`tl-day-${i}`);
         const dot = Utils.getElement(`tl-dot-${i}`);
         const card = Utils.getElement(`tl-card-${i}`);
@@ -893,7 +893,7 @@
 
   /* ===== VOITURE + FEUX D'ARTIFICE ===== */
   (function() {
-    if (prefersReducedMotion) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = Utils.getElement('final-scene');
     const car = Utils.getElement('car-el');
     const canvas = Utils.getElement('fireworks-canvas');
@@ -938,35 +938,23 @@
         const p = particles[i];
         p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
         if (p.trail.length > 6) p.trail.shift();
-        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--;
-        p.alpha = p.life / p.maxLife;
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--; p.alpha = p.life / p.maxLife;
         for (let t = 0; t < p.trail.length; t++) {
           const tp = p.trail[t];
-          ctx.beginPath();
-          ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+          ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill();
         }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.alpha;
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); ctx.globalAlpha = 1;
         if (p.life <= 0) particles.splice(i, 1);
       }
     }
 
     let burstTOs = [];
     function launchFW() {
-      burstTOs.forEach(clearTimeout);
-      burstTOs = [];
+      burstTOs.forEach(clearTimeout); burstTOs = [];
       const W = canvas.width, H = canvas.height;
-      const pos = [
-        { x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 },
-        { x: W * 0.78, y: H * 0.2 }, { x: W * 0.35, y: H * 0.28 }, { x: W * 0.65, y: H * 0.25 }
-      ];
+      const pos = [{ x: W*0.2, y: H*0.18 }, { x: W*0.5, y: H*0.12 }, { x: W*0.78, y: H*0.2 }, { x: W*0.35, y: H*0.28 }, { x: W*0.65, y: H*0.25 }];
       pos.forEach((p, i) => { burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280)); });
       burstTOs.push(setTimeout(launchFW, pos.length * 280 + 1000));
     }
@@ -1000,62 +988,35 @@
     updateCar();
   })();
 
-  /* ===== FIX iOS : Empêcher le rebond scroll à la fermeture du clavier ===== */
+  /* ===== FIX iOS : CLAVIER VIRTUEL ===== */
   (function() {
     if (!isIOS) return;
     const form = Utils.getElement('rsvp-form');
     if (!form) return;
 
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let scrollPosBeforeFocus = 0;
-    let isFocused = false;
+    let savedScrollY = 0;
 
     inputs.forEach(input => {
-      /* Mémoriser la position scroll avant le focus */
       input.addEventListener('focus', () => {
-        scrollPosBeforeFocus = window.scrollY;
-        isFocused = true;
-      }, { passive: true });
-
-      /* À la fermeture du clavier (blur), forcer le retour à la bonne position */
-      input.addEventListener('blur', () => {
-        if (!isFocused) return;
-        isFocused = false;
-        /* Petit délai pour laisser iOS finir son animation de fermeture clavier */
+        savedScrollY = window.scrollY;
+        // Petit délai pour laisser Safari faire son scroll initial puis corriger
         setTimeout(() => {
-          /* Vérifier si on a été déplacé de manière anormale (> 200px de l'endroit attendu) */
-          const rsvpSection = Utils.getElement('rsvp');
-          if (!rsvpSection) return;
-          const rsvpRect = rsvpSection.getBoundingClientRect();
-          /* Si la section RSVP n'est plus visible, on y revient */
-          if (rsvpRect.top > window.innerHeight || rsvpRect.bottom < 0) {
-            window.scrollTo({ top: scrollPosBeforeFocus, behavior: 'instant' });
-          }
-        }, 120);
+          document.body.classList.add('ios-keyboard-open');
+          document.body.style.top = `-${savedScrollY}px`;
+        }, 50);
       });
-    });
 
-    /* Empêcher le scrollIntoView automatique de Safari lors du focus */
-    let ticking = false;
-    window.addEventListener('resize', () => {
-      if (!isFocused || ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        ticking = false;
-        /* Quand le clavier se ferme (viewport re-grandit), Safari scroll parfois vers le haut */
-        if (window.visualViewport && window.visualViewport.height > window.innerHeight * 0.85) {
-          const rsvpSection = Utils.getElement('rsvp');
-          if (!rsvpSection) return;
-          const rsvpRect = rsvpSection.getBoundingClientRect();
-          if (rsvpRect.top > window.innerHeight || rsvpRect.bottom < 0) {
-            window.scrollTo({ top: scrollPosBeforeFocus, behavior: 'instant' });
-          }
-        }
+      input.addEventListener('blur', () => {
+        if (!document.body.classList.contains('ios-keyboard-open')) return;
+        document.body.classList.remove('ios-keyboard-open');
+        document.body.style.top = '';
+        window.scrollTo(0, savedScrollY);
       });
     });
   })();
 
-  /* ===== RADIO & RSVP ===== */
+  /* ===== RADIO & FORMULAIRE RSVP ===== */
   (function() {
     const form = Utils.getElement('rsvp-form');
     const btn = Utils.getElement('btn-submit');
@@ -1065,7 +1026,6 @@
     const errorAtt = Utils.getElement('error-attending');
     const nameInput = Utils.getElement('rsvp-name');
     const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
-
     let submitted = false;
 
     iframe.addEventListener('load', () => {
@@ -1079,8 +1039,7 @@
 
     form.addEventListener('submit', (e) => {
       let valid = true;
-      const nameVal = nameInput.value.trim();
-      if (!nameVal) {
+      if (!nameInput.value.trim()) {
         errorName.classList.add('visible');
         if (valid) nameInput.focus();
         valid = false;
