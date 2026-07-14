@@ -1416,7 +1416,7 @@
         // Si la goutte touche le sol
         if (d.y >= canvas.height) {
           // Splash avec une probabilité réduite (1 sur 5)
-          if (Math.random() < 0.2) {
+          if (Math.random() < 0.4) {
             splashes.push(createSplash(d.x, canvas.height - 2));
           }
           drops.splice(i, 1);
