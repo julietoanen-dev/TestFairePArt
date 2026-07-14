@@ -379,7 +379,7 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       PLUIE CANVAS
+       RAIN CANVAS
     ═══════════════════════════════════════════════════════════ */
     #rain-canvas {
       position: fixed;
@@ -390,14 +390,10 @@
       pointer-events: none;
       z-index: 9999;
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transition: opacity 1.5s ease;
     }
     #rain-canvas.visible {
       opacity: 1;
-    }
-    #rain-canvas.fading {
-      opacity: 0;
-      transition: opacity 1.5s ease;
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -1334,19 +1330,24 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     PLUIE (lancée si réponse "Non")
+     PLUIE (lancée si réponse "Malheureusement non...")
   ═══════════════════════════════════════════════════════════ */
   const Rain = (function() {
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
     const drops = [];
+    const splashes = [];
     let animating = false;
     let launched = false;
-    let stopSpawning = false;
+    let spawning = true;
+    let spawnTimer = null;
 
-    // Durée totale de la pluie (en ms) — réduite pour être plus courte
+    // Durée de la pluie en ms
     const RAIN_DURATION = 5000;
+
+    // Couleurs blanc/bleu
+    const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -1358,74 +1359,113 @@
     function createDrop() {
       return {
         x: Math.random() * canvas.width,
-        y: -10 - Math.random() * 60,
-        speed: 8 + Math.random() * 10,
-        length: 15 + Math.random() * 20,
-        wind: 1.5 + Math.random() * 1.5,
-        alpha: 0.3 + Math.random() * 0.5,
-        width: 1 + Math.random() * 1.2
+        y: -20 - Math.random() * 80,
+        speed: 8 + Math.random() * 7,
+        length: 18 + Math.random() * 22,
+        wind: 2 + Math.random() * 2,
+        alpha: 0.4 + Math.random() * 0.5,
+        color: COLORS[(Math.random() * COLORS.length) | 0],
+        thickness: 1 + Math.random() * 1.5
+      };
+    }
+
+    function createSplash(x, y) {
+      return {
+        x: x,
+        y: y,
+        radius: 1,
+        maxRadius: 3 + Math.random() * 4,
+        alpha: 0.7,
+        color: COLORS[(Math.random() * COLORS.length) | 0]
       };
     }
 
     function animate() {
       if (!animating) return;
-      requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Ajouter de nouvelles gouttes tant qu'on n'a pas arrêté
-      if (!stopSpawning) {
-        const spawnCount = 8 + Math.floor(Math.random() * 6);
-        for (let i = 0; i < spawnCount; i++) {
-          drops.push(createDrop());
-        }
-      }
-
-      // Dessiner et mettre à jour les gouttes
+      // Dessiner les gouttes
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
-        d.y += d.speed;
         d.x += d.wind;
+        d.y += d.speed;
 
-        // Dessiner la goutte (trait oblique)
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x + d.wind * 0.6, d.y + d.length);
-        ctx.strokeStyle = `rgba(174, 194, 224, ${d.alpha})`;
-        ctx.lineWidth = d.width;
+        ctx.lineTo(d.x - d.wind * 0.6, d.y - d.length);
+        ctx.strokeStyle = d.color;
+        ctx.globalAlpha = d.alpha;
+        ctx.lineWidth = d.thickness;
         ctx.lineCap = 'round';
         ctx.stroke();
+        ctx.globalAlpha = 1;
 
-        // Supprimer si hors écran
-        if (d.y > canvas.height + 20) {
+        // Goutte sortie de l'écran → splash + suppression
+        if (d.y > canvas.height) {
+          splashes.push(createSplash(d.x, canvas.height - 5));
           drops.splice(i, 1);
         }
       }
 
-      // Si on a arrêté de spawner et qu'il n'y a plus de gouttes, on stoppe
-      if (stopSpawning && drops.length === 0) {
+      // Dessiner les splashes
+      for (let i = splashes.length - 1; i >= 0; i--) {
+        const s = splashes[i];
+        s.radius += 0.4;
+        s.alpha -= 0.04;
+
+        if (s.alpha <= 0) {
+          splashes.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = s.color;
+        ctx.globalAlpha = s.alpha;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Ajouter de nouvelles gouttes si on est encore en phase active
+      if (spawning) {
+        const count = 4 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < count; i++) {
+          drops.push(createDrop());
+        }
+      }
+
+      // Continuer l'animation tant qu'il y a des particules
+      if (drops.length > 0 || splashes.length > 0) {
+        requestAnimationFrame(animate);
+      } else {
         animating = false;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Fade-out du canvas
         canvas.classList.remove('visible');
-        canvas.classList.remove('fading');
       }
     }
 
     function launch() {
       if (launched) return;
       launched = true;
-      stopSpawning = false;
+      spawning = true;
 
-      // Afficher le canvas
+      // Afficher le canvas immédiatement
+      canvas.style.transition = 'opacity 0.3s ease';
       canvas.classList.add('visible');
 
       // Démarrer l'animation
-      animating = true;
-      requestAnimationFrame(animate);
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
 
-      // Après RAIN_DURATION, arrêter de créer des gouttes et fader le canvas
-      setTimeout(() => {
-        stopSpawning = true;
-        canvas.classList.add('fading');
+      // Arrêter de générer des gouttes après RAIN_DURATION
+      spawnTimer = setTimeout(() => {
+        spawning = false;
+        // Remettre la transition lente pour le fade-out
+        canvas.style.transition = 'opacity 1.5s ease';
       }, RAIN_DURATION);
     }
 
@@ -1504,38 +1544,35 @@
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        const blurredInput = activeInput;
         isFocused = false;
         activeInput = null;
 
         setTimeout(() => {
           document.documentElement.classList.remove('ios-keyboard-open');
-          if (blurredInput) {
-            const rsvpSection = document.getElementById('rsvp');
-            if (rsvpSection) {
-              const rect = rsvpSection.getBoundingClientRect();
-              const targetY = window.scrollY + rect.top - 40;
-              let lastY = window.scrollY;
-              let stable = 0;
-              const start = Date.now();
+          const rsvpSection = document.getElementById('rsvp');
+          if (rsvpSection) {
+            const rect = rsvpSection.getBoundingClientRect();
+            const targetY = window.scrollY + rect.top - 40;
+            let lastY = window.scrollY;
+            let stable = 0;
+            const start = Date.now();
 
-              function waitStable() {
-                if (Date.now() - start > 800) {
-                  window.scrollTo(0, targetY);
-                  return;
-                }
-                const cur = window.scrollY;
-                if (Math.abs(cur - lastY) < 2) stable++;
-                else stable = 0;
-                lastY = cur;
-                if (stable >= 4) {
-                  window.scrollTo(0, targetY);
-                } else {
-                  requestAnimationFrame(waitStable);
-                }
+            function waitStable() {
+              if (Date.now() - start > 800) {
+                window.scrollTo(0, targetY);
+                return;
               }
-              requestAnimationFrame(waitStable);
+              const cur = window.scrollY;
+              if (Math.abs(cur - lastY) < 2) stable++;
+              else stable = 0;
+              lastY = cur;
+              if (stable >= 4) {
+                window.scrollTo(0, targetY);
+              } else {
+                requestAnimationFrame(waitStable);
+              }
             }
+            requestAnimationFrame(waitStable);
           }
         }, 100);
       }, { passive: true });
@@ -1570,7 +1607,6 @@
     const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
 
     let submitted = false;
-    // On stocke la réponse sélectionnée au moment du submit
     let selectedAnswer = '';
 
     iframe.addEventListener('load', () => {
@@ -1581,10 +1617,10 @@
       btn.textContent = 'Confirmer';
       submitted = false;
 
-      // Lancer l'effet approprié selon la réponse
+      // Effet conditionnel selon la réponse
       if (selectedAnswer === 'Oui, j\'y serai !') {
         Confetti.launch();
-      } else {
+      } else if (selectedAnswer === 'Malheureusement non...') {
         Rain.launch();
       }
     });
@@ -1607,12 +1643,10 @@
         valid = false;
       } else {
         errorAtt.classList.remove('visible');
+        selectedAnswer = radioChecked.value;
       }
 
       if (!valid) { e.preventDefault(); return; }
-
-      // Stocker la réponse avant l'envoi
-      selectedAnswer = radioChecked.value;
       submitted = true;
       btn.disabled = true;
       btn.textContent = 'Envoi en cours...';
