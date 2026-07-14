@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Julie & Thomas — 24 juillet 2027</title>
   <meta name="description" content="Julie & Thomas se disent oui le 24 juillet 2027 à Verfeil. Venez célébrer avec nous !" />
 
@@ -12,7 +12,9 @@
   <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
 
   <style>
-    /* ===== VARIABLES ===== */
+    /* ═══════════════════════════════════════════════════════════
+       VARIABLES & RESET
+    ═══════════════════════════════════════════════════════════ */
     :root {
       --rose: #FF3CAC;
       --corail: #FF6B35;
@@ -28,7 +30,6 @@
       --transition-base: 0.3s ease;
     }
 
-    /* ===== RESET & BASE ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; }
     body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; }
@@ -43,8 +44,11 @@
 
     .container { width: min(90%, 960px); margin-inline: auto; }
     section { padding: 90px 0; position: relative; z-index: 2; }
+    fieldset { border: none; padding: 0; }
 
-    /* ===== ANIMATIONS DE RÉVÉLATION ===== */
+    /* ═══════════════════════════════════════════════════════════
+       ANIMATIONS DE RÉVÉLATION
+    ═══════════════════════════════════════════════════════════ */
     .reveal, .reveal-left, .reveal-right { opacity: 0; transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal { transform: translateY(40px); }
     .reveal-left { transform: translateX(-40px); }
@@ -55,11 +59,15 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
     }
 
-    /* ===== STRUCTURE PRINCIPALE ===== */
+    /* ═══════════════════════════════════════════════════════════
+       STRUCTURE PRINCIPALE
+    ═══════════════════════════════════════════════════════════ */
     #page-wrapper { position: relative; min-height: 100vh; }
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
-    /* ===== LANTERNES ===== */
+    /* ═══════════════════════════════════════════════════════════
+       LANTERNES
+    ═══════════════════════════════════════════════════════════ */
     #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
     #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
     .lantern { animation-fill-mode: both; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
@@ -71,7 +79,9 @@
     @keyframes float-d { 0%,100% { transform: translate3d(0,0,0) rotate(4deg); } 50% { transform: translate3d(0,-20px,0) rotate(-3deg); } }
     @keyframes float-e { 0%,100% { transform: translate3d(0,0,0) rotate(-3.5deg); } 50% { transform: translate3d(0,-19px,0) rotate(3deg); } }
 
-    /* ===== ANIMATION CLIGNOTEMENT ===== */
+    /* ═══════════════════════════════════════════════════════════
+       ANIMATION CLIGNOTEMENT ROSE/VIOLET
+    ═══════════════════════════════════════════════════════════ */
     @keyframes blink-rose-violet {
       0%, 100% { color: var(--rose); text-shadow: 0 0 35px rgba(255, 60, 172, 0.9), 0 0 70px rgba(255, 60, 172, 0.5); }
       25% { color: rgba(255, 60, 172, 0.4); text-shadow: 0 0 15px rgba(255, 60, 172, 0.4); }
@@ -85,7 +95,9 @@
       .highlight-blink { animation: none; color: var(--blanc); text-shadow: 0 0 30px rgba(255, 60, 172, 0.8); }
     }
 
-    /* ===== HERO ===== */
+    /* ═══════════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════════ */
     #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
     .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
     .hero-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
@@ -96,7 +108,9 @@
     .chevrons span:nth-child(2) { animation-delay: 0.18s; opacity: 0.8; }
     @keyframes chevron { 0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; } 50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; } }
 
-    /* ===== COUNTDOWN ===== */
+    /* ═══════════════════════════════════════════════════════════
+       COUNTDOWN
+    ═══════════════════════════════════════════════════════════ */
     #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
     .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2vw, 18px); flex-wrap: nowrap; margin-bottom: 20px; }
     .countdown-unit { background: rgba(255,255,255,0.78); border: 1.5px solid rgba(139,92,246,0.28); border-radius: 10px; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0; }
@@ -105,7 +119,9 @@
     .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
 
-    /* ===== TIMELINE DESKTOP ===== */
+    /* ═══════════════════════════════════════════════════════════
+       TIMELINE DESKTOP
+    ═══════════════════════════════════════════════════════════ */
     #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
     #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
     .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
@@ -139,7 +155,9 @@
     .event-img-wrap { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 4/3; position: relative; background: linear-gradient(135deg,#ffb27a,#86bde8); }
     .event-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ===== TIMELINE MOBILE ===== */
+    /* ═══════════════════════════════════════════════════════════
+       TIMELINE MOBILE
+    ═══════════════════════════════════════════════════════════ */
     #timeline-mobile { display: none; position: relative; z-index: 2; }
     #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
     .tl-mobile-wrapper { position: relative; }
@@ -166,7 +184,9 @@
     .tl-step-address { font-size: 0.78rem; color: var(--texte-soft); line-height: 1.6; }
     .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
 
-    /* ===== RSVP ===== */
+    /* ═══════════════════════════════════════════════════════════
+       RSVP
+    ═══════════════════════════════════════════════════════════ */
     #rsvp {
       text-align: center;
       padding: 80px 20px 100px;
@@ -201,6 +221,8 @@
       box-shadow: 0 8px 40px rgba(46,18,0,0.07);
       backdrop-filter: blur(12px);
       width: 100%;
+      -webkit-user-select: text;
+      user-select: text;
     }
 
     .form-group { margin-bottom: 26px; }
@@ -214,8 +236,6 @@
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
-
-    .form-group fieldset { border: none; padding: 0; }
 
     .form-group input[type="text"], .form-group textarea {
       width: 100%;
@@ -307,7 +327,9 @@
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
-    /* ===== FINAL SCENE ===== */
+    /* ═══════════════════════════════════════════════════════════
+       FINAL SCENE
+    ═══════════════════════════════════════════════════════════ */
     #final-scene { position: relative; height: 300vh; z-index: 2; }
     .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
     .final-bg-container { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -322,7 +344,9 @@
     #car-el { position: absolute; bottom: 1%; will-change: transform; z-index: 6; }
     #car-el img { width: 100%; height: auto; display: block; }
 
-    /* ===== RESPONSIVE ===== */
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════ */
     @media (max-width: 700px) {
       #timeline-desktop { display: none; }
       #timeline-mobile { display: block; }
@@ -332,7 +356,9 @@
       #timeline-mobile { display: none; }
     }
 
-    /* ===== PRINT ===== */
+    /* ═══════════════════════════════════════════════════════════
+       PRINT
+    ═══════════════════════════════════════════════════════════ */
     @media print {
       #lanterns-layer, #panorama, #final-scene { display: none !important; }
       body { background: white; color: black; }
@@ -340,7 +366,10 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
     }
 
-    /* ===== iOS PERFORMANCE ===== */
+    /* ═══════════════════════════════════════════════════════════
+       IOS PERFORMANCE
+    ═══════════════════════════════════════════════════════════ */
+    .ios-perf html { scroll-behavior: auto !important; }
     .ios-perf #panorama { display: none !important; }
     .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
     .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label,
@@ -356,7 +385,7 @@
 
 <body>
 <div id="page-wrapper">
-  <!-- Panorama SVG background -->
+  <!-- Panorama SVG (fond dégradé) -->
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
   <!-- Lanternes flottantes -->
@@ -387,11 +416,11 @@
       <g class="lantern" style="animation:float-c 9.1s ease-in-out infinite; animation-delay:-1.5s; transform-origin:304px 520px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="260" y="470" width="84" height="116" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Nouvelle petite lanterne (remplace l'ancienne position de la grosse) -->
+      <!-- Petite lanterne ajoutée (remplace l'ancienne position de la grosse) -->
       <g class="lantern" style="animation:float-d 8.9s ease-in-out infinite; animation-delay:-3.5s; transform-origin:115px 535px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="90" y="500" width="50" height="70" preserveAspectRatio="xMidYMid meet"/>
       </g>
-      <!-- Lanterne descendue pour éviter le doublon visuel -->
+      <!-- Lanterne descendue pour espacer du duo -->
       <g class="lantern" style="animation:float-d 8.6s ease-in-out infinite; animation-delay:-8s; transform-origin:55px 655px;">
         <image href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" x="30" y="620" width="48" height="66" preserveAspectRatio="xMidYMid meet"/>
       </g>
@@ -664,79 +693,103 @@
 <script>
 'use strict';
 (function() {
-  /* ===== CONFIG & UTILS ===== */
+  /* ═══════════════════════════════════════════════════════════
+     CONFIGURATION & UTILITAIRES
+  ═══════════════════════════════════════════════════════════ */
   const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
   const Utils = {
     pad: (n) => String(n).padStart(2, '0'),
     debounce: (fn, delay) => {
       let timeout;
-      return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); };
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
     },
     getElement: (id) => document.getElementById(id),
     queryAll: (selector) => document.querySelectorAll(selector)
   };
 
-  /* ===== DÉTECTION iOS ===== */
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-    (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
+  /* ═══════════════════════════════════════════════════════════
+     DÉTECTION iOS
+  ═══════════════════════════════════════════════════════════ */
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    || (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
+
   if (isIOS) document.documentElement.classList.add('ios-perf');
 
-  /* ===== SCROLL MANAGER (un seul listener consolidé) ===== */
+  /* ═══════════════════════════════════════════════════════════
+     SCROLL MANAGER — Un seul listener pour tout
+  ═══════════════════════════════════════════════════════════ */
   const ScrollManager = {
     handlers: [],
     rafId: null,
     register(fn) { this.handlers.push(fn); },
+    tick() {
+      ScrollManager.rafId = null;
+      const scrollY = window.scrollY;
+      for (let i = 0; i < ScrollManager.handlers.length; i++) {
+        ScrollManager.handlers[i](scrollY);
+      }
+    },
     init() {
       window.addEventListener('scroll', () => {
-        if (this.rafId) return;
-        this.rafId = requestAnimationFrame(() => {
-          this.rafId = null;
-          const scrollY = window.scrollY;
-          for (const fn of this.handlers) fn(scrollY);
-        });
+        if (!ScrollManager.rafId) {
+          ScrollManager.rafId = requestAnimationFrame(ScrollManager.tick);
+        }
       }, { passive: true });
     }
   };
+  ScrollManager.init();
 
-  /* ===== PANORAMA ===== */
+  /* ═══════════════════════════════════════════════════════════
+     PANORAMA SVG
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (document.documentElement.classList.contains('ios-perf')) return;
     const svg = Utils.getElement('panorama');
-    const ns = 'http://www.w3.org/2000/svg';
-    let built = false;
-    let rectBg, rectGrain;
+    const wrapper = Utils.getElement('page-wrapper');
+    const W = 1440;
+    let bgRect = null, grainRect = null;
 
-    function build() {
-      const H = Utils.getElement('page-wrapper').scrollHeight;
-      const W = 1440;
+    function init() {
+      const H = wrapper.scrollHeight;
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', H);
       svg.style.height = H + 'px';
-
-      if (!built) {
-        svg.innerHTML = `<defs><filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter><linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/><stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/><stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/></linearGradient></defs>`;
-        rectBg = document.createElementNS(ns, 'rect');
-        rectBg.setAttribute('width', W);
-        rectBg.setAttribute('fill', 'url(#bg-grad)');
-        svg.appendChild(rectBg);
-        rectGrain = document.createElementNS(ns, 'rect');
-        rectGrain.setAttribute('width', W);
-        rectGrain.setAttribute('filter', 'url(#paper-grain)');
-        rectGrain.setAttribute('opacity', '0.7');
-        svg.appendChild(rectGrain);
-        built = true;
-      }
-      rectBg.setAttribute('height', H);
-      rectGrain.setAttribute('height', H);
+      svg.innerHTML = `<defs>
+        <filter id="paper-grain"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="3"/>
+        <feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer></filter>
+        <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#020159"/><stop offset="18%" stop-color="#5a7fc8"/>
+          <stop offset="36%" stop-color="#b78fdd"/><stop offset="52%" stop-color="#ff87a8"/>
+          <stop offset="68%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f7e6cf"/>
+        </linearGradient></defs>
+        <rect width="${W}" height="${H}" fill="url(#bg-grad)"/>
+        <rect width="${W}" height="${H}" filter="url(#paper-grain)" opacity="0.7"/>`;
+      bgRect = svg.querySelectorAll('rect')[0];
+      grainRect = svg.querySelectorAll('rect')[1];
     }
-    build();
-    window.addEventListener('resize', Utils.debounce(build, 300));
+
+    function resize() {
+      const H = wrapper.scrollHeight;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.setAttribute('height', H);
+      svg.style.height = H + 'px';
+      if (bgRect) { bgRect.setAttribute('height', H); }
+      if (grainRect) { grainRect.setAttribute('height', H); }
+    }
+
+    init();
+    window.addEventListener('resize', Utils.debounce(resize, 300));
   })();
 
-  /* ===== LANTERNES PARALLAX ===== */
+  /* ═══════════════════════════════════════════════════════════
+     LANTERNES PARALLAX
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const layer = Utils.getElement('lanterns-layer');
@@ -747,7 +800,9 @@
     });
   })();
 
-  /* ===== COUNTDOWN ===== */
+  /* ═══════════════════════════════════════════════════════════
+     COUNTDOWN
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     const target = new Date(CONFIG.weddingDate).getTime();
     const grid = Utils.getElement('countdown-grid');
@@ -776,18 +831,25 @@
     setInterval(tick, 1000);
   })();
 
-  /* ===== REVEAL ANIMATIONS ===== */
+  /* ═══════════════════════════════════════════════════════════
+     REVEAL (IntersectionObserver)
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const obs = new IntersectionObserver((entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
       }
     }, { threshold: 0.12 });
     Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
   })();
 
-  /* ===== TIMELINE DESKTOP ===== */
+  /* ═══════════════════════════════════════════════════════════
+     TIMELINE DESKTOP
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (window.innerWidth <= 700) return;
     const section = Utils.getElement('timeline-desktop');
@@ -851,7 +913,9 @@
     });
   })();
 
-  /* ===== TIMELINE MOBILE ===== */
+  /* ═══════════════════════════════════════════════════════════
+     TIMELINE MOBILE
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (window.innerWidth > 700) return;
     const wrapper = Utils.getElement('tl-mobile-wrapper');
@@ -924,14 +988,15 @@
     }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
 
     steps.forEach((step, i) => { step.dataset.i = String(i); io.observe(step); });
-
     Utils.getElement('tl-day-0')?.classList.add('show');
     Utils.getElement('tl-dot-0')?.classList.add('show');
     Utils.getElement('tl-card-0')?.classList.add('show');
     Utils.getElement('tl-img-0')?.classList.add('show');
   })();
 
-  /* ===== VOITURE + FEUX D'ARTIFICE ===== */
+  /* ═══════════════════════════════════════════════════════════
+     VOITURE + FEUX D'ARTIFICE
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = Utils.getElement('final-scene');
@@ -949,9 +1014,9 @@
       canvas.height = Math.floor(canvas.offsetHeight * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-
     car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`;
 
     const particles = [];
@@ -986,26 +1051,18 @@
         p.life--; p.alpha = p.life / p.maxLife;
         for (let t = 0; t < p.trail.length; t++) {
           const tp = p.trail[t];
-          ctx.beginPath();
-          ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length);
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+          ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill();
         }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.alpha;
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill(); ctx.globalAlpha = 1;
         if (p.life <= 0) particles.splice(i, 1);
       }
     }
 
     let burstTOs = [];
     function launchFW() {
-      burstTOs.forEach(clearTimeout);
-      burstTOs = [];
+      burstTOs.forEach(clearTimeout); burstTOs = [];
       const W = canvas.width, H = canvas.height;
       const pos = [
         { x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 },
@@ -1042,59 +1099,79 @@
     window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; });
   })();
 
-  /* ===== FIX iOS : CLAVIER VIRTUEL ===== */
+  /* ═══════════════════════════════════════════════════════════
+     FIX iOS — CLAVIER VIRTUEL
+     Utilise visualViewport API pour détecter précisément
+     l'ouverture/fermeture du clavier et corriger le scroll.
+     scroll-behavior: auto est forcé sur iOS via CSS (.ios-perf)
+     pour que les corrections soient instantanées.
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     if (!isIOS) return;
-    const form = Utils.getElement('rsvp-form');
-    const rsvpHeading = Utils.getElement('rsvp-heading');
-    if (!form || !rsvpHeading) return;
+    const form = document.getElementById('rsvp-form');
+    const heading = document.getElementById('rsvp-heading');
+    if (!form || !heading) return;
 
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let blurTimeout = null;
     let isFocused = false;
+    let savedScrollY = 0;
+    let viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    // Empêche le zoom iOS sur les inputs
-    inputs.forEach(input => { input.style.fontSize = '16px'; });
+    // Position cible : le heading "Vous serez là ?" en haut du viewport
+    function getTargetScrollY() {
+      const rect = heading.getBoundingClientRect();
+      return window.scrollY + rect.top - 20;
+    }
 
-    inputs.forEach(input => {
-      // Au focus : on ne fait rien, on laisse Safari gérer
-      // mais on note qu'on est en mode saisie
-      input.addEventListener('focus', () => {
-        isFocused = true;
-        if (blurTimeout) { clearTimeout(blurTimeout); blurTimeout = null; }
-      });
+    // Correction instantanée du scroll
+    function correctScroll() {
+      window.scrollTo(0, getTargetScrollY());
+    }
 
-      // Au blur : on attend que Safari ait fini de repositionner
-      // puis on scrolle INSTANTANÉMENT vers le heading RSVP
-      input.addEventListener('blur', () => {
-        isFocused = false;
-        if (blurTimeout) clearTimeout(blurTimeout);
-        blurTimeout = setTimeout(() => {
-          // Vérifie qu'on n'a pas re-focus un autre champ entre temps
-          if (isFocused) return;
-          // Scroll instantané vers "Vous serez là ?"
-          rsvpHeading.scrollIntoView({ behavior: 'instant', block: 'start' });
-        }, 350);
-      });
-    });
+    // Écoute le resize du visualViewport (= clavier s'ouvre ou se ferme)
+    if (window.visualViewport) {
+      let resizeTimer = null;
+      window.visualViewport.addEventListener('resize', () => {
+        const newHeight = window.visualViewport.height;
+        const heightDiff = newHeight - viewportHeight;
+        viewportHeight = newHeight;
 
-    // Pour le textarea : empêcher le saut en bas de page au focus
-    const textarea = Utils.getElement('rsvp-message');
-    if (textarea) {
-      textarea.addEventListener('focus', () => {
-        isFocused = true;
-        if (blurTimeout) { clearTimeout(blurTimeout); blurTimeout = null; }
-        // Après que Safari ait fini son scroll parasite au focus,
-        // on repositionne sur le formulaire
-        setTimeout(() => {
-          if (!isFocused) return;
-          textarea.scrollIntoView({ behavior: 'instant', block: 'center' });
-        }, 400);
+        // Le viewport grandit = le clavier se FERME
+        if (heightDiff > 50 && isFocused === false) {
+          // Clavier vient de se fermer, corriger après stabilisation
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(correctScroll, 120);
+        }
       });
     }
+
+    inputs.forEach(input => {
+      input.style.fontSize = '16px';
+
+      input.addEventListener('focus', () => {
+        isFocused = true;
+        savedScrollY = window.scrollY;
+
+        // Pour le textarea qui envoie en bas de page au focus
+        if (input.tagName === 'TEXTAREA') {
+          setTimeout(() => {
+            if (isFocused) correctScroll();
+          }, 400);
+        }
+      }, { passive: true });
+
+      input.addEventListener('blur', () => {
+        isFocused = false;
+        // Attendre que Safari + visualViewport se stabilisent
+        // puis corriger la position
+        setTimeout(correctScroll, 450);
+      }, { passive: true });
+    });
   })();
 
-  /* ===== RADIO & RSVP ===== */
+  /* ═══════════════════════════════════════════════════════════
+     RADIO BUTTONS & RSVP SUBMIT
+  ═══════════════════════════════════════════════════════════ */
   (function() {
     const form = Utils.getElement('rsvp-form');
     const btn = Utils.getElement('btn-submit');
@@ -1150,8 +1227,6 @@
     });
   })();
 
-  /* ===== INIT SCROLL MANAGER ===== */
-  ScrollManager.init();
 })();
 </script>
 
