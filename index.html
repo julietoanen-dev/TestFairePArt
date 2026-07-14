@@ -390,10 +390,13 @@
       pointer-events: none;
       z-index: 9999;
       opacity: 0;
-      transition: opacity 1.5s ease;
+      transition: opacity 1s ease;
     }
     #rain-canvas.visible {
       opacity: 1;
+    }
+    #rain-canvas.fade-out {
+      opacity: 0;
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -1330,23 +1333,23 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     PLUIE (lancée si réponse "Malheureusement non...")
+     PLUIE (lancée si réponse "Non")
   ═══════════════════════════════════════════════════════════ */
   const Rain = (function() {
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    const drops = [];
-    const splashes = [];
-    let animating = false;
     let launched = false;
-    let spawning = true;
-    let spawnTimer = null;
+    let animating = false;
+    let drops = [];
+    let splashes = [];
+    let spawnActive = false;
 
-    // Durée de la pluie en ms
-    const RAIN_DURATION = 5000;
+    // Durée totale de la pluie (ms)
+    const RAIN_DURATION = 4000;
+    // Nombre de gouttes générées par frame
+    const DROPS_PER_FRAME = 2;
 
-    // Couleurs blanc/bleu
     const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
 
     function resize() {
@@ -1358,14 +1361,17 @@
 
     function createDrop() {
       return {
+        // Position X sur toute la largeur de l'écran
         x: Math.random() * canvas.width,
-        y: -20 - Math.random() * 80,
-        speed: 8 + Math.random() * 7,
-        length: 18 + Math.random() * 22,
-        wind: 2 + Math.random() * 2,
-        alpha: 0.4 + Math.random() * 0.5,
+        y: -10 - Math.random() * 60,
+        speed: 8 + Math.random() * 6,
+        length: 12 + Math.random() * 14,
+        // Épaisseur fine
+        width: 0.8 + Math.random() * 0.7,
+        // Léger vent
+        wind: 1.5 + Math.random() * 1,
         color: COLORS[(Math.random() * COLORS.length) | 0],
-        thickness: 1 + Math.random() * 1.5
+        alpha: 0.4 + Math.random() * 0.4
       };
     }
 
@@ -1373,18 +1379,26 @@
       return {
         x: x,
         y: y,
-        radius: 1,
-        maxRadius: 3 + Math.random() * 4,
-        alpha: 0.7,
+        radius: 1.5 + Math.random() * 2,
+        alpha: 0.6 + Math.random() * 0.3,
+        decay: 0.03 + Math.random() * 0.02,
         color: COLORS[(Math.random() * COLORS.length) | 0]
       };
     }
 
     function animate() {
       if (!animating) return;
+      requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Dessiner les gouttes
+      // Générer de nouvelles gouttes si actif
+      if (spawnActive) {
+        for (let i = 0; i < DROPS_PER_FRAME; i++) {
+          drops.push(createDrop());
+        }
+      }
+
+      // Dessiner et mettre à jour les gouttes
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         d.x += d.wind;
@@ -1392,80 +1406,66 @@
 
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x - d.wind * 0.6, d.y - d.length);
+        ctx.lineTo(d.x - d.wind * 0.4, d.y - d.length);
         ctx.strokeStyle = d.color;
         ctx.globalAlpha = d.alpha;
-        ctx.lineWidth = d.thickness;
+        ctx.lineWidth = d.width;
         ctx.lineCap = 'round';
         ctx.stroke();
-        ctx.globalAlpha = 1;
 
-        // Goutte sortie de l'écran → splash + suppression
-        if (d.y > canvas.height) {
-          splashes.push(createSplash(d.x, canvas.height - 5));
+        // Si la goutte touche le sol
+        if (d.y >= canvas.height) {
+          // Splash avec une probabilité réduite (1 sur 5)
+          if (Math.random() < 0.2) {
+            splashes.push(createSplash(d.x, canvas.height - 2));
+          }
           drops.splice(i, 1);
         }
       }
 
-      // Dessiner les splashes
+      // Dessiner et mettre à jour les splashes
       for (let i = splashes.length - 1; i >= 0; i--) {
         const s = splashes[i];
-        s.radius += 0.4;
-        s.alpha -= 0.04;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI, true);
+        ctx.strokeStyle = s.color;
+        ctx.globalAlpha = s.alpha;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        s.radius += 0.3;
+        s.alpha -= s.decay;
 
         if (s.alpha <= 0) {
           splashes.splice(i, 1);
-          continue;
-        }
-
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = s.color;
-        ctx.globalAlpha = s.alpha;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-      }
-
-      // Ajouter de nouvelles gouttes si on est encore en phase active
-      if (spawning) {
-        const count = 4 + Math.floor(Math.random() * 4);
-        for (let i = 0; i < count; i++) {
-          drops.push(createDrop());
         }
       }
 
-      // Continuer l'animation tant qu'il y a des particules
-      if (drops.length > 0 || splashes.length > 0) {
-        requestAnimationFrame(animate);
-      } else {
+      ctx.globalAlpha = 1;
+
+      // Si plus rien à afficher, arrêter
+      if (!spawnActive && drops.length === 0 && splashes.length === 0) {
         animating = false;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Fade-out du canvas
         canvas.classList.remove('visible');
+        canvas.classList.remove('fade-out');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
     function launch() {
       if (launched) return;
       launched = true;
-      spawning = true;
+      spawnActive = true;
+      animating = true;
 
-      // Afficher le canvas immédiatement
-      canvas.style.transition = 'opacity 0.3s ease';
+      canvas.classList.remove('fade-out');
       canvas.classList.add('visible');
+      requestAnimationFrame(animate);
 
-      // Démarrer l'animation
-      if (!animating) {
-        animating = true;
-        requestAnimationFrame(animate);
-      }
-
-      // Arrêter de générer des gouttes après RAIN_DURATION
-      spawnTimer = setTimeout(() => {
-        spawning = false;
-        // Remettre la transition lente pour le fade-out
-        canvas.style.transition = 'opacity 1.5s ease';
+      // Arrêter la génération après RAIN_DURATION
+      setTimeout(() => {
+        spawnActive = false;
+        canvas.classList.add('fade-out');
       }, RAIN_DURATION);
     }
 
@@ -1544,35 +1544,38 @@
       }, { passive: true });
 
       input.addEventListener('blur', () => {
+        const blurredInput = activeInput;
         isFocused = false;
         activeInput = null;
 
         setTimeout(() => {
           document.documentElement.classList.remove('ios-keyboard-open');
-          const rsvpSection = document.getElementById('rsvp');
-          if (rsvpSection) {
-            const rect = rsvpSection.getBoundingClientRect();
-            const targetY = window.scrollY + rect.top - 40;
-            let lastY = window.scrollY;
-            let stable = 0;
-            const start = Date.now();
+          if (blurredInput) {
+            const rsvpSection = document.getElementById('rsvp');
+            if (rsvpSection) {
+              const rect = rsvpSection.getBoundingClientRect();
+              const targetY = window.scrollY + rect.top - 40;
+              let lastY = window.scrollY;
+              let stable = 0;
+              const start = Date.now();
 
-            function waitStable() {
-              if (Date.now() - start > 800) {
-                window.scrollTo(0, targetY);
-                return;
+              function waitStable() {
+                if (Date.now() - start > 800) {
+                  window.scrollTo(0, targetY);
+                  return;
+                }
+                const cur = window.scrollY;
+                if (Math.abs(cur - lastY) < 2) stable++;
+                else stable = 0;
+                lastY = cur;
+                if (stable >= 4) {
+                  window.scrollTo(0, targetY);
+                } else {
+                  requestAnimationFrame(waitStable);
+                }
               }
-              const cur = window.scrollY;
-              if (Math.abs(cur - lastY) < 2) stable++;
-              else stable = 0;
-              lastY = cur;
-              if (stable >= 4) {
-                window.scrollTo(0, targetY);
-              } else {
-                requestAnimationFrame(waitStable);
-              }
+              requestAnimationFrame(waitStable);
             }
-            requestAnimationFrame(waitStable);
           }
         }, 100);
       }, { passive: true });
@@ -1617,7 +1620,7 @@
       btn.textContent = 'Confirmer';
       submitted = false;
 
-      // Effet conditionnel selon la réponse
+      // Effet selon la réponse
       if (selectedAnswer === 'Oui, j\'y serai !') {
         Confetti.launch();
       } else if (selectedAnswer === 'Malheureusement non...') {
@@ -1643,10 +1646,12 @@
         valid = false;
       } else {
         errorAtt.classList.remove('visible');
-        selectedAnswer = radioChecked.value;
       }
 
       if (!valid) { e.preventDefault(); return; }
+
+      // Stocker la réponse sélectionnée
+      selectedAnswer = radioChecked.value;
       submitted = true;
       btn.disabled = true;
       btn.textContent = 'Envoi en cours...';
