@@ -379,61 +379,26 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       EFFET PLUIE & NUAGES
+       PLUIE CANVAS
     ═══════════════════════════════════════════════════════════ */
-    #rain-overlay {
+    #rain-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 9998;
+      z-index: 9999;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 0.4s ease;
     }
-    #rain-overlay.visible {
+    #rain-canvas.visible {
       opacity: 1;
     }
-
-    #rain-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    #rain-canvas.fading {
+      opacity: 0;
+      transition: opacity 1.5s ease;
     }
-
-    .rain-clouds {
-      position: absolute;
-      top: -120px;
-      left: 0;
-      width: 100%;
-      height: 200px;
-      pointer-events: none;
-      transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    #rain-overlay.visible .rain-clouds {
-      top: -30px;
-    }
-
-    .rain-cloud {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, #6b7b8f 0%, #4a5568 40%, #2d3748 100%);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      opacity: 0.92;
-    }
-    .rain-cloud-1 { width: 280px; height: 100px; top: 40px; left: -5%; }
-    .rain-cloud-2 { width: 360px; height: 120px; top: 20px; left: 15%; }
-    .rain-cloud-3 { width: 300px; height: 110px; top: 50px; left: 42%; }
-    .rain-cloud-4 { width: 340px; height: 105px; top: 30px; left: 62%; }
-    .rain-cloud-5 { width: 260px; height: 95px; top: 55px; left: 85%; }
-
-    /* Petits nuages secondaires pour densifier */
-    .rain-cloud-6 { width: 200px; height: 80px; top: 80px; left: 8%; opacity: 0.7; }
-    .rain-cloud-7 { width: 220px; height: 85px; top: 75px; left: 50%; opacity: 0.75; }
-    .rain-cloud-8 { width: 180px; height: 70px; top: 90px; left: 78%; opacity: 0.65; }
 
     /* ═══════════════════════════════════════════════════════════
        FINAL SCENE
@@ -490,7 +455,6 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    /* iOS keyboard open — neutralise les sticky qui perturbent le scroll */
     html.ios-perf.ios-keyboard-open .tl-step-sticky {
       position: relative !important;
       height: auto !important;
@@ -790,20 +754,8 @@
   <!-- CONFETTIS -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-  <!-- PLUIE & NUAGES -->
-  <div id="rain-overlay" aria-hidden="true">
-    <div class="rain-clouds">
-      <div class="rain-cloud rain-cloud-1"></div>
-      <div class="rain-cloud rain-cloud-2"></div>
-      <div class="rain-cloud rain-cloud-3"></div>
-      <div class="rain-cloud rain-cloud-4"></div>
-      <div class="rain-cloud rain-cloud-5"></div>
-      <div class="rain-cloud rain-cloud-6"></div>
-      <div class="rain-cloud rain-cloud-7"></div>
-      <div class="rain-cloud rain-cloud-8"></div>
-    </div>
-    <canvas id="rain-canvas"></canvas>
-  </div>
+  <!-- PLUIE -->
+  <canvas id="rain-canvas" aria-hidden="true"></canvas>
 
   <!-- FINAL SCENE -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
@@ -1382,18 +1334,19 @@
   })();
 
   /* ═══════════════════════════════════════════════════════════
-     EFFET PLUIE (lancé si réponse "Malheureusement non")
+     PLUIE (lancée si réponse "Non")
   ═══════════════════════════════════════════════════════════ */
-  const RainEffect = (function() {
-    const overlay = Utils.getElement('rain-overlay');
+  const Rain = (function() {
     const canvas = Utils.getElement('rain-canvas');
-    if (!overlay || !canvas) return { launch: function(){} };
-
+    if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
     const drops = [];
     let animating = false;
     let launched = false;
-    let stopTimer = null;
+    let stopSpawning = false;
+
+    // Durée totale de la pluie (en ms) — réduite pour être plus courte
+    const RAIN_DURATION = 5000;
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -1402,127 +1355,78 @@
     resize();
     window.addEventListener('resize', resize);
 
-    // Créer une goutte de pluie
     function createDrop() {
       return {
         x: Math.random() * canvas.width,
-        y: -10 - Math.random() * 100,
-        length: 12 + Math.random() * 18,
+        y: -10 - Math.random() * 60,
         speed: 8 + Math.random() * 10,
-        width: 1 + Math.random() * 1.5,
-        opacity: 0.3 + Math.random() * 0.5,
-        wind: -1.5 + Math.random() * 0.5 // Léger vent vers la gauche
+        length: 15 + Math.random() * 20,
+        wind: 1.5 + Math.random() * 1.5,
+        alpha: 0.3 + Math.random() * 0.5,
+        width: 1 + Math.random() * 1.2
       };
     }
-
-    // Créer un splash quand une goutte touche le sol
-    function createSplash(x, y) {
-      const count = 2 + (Math.random() * 3) | 0;
-      for (let i = 0; i < count; i++) {
-        const angle = Math.PI + (Math.random() - 0.5) * Math.PI * 0.8;
-        splashes.push({
-          x: x,
-          y: y,
-          vx: Math.cos(angle) * (1 + Math.random() * 2),
-          vy: Math.sin(angle) * (2 + Math.random() * 2),
-          radius: 0.8 + Math.random() * 1,
-          alpha: 0.6,
-          gravity: 0.15
-        });
-      }
-    }
-
-    const splashes = [];
 
     function animate() {
       if (!animating) return;
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Dessiner les gouttes
+      // Ajouter de nouvelles gouttes tant qu'on n'a pas arrêté
+      if (!stopSpawning) {
+        const spawnCount = 8 + Math.floor(Math.random() * 6);
+        for (let i = 0; i < spawnCount; i++) {
+          drops.push(createDrop());
+        }
+      }
+
+      // Dessiner et mettre à jour les gouttes
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         d.y += d.speed;
         d.x += d.wind;
 
-        if (d.y > canvas.height) {
-          createSplash(d.x, canvas.height - 2);
-          drops.splice(i, 1);
-          continue;
-        }
-
+        // Dessiner la goutte (trait oblique)
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x + d.wind * 0.5, d.y - d.length);
-        ctx.strokeStyle = `rgba(174, 194, 224, ${d.opacity})`;
+        ctx.lineTo(d.x + d.wind * 0.6, d.y + d.length);
+        ctx.strokeStyle = `rgba(174, 194, 224, ${d.alpha})`;
         ctx.lineWidth = d.width;
         ctx.lineCap = 'round';
         ctx.stroke();
+
+        // Supprimer si hors écran
+        if (d.y > canvas.height + 20) {
+          drops.splice(i, 1);
+        }
       }
 
-      // Dessiner les splashes
-      for (let i = splashes.length - 1; i >= 0; i--) {
-        const s = splashes[i];
-        s.x += s.vx;
-        s.y += s.vy;
-        s.vy += s.gravity;
-        s.alpha -= 0.025;
-
-        if (s.alpha <= 0) {
-          splashes.splice(i, 1);
-          continue;
-        }
-
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(174, 194, 224, ${s.alpha})`;
-        ctx.fill();
-      }
-
-      // Ajouter des gouttes continuellement (pluie dense)
-      if (launched) {
-        const newDrops = 3 + (Math.random() * 4) | 0;
-        for (let i = 0; i < newDrops; i++) {
-          drops.push(createDrop());
-        }
+      // Si on a arrêté de spawner et qu'il n'y a plus de gouttes, on stoppe
+      if (stopSpawning && drops.length === 0) {
+        animating = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.classList.remove('visible');
+        canvas.classList.remove('fading');
       }
     }
 
     function launch() {
       if (launched) return;
       launched = true;
+      stopSpawning = false;
 
-      // Rendre l'overlay visible (les nuages descendent via CSS)
-      overlay.classList.add('visible');
+      // Afficher le canvas
+      canvas.classList.add('visible');
 
-      // Démarrer la pluie après un court délai (laisser les nuages apparaître)
+      // Démarrer l'animation
+      animating = true;
+      requestAnimationFrame(animate);
+
+      // Après RAIN_DURATION, arrêter de créer des gouttes et fader le canvas
       setTimeout(() => {
-        // Créer un premier lot de gouttes
-        for (let i = 0; i < 60; i++) {
-          const drop = createDrop();
-          drop.y = Math.random() * canvas.height; // Répartir sur toute la hauteur
-          drops.push(drop);
-        }
-
-        if (!animating) {
-          animating = true;
-          requestAnimationFrame(animate);
-        }
-      }, 400);
-
-      // Arrêter l'effet après 8 secondes
-      stopTimer = setTimeout(() => {
-        launched = false; // Arrêter de créer de nouvelles gouttes
-
-        // Attendre que les gouttes restantes tombent puis tout cacher
-        setTimeout(() => {
-          animating = false;
-          overlay.classList.remove('visible');
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drops.length = 0;
-          splashes.length = 0;
-        }, 2000);
-      }, 8000);
+        stopSpawning = true;
+        canvas.classList.add('fading');
+      }, RAIN_DURATION);
     }
 
     return { launch: launch };
@@ -1666,7 +1570,7 @@
     const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
 
     let submitted = false;
-    // On stocke la valeur sélectionnée au moment du submit
+    // On stocke la réponse sélectionnée au moment du submit
     let selectedAnswer = '';
 
     iframe.addEventListener('load', () => {
@@ -1677,11 +1581,11 @@
       btn.textContent = 'Confirmer';
       submitted = false;
 
-      // Déclencher l'effet en fonction de la réponse
+      // Lancer l'effet approprié selon la réponse
       if (selectedAnswer === 'Oui, j\'y serai !') {
         Confetti.launch();
-      } else if (selectedAnswer === 'Malheureusement non...') {
-        RainEffect.launch();
+      } else {
+        Rain.launch();
       }
     });
 
@@ -1707,7 +1611,7 @@
 
       if (!valid) { e.preventDefault(); return; }
 
-      // Stocker la réponse sélectionnée avant l'envoi
+      // Stocker la réponse avant l'envoi
       selectedAnswer = radioChecked.value;
       submitted = true;
       btn.disabled = true;
