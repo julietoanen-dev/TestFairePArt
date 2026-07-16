@@ -100,7 +100,7 @@
     ═══════════════════════════════════════════════════════════ */
     #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
     .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-    .hero-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
+    .hero-date { font-weight: 400; font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
     .hero-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.92); max-width: 480px; text-shadow: 0 2px 16px rgba(0,0,0,0.12); }
     .hero-scroll-hint { margin-top: 50px; color: rgba(255,255,255,0.68); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; display: inline-flex; flex-direction: column; align-items: center; gap: 10px; }
     .chevrons { display: grid; gap: 4px; opacity: 0.9; }
@@ -129,7 +129,7 @@
     }
     .countdown-number { font-family: var(--font-titre); font-size: clamp(2rem, 7vw, 3.5rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
     .countdown-label { font-size: clamp(0.55rem, 1.8vw, 0.72rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; display: block; white-space: nowrap; }
-    .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
+    .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
 
     /* Bouton calendrier */
@@ -354,8 +354,6 @@
     .rsvp-success.visible { display: block; }
     .rsvp-success p { font-family: var(--font-titre); font-size: 1.3rem; color: var(--corail); }
 
-    .optional-hint { font-size: 0.72rem; font-style: italic; color: rgba(46,18,0,0.38); margin-top: 4px; display: block; }
-
     @supports (padding: max(0px)) {
       .rsvp-form-wrap { padding-bottom: max(48px, env(safe-area-inset-bottom)); }
     }
@@ -529,7 +527,7 @@
     <div class="hero-content">
       <p class="hero-date reveal">24 juillet 2027</p>
       <h1 class="reveal">Julie & Thomas</h1>
-      <p class="hero-tagline reveal">Venez célébrer avec nous à Verfeil.</p>
+      <p class="hero-tagline reveal">Venez célébrer avec nous.</p>
       <div class="hero-scroll-hint reveal" aria-hidden="true">
         Défiler
         <div class="chevrons"><span></span><span></span></div>
@@ -702,8 +700,8 @@
   <!-- RSVP -->
   <section id="rsvp" aria-label="Formulaire RSVP">
     <div class="container">
-      <h2 class="reveal" id="rsvp-heading">Serez-vous disponible ?</h2>
-      <p class="rsvp-subtitle reveal">Répondez-nous avant <span class="highlight-blink">le 1er juin 2027</span> — on compte sur vous.</p>
+      <h2 class="reveal" id="rsvp-heading">Confirmer votre participation</h2>
+      <p class="rsvp-subtitle reveal">Répondez-nous avant <span class="highlight-blink">le 15 avril 2027</span> — on compte sur vous.</p>
       <div class="rsvp-form-wrap reveal">
         <form id="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfYZrMX2Yp9gJlAjLgc27uZ1Ey8lDOnrVq-arw8xuh_YtGOgQ/formResponse" method="POST" target="hidden_iframe">
           <input type="hidden" name="fvv" value="1"/>
@@ -711,9 +709,9 @@
           <input type="hidden" name="pageHistory" value="0"/>
 
           <div class="form-group">
-            <label for="rsvp-name">Nom complet *</label>
+            <label for="rsvp-name">Nom *</label>
             <input type="text" id="rsvp-name" name="entry.634494262" required autocomplete="name" placeholder="Votre nom" aria-required="true" aria-describedby="error-name"/>
-            <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom complet.</span>
+            <span class="field-error" id="error-name" role="alert">Merci d'indiquer votre nom.</span>
           </div>
 
           <div class="form-group">
@@ -736,13 +734,12 @@
           <div class="form-group">
             <label for="rsvp-message">Un mot pour les mariés</label>
             <textarea id="rsvp-message" name="entry.1167258628" placeholder="Écrivez-nous quelques mots..."></textarea>
-            <span class="optional-hint">Optionnel</span>
           </div>
 
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
         </form>
         <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
-          <p>Merci ! On a bien enregistré ta réponse 🎉</p>
+          <p id="rsvp-success-message">Merci ! On a bien enregistré ta réponse 🎉</p>
         </div>
       </div>
     </div>
@@ -1361,15 +1358,13 @@
 
     function createDrop() {
       return {
-        // Position X sur toute la largeur de l'écran
         x: Math.random() * canvas.width,
         y: -10 - Math.random() * 60,
         speed: 8 + Math.random() * 6,
         length: 12 + Math.random() * 14,
-        // Épaisseur fine
         width: 0.8 + Math.random() * 0.7,
-        // Léger vent
-        wind: 1.5 + Math.random() * 1,
+        // Vent réduit pour une pluie quasi verticale
+        wind: 0.3 + Math.random() * 0.2,
         color: COLORS[(Math.random() * COLORS.length) | 0],
         alpha: 0.4 + Math.random() * 0.4
       };
@@ -1391,14 +1386,12 @@
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Générer de nouvelles gouttes si actif
       if (spawnActive) {
         for (let i = 0; i < DROPS_PER_FRAME; i++) {
           drops.push(createDrop());
         }
       }
 
-      // Dessiner et mettre à jour les gouttes
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         d.x += d.wind;
@@ -1413,9 +1406,7 @@
         ctx.lineCap = 'round';
         ctx.stroke();
 
-        // Si la goutte touche le sol
         if (d.y >= canvas.height) {
-          // Splash avec une probabilité réduite (1 sur 5)
           if (Math.random() < 0.4) {
             splashes.push(createSplash(d.x, canvas.height - 2));
           }
@@ -1423,7 +1414,6 @@
         }
       }
 
-      // Dessiner et mettre à jour les splashes
       for (let i = splashes.length - 1; i >= 0; i--) {
         const s = splashes[i];
         ctx.beginPath();
@@ -1443,7 +1433,6 @@
 
       ctx.globalAlpha = 1;
 
-      // Si plus rien à afficher, arrêter
       if (!spawnActive && drops.length === 0 && splashes.length === 0) {
         animating = false;
         canvas.classList.remove('visible');
@@ -1462,7 +1451,6 @@
       canvas.classList.add('visible');
       requestAnimationFrame(animate);
 
-      // Arrêter la génération après RAIN_DURATION
       setTimeout(() => {
         spawnActive = false;
         canvas.classList.add('fade-out');
@@ -1603,6 +1591,7 @@
     const form = Utils.getElement('rsvp-form');
     const btn = Utils.getElement('btn-submit');
     const success = Utils.getElement('rsvp-success');
+    const successMsg = Utils.getElement('rsvp-success-message');
     const iframe = Utils.getElement('hidden_iframe');
     const errorName = Utils.getElement('error-name');
     const errorAtt = Utils.getElement('error-attending');
@@ -1615,6 +1604,14 @@
     iframe.addEventListener('load', () => {
       if (!submitted) return;
       form.style.display = 'none';
+
+      // Message conditionnel selon la réponse
+      if (selectedAnswer === 'Malheureusement non...') {
+        successMsg.textContent = 'Dommage ! On a enregistré ta réponse 😞';
+      } else {
+        successMsg.textContent = 'Merci ! On a bien enregistré ta réponse 🎉';
+      }
+
       success.classList.add('visible');
       btn.disabled = false;
       btn.textContent = 'Confirmer';
