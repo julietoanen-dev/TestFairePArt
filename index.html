@@ -66,14 +66,14 @@
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
     /* ═══════════════════════════════════════════════════════════
-       ÉTOILES
+       ÉTOILES CANVAS
     ═══════════════════════════════════════════════════════════ */
     #stars-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       pointer-events: none;
       z-index: 1;
       opacity: 1;
@@ -592,6 +592,7 @@
         <div class="timeline-day">
           <div class="timeline-day-label reveal">Samedi 24 juillet 2027</div>
           <div class="timeline-events">
+            <!-- Événement 1 : Mairie -->
             <div class="timeline-event">
               <div class="event-side reveal-left">
                 <div class="event-card">
@@ -609,6 +610,7 @@
               </div>
             </div>
 
+            <!-- Événement 2 : Vin d'honneur -->
             <div class="timeline-event">
               <div class="event-img-col reveal-left">
                 <div class="event-img-wrap">
@@ -626,12 +628,14 @@
               </div>
             </div>
 
+            <!-- Événement 3 : Repas & Soirée -->
             <div class="timeline-event">
               <div class="event-side reveal-left">
                 <div class="event-card">
                   <div class="event-time">20h</div>
                   <div class="event-title">Repas & Soirée</div>
                   <div class="event-address">Repas Canard et soirée dance floor !!</div>
+                  <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="event-map-link" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
                 </div>
               </div>
               <div class="event-dot"><div class="event-dot-inner event-dot-inner--amber"></div></div>
@@ -660,6 +664,7 @@
         <path id="tl-mobile-path-bg" d="M20 0"/><path id="tl-mobile-path-draw" d="M20 0"/>
       </svg>
 
+      <!-- Step 0 : Mairie -->
       <div class="tl-step" id="tl-step-0">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-0">Samedi 24 juillet 2027</div>
@@ -676,6 +681,7 @@
         </div>
       </div>
 
+      <!-- Step 1 : Vin d'honneur -->
       <div class="tl-step" id="tl-step-1">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-1">Samedi 24 juillet 2027</div>
@@ -692,6 +698,7 @@
         </div>
       </div>
 
+      <!-- Step 2 : Repas & Soirée -->
       <div class="tl-step" id="tl-step-2">
         <div class="tl-step-sticky">
           <div class="tl-step-day" id="tl-day-2">Samedi 24 juillet 2027</div>
@@ -700,6 +707,7 @@
             <div class="tl-step-time tl-step-time--amber">20h</div>
             <div class="tl-step-title">Repas & Soirée</div>
             <div class="tl-step-address">Repas Canard et soirée dance floor !!</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=Domaine+de+Gailhaguet+Verfeil+31590" class="tl-step-map" target="_blank" rel="noopener noreferrer">Voir sur la carte</a>
           </div>
           <div class="tl-step-img" id="tl-img-2">
             <img src="Soiree.png" alt="Repas et soirée" loading="lazy" decoding="async"/>
@@ -751,7 +759,7 @@
           <button type="submit" class="btn-submit" id="btn-submit">Confirmer</button>
         </form>
         <div class="rsvp-success" id="rsvp-success" aria-live="polite" role="status">
-          <p id="rsvp-success-text">Merci ! On a bien enregistré ta réponse 🎉</p>
+          <p>Merci ! On a bien enregistré ta réponse 🎉</p>
         </div>
       </div>
     </div>
@@ -898,121 +906,135 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    const stars = [];
-    const shootingStars = [];
-    const STAR_COUNT = 80;
-    const SHOOTING_INTERVAL = 3000; // une étoile filante toutes les ~3s
+    const STAR_COLORS = [
+      'rgba(255, 255, 255,',   // blanc
+      'rgba(255, 245, 157,',   // jaune pâle
+      'rgba(255, 182, 193,',   // rose clair
+      'rgba(255, 223, 186,',   // jaune chaud
+      'rgba(255, 200, 220,'    // rose doux
+    ];
+
+    let stars = [];
+    let shootingStars = [];
+    let animId = null;
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      initStars();
     }
-    resize();
-    window.addEventListener('resize', Utils.debounce(resize, 200));
 
-    // Créer les étoiles fixes
-    for (let i = 0; i < STAR_COUNT; i++) {
-      stars.push({
-        x: Math.random(),
-        y: Math.random(),
-        radius: 0.5 + Math.random() * 1.2,
-        baseAlpha: 0.15 + Math.random() * 0.5,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.3 + Math.random() * 0.7
-      });
+    function initStars() {
+      stars = [];
+      const count = 80 + Math.floor(canvas.width * 0.03);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: 0.5 + Math.random() * 1.5,
+          baseAlpha: 0.2 + Math.random() * 0.5,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.8,
+          color: STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0]
+        });
+      }
     }
 
     function createShootingStar() {
-      const startX = Math.random() * canvas.width * 0.8;
-      const startY = Math.random() * canvas.height * 0.4;
-      const angle = (Math.PI / 6) + Math.random() * (Math.PI / 6); // entre 30° et 60°
-      const speed = 4 + Math.random() * 4;
-      return {
+      const startX = Math.random() * canvas.width;
+      const startY = Math.random() * canvas.height * 0.5;
+      const angle = (Math.PI / 6) + Math.random() * (Math.PI / 4);
+      const speed = 6 + Math.random() * 8;
+      const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
+      shootingStars.push({
         x: startX,
         y: startY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        alpha: 1,
+        life: 1,
+        decay: 0.015 + Math.random() * 0.01,
         length: 30 + Math.random() * 40,
-        decay: 0.015 + Math.random() * 0.01
-      };
+        width: 1 + Math.random() * 1.5,
+        color: color
+      });
     }
 
-    // Lancer des étoiles filantes régulièrement
-    setInterval(() => {
-      if (Math.random() < 0.6) { // pas systématique
-        shootingStars.push(createShootingStar());
-      }
-    }, SHOOTING_INTERVAL);
+    // Lancer des étoiles filantes fréquemment (toutes les 1-2s)
+    function scheduleShootingStar() {
+      const delay = 800 + Math.random() * 1200;
+      setTimeout(() => {
+        createShootingStar();
+        scheduleShootingStar();
+      }, delay);
+    }
+    scheduleShootingStar();
+    // Lancer une deuxième série décalée pour plus de densité
+    setTimeout(() => scheduleShootingStar(), 500);
 
-    let animId;
+    let time = 0;
     function animate() {
       animId = requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const time = Date.now() * 0.001;
+      time += 0.016;
 
-      // Étoiles fixes avec scintillement
+      // Dessiner les étoiles fixes avec scintillement
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
         const alpha = s.baseAlpha * (0.5 + 0.5 * Math.sin(time * s.speed + s.phase));
         ctx.beginPath();
-        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = alpha;
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = s.color + alpha + ')';
         ctx.fill();
       }
 
-      // Étoiles filantes
+      // Dessiner les étoiles filantes
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
         ss.x += ss.vx;
         ss.y += ss.vy;
-        ss.alpha -= ss.decay;
+        ss.life -= ss.decay;
 
-        if (ss.alpha <= 0) {
+        if (ss.life <= 0 || ss.x > canvas.width + 50 || ss.y > canvas.height + 50) {
           shootingStars.splice(i, 1);
           continue;
         }
 
-        // Traînée
         const tailX = ss.x - (ss.vx / Math.sqrt(ss.vx * ss.vx + ss.vy * ss.vy)) * ss.length;
         const tailY = ss.y - (ss.vy / Math.sqrt(ss.vx * ss.vx + ss.vy * ss.vy)) * ss.length;
 
-        const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
-        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
-        grad.addColorStop(1, `rgba(255, 255, 255, 0)`);
+        const grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+        grad.addColorStop(0, ss.color + '0)');
+        grad.addColorStop(1, ss.color + (ss.life * 0.8) + ')');
 
         ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(tailX, tailY);
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(ss.x, ss.y);
         ctx.strokeStyle = grad;
-        ctx.globalAlpha = 1;
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = ss.width;
         ctx.lineCap = 'round';
         ctx.stroke();
 
         // Point lumineux en tête
         ctx.beginPath();
-        ctx.arc(ss.x, ss.y, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = ss.alpha;
+        ctx.arc(ss.x, ss.y, ss.width * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = ss.color + ss.life + ')';
         ctx.fill();
       }
-
-      ctx.globalAlpha = 1;
     }
+
+    resize();
+    window.addEventListener('resize', Utils.debounce(resize, 200));
     animate();
 
-    // Masquer les étoiles quand on arrive au niveau du programme
+    // Masquer les étoiles quand on scrolle au niveau du programme
     const timelineDesktop = Utils.getElement('timeline-desktop');
     const timelineMobile = Utils.getElement('timeline-mobile');
 
     ScrollManager.register((scrollY) => {
       const timeline = window.innerWidth > 700 ? timelineDesktop : timelineMobile;
       if (!timeline) return;
-      const rect = timeline.getBoundingClientRect();
-      // Commencer à cacher quand le haut de la timeline entre dans le viewport
-      if (rect.top < window.innerHeight * 0.8) {
+      const triggerY = timeline.offsetTop - window.innerHeight * 0.5;
+      if (scrollY > triggerY) {
         canvas.classList.add('hidden');
       } else {
         canvas.classList.remove('hidden');
@@ -1082,7 +1104,7 @@
         'DTSTART:20270724T143000Z',
         'DTEND:20270724T215900Z',
         'SUMMARY:Mariage Julie & Thomas',
-        'DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nVin d\'honneur à 18h00 au Domaine de Gailhaguet\\, Verfeil\\nRepas & Soirée à 20h',
+        'DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nCocktail & soirée à 18h00 au Domaine de Gailhaguet\\, Verfeil',
         'LOCATION:Mairie de Pin-Balma\\, Pl. de la Mairie\\, 31130 Pin-Balma',
         'STATUS:CONFIRMED',
         'BEGIN:VALARM',
@@ -1731,7 +1753,7 @@
     const form = Utils.getElement('rsvp-form');
     const btn = Utils.getElement('btn-submit');
     const success = Utils.getElement('rsvp-success');
-    const successText = Utils.getElement('rsvp-success-text');
+    const successText = success ? success.querySelector('p') : null;
     const iframe = Utils.getElement('hidden_iframe');
     const errorName = Utils.getElement('error-name');
     const errorAtt = Utils.getElement('error-attending');
@@ -1747,9 +1769,9 @@
 
       // Message conditionnel selon la réponse
       if (selectedAnswer === 'Malheureusement non...') {
-        successText.textContent = 'Dommage ! On a enregistré ta réponse 😞';
+        if (successText) successText.textContent = 'Dommage ! On a enregistré ta réponse 😞';
       } else {
-        successText.textContent = 'Merci ! On a bien enregistré ta réponse 🎉';
+        if (successText) successText.textContent = 'Merci ! On a bien enregistré ta réponse 🎉';
       }
 
       success.classList.add('visible');
@@ -1787,6 +1809,7 @@
 
       if (!valid) { e.preventDefault(); return; }
 
+      // Stocker la réponse sélectionnée
       selectedAnswer = radioChecked.value;
       submitted = true;
       btn.disabled = true;
