@@ -12,9 +12,6 @@
   <link rel="preload" as="image" href="https://framerusercontent.com/images/6tUL6N8p40INoMoTwAhxIStFQEM.png" />
 
   <style>
-    /* ═══════════════════════════════════════════════════════════
-       VARIABLES & RESET
-    ═══════════════════════════════════════════════════════════ */
     :root {
       --rose: #FF3CAC;
       --corail: #FF6B35;
@@ -46,9 +43,6 @@
     section { padding: 90px 0; position: relative; z-index: 2; }
     fieldset { border: none; padding: 0; }
 
-    /* ═══════════════════════════════════════════════════════════
-       ANIMATIONS DE RÉVÉLATION
-    ═══════════════════════════════════════════════════════════ */
     .reveal, .reveal-left, .reveal-right { opacity: 0; transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal { transform: translateY(40px); }
     .reveal-left { transform: translateX(-40px); }
@@ -59,21 +53,16 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       STRUCTURE PRINCIPALE
-    ═══════════════════════════════════════════════════════════ */
     #page-wrapper { position: relative; min-height: 100vh; }
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
-    /* ═══════════════════════════════════════════════════════════
-       ÉTOILES CANVAS
-    ═══════════════════════════════════════════════════════════ */
+    /* STARS CANVAS */
     #stars-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       pointer-events: none;
       z-index: 1;
       opacity: 1;
@@ -83,9 +72,7 @@
       opacity: 0;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       LANTERNES
-    ═══════════════════════════════════════════════════════════ */
+    /* LANTERNES */
     #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
     #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
     .lantern { animation-fill-mode: both; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
@@ -97,9 +84,6 @@
     @keyframes float-d { 0%,100% { transform: translate3d(0,0,0) rotate(4deg); } 50% { transform: translate3d(0,-20px,0) rotate(-3deg); } }
     @keyframes float-e { 0%,100% { transform: translate3d(0,0,0) rotate(-3.5deg); } 50% { transform: translate3d(0,-19px,0) rotate(3deg); } }
 
-    /* ═══════════════════════════════════════════════════════════
-       ANIMATION CLIGNOTEMENT ROSE/VIOLET
-    ═══════════════════════════════════════════════════════════ */
     @keyframes blink-rose-violet {
       0%, 100% { color: var(--rose); text-shadow: 0 0 35px rgba(255, 60, 172, 0.9), 0 0 70px rgba(255, 60, 172, 0.5); }
       25% { color: rgba(255, 60, 172, 0.4); text-shadow: 0 0 15px rgba(255, 60, 172, 0.4); }
@@ -113,9 +97,7 @@
       .highlight-blink { animation: none; color: var(--blanc); text-shadow: 0 0 30px rgba(255, 60, 172, 0.8); }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       HERO
-    ═══════════════════════════════════════════════════════════ */
+    /* HERO */
     #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; z-index: 2; }
     .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 18px; }
     .hero-date { font-weight: 400; font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: rgba(255,255,255,0.84); letter-spacing: 0.25em; text-transform: uppercase; }
@@ -126,9 +108,7 @@
     .chevrons span:nth-child(2) { animation-delay: 0.18s; opacity: 0.8; }
     @keyframes chevron { 0%,100% { transform: translate3d(0,0,0) rotate(45deg); opacity: 0.55; } 50% { transform: translate3d(0,6px,0) rotate(45deg); opacity: 1; } }
 
-    /* ═══════════════════════════════════════════════════════════
-       COUNTDOWN
-    ═══════════════════════════════════════════════════════════ */
+    /* COUNTDOWN */
     #countdown { text-align: center; padding: 60px 20px 70px; position: relative; z-index: 2; }
     .countdown-grid { display: flex; justify-content: center; gap: clamp(8px, 3vw, 20px); flex-wrap: nowrap; margin-bottom: 20px; }
     .countdown-unit {
@@ -150,7 +130,6 @@
     .countdown-tagline { font-family: var(--font-titre); font-style: italic; font-size: 1.3rem; color: var(--blanc); margin-top: 16px; display: block; opacity: 0.9; }
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
 
-    /* Bouton calendrier */
     .btn-calendar {
       display: inline-flex;
       align-items: center;
@@ -173,9 +152,7 @@
     .btn-calendar:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7); transform: translateY(-2px); text-decoration: none; }
     .btn-calendar:active { transform: translateY(0); }
 
-    /* ═══════════════════════════════════════════════════════════
-       TIMELINE DESKTOP
-    ═══════════════════════════════════════════════════════════ */
+    /* TIMELINE DESKTOP */
     #timeline-desktop { padding: 90px 0 80px; position: relative; z-index: 2; }
     #timeline-desktop h2 { text-align: center; margin-bottom: 70px; font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--corail); letter-spacing: 0.04em; text-transform: uppercase; }
     .timeline-wrapper { position: relative; display: flex; flex-direction: column; align-items: stretch; }
@@ -210,9 +187,7 @@
     .event-img-wrap { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 28px rgba(46,18,0,0.12); border: 1.5px solid rgba(255,255,255,0.6); aspect-ratio: 4/3; position: relative; background: linear-gradient(135deg,#ffb27a,#86bde8); }
     .event-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ═══════════════════════════════════════════════════════════
-       TIMELINE MOBILE
-    ═══════════════════════════════════════════════════════════ */
+    /* TIMELINE MOBILE */
     #timeline-mobile { display: none; position: relative; z-index: 2; }
     #timeline-mobile h2 { text-align: center; padding: 60px 20px 40px; font-weight: 600; font-size: 1.5rem; color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
     .tl-mobile-wrapper { position: relative; }
@@ -240,9 +215,7 @@
     .tl-step-hint { font-size: 0.75rem; color: var(--violet); font-style: italic; margin-top: 8px; line-height: 1.5; }
     .tl-step-map { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 600; color: var(--corail); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid rgba(255,107,53,0.3); padding-bottom: 1px; }
 
-    /* ═══════════════════════════════════════════════════════════
-       RSVP
-    ═══════════════════════════════════════════════════════════ */
+    /* RSVP */
     #rsvp {
       text-align: center;
       padding: 80px 20px 100px;
@@ -277,8 +250,6 @@
       box-shadow: 0 8px 40px rgba(46,18,0,0.07);
       backdrop-filter: blur(12px);
       width: 100%;
-      -webkit-user-select: text;
-      user-select: text;
     }
 
     .form-group { margin-bottom: 26px; }
@@ -381,9 +352,7 @@
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       CONFETTIS CANVAS
-    ═══════════════════════════════════════════════════════════ */
+    /* CONFETTIS */
     #confetti-canvas {
       position: fixed;
       top: 0;
@@ -394,9 +363,7 @@
       z-index: 9999;
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       RAIN CANVAS
-    ═══════════════════════════════════════════════════════════ */
+    /* RAIN */
     #rain-canvas {
       position: fixed;
       top: 0;
@@ -408,16 +375,10 @@
       opacity: 0;
       transition: opacity 1s ease;
     }
-    #rain-canvas.visible {
-      opacity: 1;
-    }
-    #rain-canvas.fade-out {
-      opacity: 0;
-    }
+    #rain-canvas.visible { opacity: 1; }
+    #rain-canvas.fade-out { opacity: 0; }
 
-    /* ═══════════════════════════════════════════════════════════
-       FINAL SCENE
-    ═══════════════════════════════════════════════════════════ */
+    /* FINAL SCENE */
     #final-scene { position: relative; height: 300vh; z-index: 2; }
     .final-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
     .final-bg-container { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -432,9 +393,7 @@
     #car-el { position: absolute; bottom: 1%; will-change: transform; z-index: 6; }
     #car-el img { width: 100%; height: auto; display: block; }
 
-    /* ═══════════════════════════════════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════════════════════════════════ */
+    /* RESPONSIVE */
     @media (max-width: 700px) {
       #timeline-desktop { display: none; }
       #timeline-mobile { display: block; }
@@ -444,19 +403,15 @@
       #timeline-mobile { display: none; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       PRINT
-    ═══════════════════════════════════════════════════════════ */
+    /* PRINT */
     @media print {
-      #lanterns-layer, #panorama, #final-scene { display: none !important; }
+      #lanterns-layer, #panorama, #final-scene, #stars-canvas { display: none !important; }
       body { background: white; color: black; }
       section { padding: 20px 0; }
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       IOS PERFORMANCE
-    ═══════════════════════════════════════════════════════════ */
+    /* IOS PERFORMANCE */
     html.ios-perf { scroll-behavior: auto !important; }
     html.ios-perf body { -webkit-overflow-scrolling: touch; }
     .ios-perf #panorama { display: none !important; }
@@ -486,10 +441,10 @@
 
 <body>
 <div id="page-wrapper">
-  <!-- Panorama SVG (fond dégradé) -->
+  <!-- Panorama SVG -->
   <svg id="panorama" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice" aria-hidden="true"></svg>
 
-  <!-- Étoiles canvas -->
+  <!-- Stars Canvas -->
   <canvas id="stars-canvas" aria-hidden="true"></canvas>
 
   <!-- Lanternes flottantes -->
@@ -797,9 +752,6 @@
 <script>
 'use strict';
 (function() {
-  /* ═══════════════════════════════════════════════════════════
-     CONFIGURATION & UTILITAIRES
-  ═══════════════════════════════════════════════════════════ */
   const CONFIG = { weddingDate: '2027-07-24T16:30:00+02:00' };
 
   const Utils = {
@@ -815,18 +767,13 @@
     queryAll: (selector) => document.querySelectorAll(selector)
   };
 
-  /* ═══════════════════════════════════════════════════════════
-     DÉTECTION iOS
-  ═══════════════════════════════════════════════════════════ */
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
     || (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
 
   if (isIOS) document.documentElement.classList.add('ios-perf');
 
-  /* ═══════════════════════════════════════════════════════════
-     SCROLL MANAGER — Un seul listener pour tout
-  ═══════════════════════════════════════════════════════════ */
+  /* SCROLL MANAGER */
   const ScrollManager = {
     handlers: [],
     rafId: null,
@@ -848,9 +795,7 @@
   };
   ScrollManager.init();
 
-  /* ═══════════════════════════════════════════════════════════
-     PANORAMA SVG
-  ═══════════════════════════════════════════════════════════ */
+  /* PANORAMA SVG */
   (function() {
     if (document.documentElement.classList.contains('ios-perf')) return;
     const svg = Utils.getElement('panorama');
@@ -891,9 +836,7 @@
     window.addEventListener('resize', Utils.debounce(resize, 300));
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     ÉTOILES (canvas fixé, visible uniquement en haut)
-  ═══════════════════════════════════════════════════════════ */
+  /* ÉTOILES ENCHANTÉES */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = Utils.getElement('stars-canvas');
@@ -901,17 +844,18 @@
     const ctx = canvas.getContext('2d');
 
     const STAR_COLORS = [
-      'rgba(255,255,255,',   // blanc
-      'rgba(255,250,200,',   // jaune pâle
-      'rgba(255,200,220,',   // rose pâle
-      'rgba(255,223,150,',   // jaune doré
-      'rgba(255,180,210,'    // rose
+      { r: 255, g: 255, b: 255 },  // blanc
+      { r: 255, g: 240, b: 180 },  // jaune doré
+      { r: 255, g: 200, b: 220 },  // rose
+      { r: 255, g: 220, b: 140 },  // doré chaud
+      { r: 255, g: 180, b: 200 },  // rose plus vif
     ];
 
     let stars = [];
     let shootingStars = [];
-    let lastShoot = 0;
-    const SHOOT_INTERVAL = 2500; // une étoile filante toutes les 2.5s environ
+    let dustParticles = [];
+    let animating = true;
+    let isHidden = false;
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -921,117 +865,259 @@
 
     function initStars() {
       stars = [];
-      const count = 80;
+      const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 8000));
       for (let i = 0; i < count; i++) {
+        const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
+        const layer = Math.random(); // 0 = far, 1 = close
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          radius: 0.5 + Math.random() * 1.5,
-          baseAlpha: 0.2 + Math.random() * 0.5,
+          baseRadius: 0.4 + layer * 1.8,
           phase: Math.random() * Math.PI * 2,
-          speed: 0.3 + Math.random() * 0.7,
-          color: STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0]
+          speed: 0.3 + Math.random() * 0.8,
+          pulseAmp: 0.15 + Math.random() * 0.4,
+          color: color,
+          baseAlpha: 0.2 + layer * 0.5,
+          isCross: Math.random() < 0.12, // 12% sont des étoiles en croix
+          crossSize: 3 + Math.random() * 5,
+          layer: layer,
+          twinkleSpeed: 1 + Math.random() * 2
         });
       }
     }
 
     function createShootingStar() {
-      // Direction uniforme : vers le bas-droite (~30°)
-      const angle = 0.5; // ~30 degrés en radians
-      const speed = 6 + Math.random() * 4;
+      const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
       const startX = Math.random() * canvas.width * 0.8;
       const startY = Math.random() * canvas.height * 0.4;
-      const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
-      return {
+      const angle = (Math.PI / 6) + Math.random() * 0.2; // ~30° direction uniforme
+      const speed = 6 + Math.random() * 4;
+
+      shootingStars.push({
         x: startX,
         y: startY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         life: 1,
-        maxLife: 1,
-        decay: 0.012 + Math.random() * 0.008,
-        length: 30 + Math.random() * 40,
-        color: color
-      };
+        decay: 0.008 + Math.random() * 0.006,
+        radius: 2 + Math.random() * 1.5,
+        color: color,
+        trail: [],
+        maxTrail: 25 + Math.random() * 15,
+        dustTimer: 0
+      });
     }
 
-    resize();
-    window.addEventListener('resize', resize);
+    function createDust(x, y, color) {
+      dustParticles.push({
+        x: x + (Math.random() - 0.5) * 4,
+        y: y + (Math.random() - 0.5) * 4,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: 0.2 + Math.random() * 0.5,
+        life: 1,
+        decay: 0.015 + Math.random() * 0.01,
+        radius: 0.5 + Math.random() * 1.2,
+        color: color,
+        twinkle: Math.random() * Math.PI * 2
+      });
+    }
 
-    // Masquer les étoiles quand on scrolle vers le programme
-    const timelineSection = Utils.getElement('timeline-desktop') || Utils.getElement('timeline-mobile');
-    ScrollManager.register((scrollY) => {
-      if (!timelineSection) return;
-      const triggerPoint = timelineSection.offsetTop - window.innerHeight * 0.5;
-      if (scrollY > triggerPoint) {
-        canvas.classList.add('hidden');
-      } else {
-        canvas.classList.remove('hidden');
+    // Lancer étoiles filantes régulièrement
+    let shootingInterval = null;
+    function startShootingSchedule() {
+      function scheduleNext() {
+        const delay = 2500 + Math.random() * 2000;
+        shootingInterval = setTimeout(() => {
+          if (!isHidden) createShootingStar();
+          scheduleNext();
+        }, delay);
       }
-    });
+      scheduleNext();
+    }
 
-    let animId;
-    function animate(time) {
-      animId = requestAnimationFrame(animate);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function drawStar(star, time) {
+      const pulse = Math.sin(time * star.speed + star.phase) * star.pulseAmp;
+      const twinkle = Math.sin(time * star.twinkleSpeed + star.phase * 2) * 0.3 + 0.7;
+      const alpha = star.baseAlpha * (1 + pulse) * twinkle;
+      const radius = star.baseRadius * (1 + pulse * 0.3);
+      const { r, g, b } = star.color;
 
-      // Étoiles fixes avec scintillement
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        const alpha = s.baseAlpha * (0.5 + 0.5 * Math.sin(time * 0.001 * s.speed + s.phase));
+      if (star.isCross) {
+        // Étoile en croix à 4 branches
+        const size = star.crossSize * (1 + pulse * 0.2);
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.9;
+        ctx.strokeStyle = `rgb(${r},${g},${b})`;
+        ctx.lineWidth = 0.6;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = s.color + alpha.toFixed(3) + ')';
+        ctx.moveTo(star.x - size, star.y);
+        ctx.lineTo(star.x + size, star.y);
+        ctx.moveTo(star.x, star.y - size);
+        ctx.lineTo(star.x, star.y + size);
+        ctx.stroke();
+        // Point central brillant
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, radius * 0.8, 0, Math.PI * 2);
         ctx.fill();
+        // Halo
+        ctx.globalAlpha = alpha * 0.2;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, size * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      } else {
+        // Étoile simple avec halo
+        ctx.save();
+        // Halo externe
+        ctx.globalAlpha = alpha * 0.15;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, radius * 4, 0, Math.PI * 2);
+        ctx.fill();
+        // Halo moyen
+        ctx.globalAlpha = alpha * 0.3;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2);
+        ctx.fill();
+        // Coeur
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function drawShootingStar(ss) {
+      const { r, g, b } = ss.color;
+
+      // Traînée dégradée
+      for (let i = 0; i < ss.trail.length; i++) {
+        const t = ss.trail[i];
+        const progress = i / ss.trail.length;
+        const trailAlpha = progress * ss.life * 0.6;
+        const trailRadius = ss.radius * progress * 0.6;
+
+        ctx.save();
+        ctx.globalAlpha = trailAlpha;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, trailRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Cœur brillant
+      ctx.save();
+      // Halo du cœur
+      ctx.globalAlpha = ss.life * 0.4;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath();
+      ctx.arc(ss.x, ss.y, ss.radius * 3, 0, Math.PI * 2);
+      ctx.fill();
+      // Point brillant
+      ctx.globalAlpha = ss.life;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(ss.x, ss.y, ss.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawDust(d, time) {
+      const twinkle = Math.sin(time * 4 + d.twinkle) * 0.3 + 0.7;
+      const { r, g, b } = d.color;
+
+      ctx.save();
+      ctx.globalAlpha = d.life * twinkle * 0.7;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      if (!animating) return;
+      requestAnimationFrame(animate);
+
+      if (isHidden) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const time = Date.now() / 1000;
+
+      // Étoiles fixes
+      for (let i = 0; i < stars.length; i++) {
+        drawStar(stars[i], time);
       }
 
       // Étoiles filantes
-      if (time - lastShoot > SHOOT_INTERVAL + Math.random() * 1500) {
-        shootingStars.push(createShootingStar());
-        lastShoot = time;
-      }
-
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
+
+        // Traînée
+        ss.trail.push({ x: ss.x, y: ss.y });
+        if (ss.trail.length > ss.maxTrail) ss.trail.shift();
+
+        // Mouvement
         ss.x += ss.vx;
         ss.y += ss.vy;
-        ss.life -= ss.decay;
 
-        if (ss.life <= 0) {
-          shootingStars.splice(i, 1);
-          continue;
+        // Poussière de fée
+        ss.dustTimer++;
+        if (ss.dustTimer % 3 === 0 && ss.life > 0.3) {
+          createDust(ss.x, ss.y, ss.color);
         }
 
-        // La traînée : plus elle avance, plus elle est transparente
-        const tailX = ss.x - (ss.vx / Math.sqrt(ss.vx * ss.vx + ss.vy * ss.vy)) * ss.length;
-        const tailY = ss.y - (ss.vy / Math.sqrt(ss.vx * ss.vx + ss.vy * ss.vy)) * ss.length;
+        // Disparition progressive
+        ss.life -= ss.decay;
 
-        const gradient = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
-        gradient.addColorStop(0, ss.color + '0)');
-        gradient.addColorStop(1, ss.color + (ss.life * 0.8).toFixed(3) + ')');
+        drawShootingStar(ss);
 
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(ss.x, ss.y);
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
+        if (ss.life <= 0 || ss.x > canvas.width + 50 || ss.y > canvas.height + 50) {
+          shootingStars.splice(i, 1);
+        }
+      }
 
-        // Point lumineux à la tête
-        ctx.beginPath();
-        ctx.arc(ss.x, ss.y, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = ss.color + (ss.life * 0.9).toFixed(3) + ')';
-        ctx.fill();
+      // Poussière
+      for (let i = dustParticles.length - 1; i >= 0; i--) {
+        const d = dustParticles[i];
+        d.x += d.vx;
+        d.y += d.vy;
+        d.vy += 0.01;
+        d.life -= d.decay;
+
+        drawDust(d, time);
+
+        if (d.life <= 0) {
+          dustParticles.splice(i, 1);
+        }
       }
     }
 
+    resize();
+    window.addEventListener('resize', Utils.debounce(resize, 200));
+    startShootingSchedule();
     requestAnimationFrame(animate);
+
+    // Masquer quand on atteint le programme
+    ScrollManager.register((scrollY) => {
+      const timeline = Utils.getElement('timeline-desktop') || Utils.getElement('timeline-mobile');
+      if (!timeline) return;
+      const triggerPoint = timeline.offsetTop - window.innerHeight * 0.5;
+      if (scrollY > triggerPoint && !isHidden) {
+        isHidden = true;
+        canvas.classList.add('hidden');
+      } else if (scrollY <= triggerPoint && isHidden) {
+        isHidden = false;
+        canvas.classList.remove('hidden');
+      }
+    });
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     LANTERNES PARALLAX
-  ═══════════════════════════════════════════════════════════ */
+  /* LANTERNES PARALLAX */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const layer = Utils.getElement('lanterns-layer');
@@ -1042,9 +1128,7 @@
     });
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     COUNTDOWN
-  ═══════════════════════════════════════════════════════════ */
+  /* COUNTDOWN */
   (function() {
     const target = new Date(CONFIG.weddingDate).getTime();
     const grid = Utils.getElement('countdown-grid');
@@ -1073,9 +1157,7 @@
     setInterval(tick, 1000);
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     BOUTON CALENDRIER (.ics)
-  ═══════════════════════════════════════════════════════════ */
+  /* BOUTON CALENDRIER */
   (function() {
     const btn = Utils.getElement('btn-calendar');
     if (!btn) return;
@@ -1115,9 +1197,7 @@
     });
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     REVEAL (IntersectionObserver)
-  ═══════════════════════════════════════════════════════════ */
+  /* REVEAL */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const obs = new IntersectionObserver((entries) => {
@@ -1131,9 +1211,7 @@
     Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     TIMELINE DESKTOP
-  ═══════════════════════════════════════════════════════════ */
+  /* TIMELINE DESKTOP */
   (function() {
     if (window.innerWidth <= 700) return;
     const section = Utils.getElement('timeline-desktop');
@@ -1197,9 +1275,7 @@
     });
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     TIMELINE MOBILE
-  ═══════════════════════════════════════════════════════════ */
+  /* TIMELINE MOBILE */
   (function() {
     if (window.innerWidth > 700) return;
     const wrapper = Utils.getElement('tl-mobile-wrapper');
@@ -1278,9 +1354,7 @@
     Utils.getElement('tl-img-0')?.classList.add('show');
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     VOITURE + FEUX D'ARTIFICE
-  ═══════════════════════════════════════════════════════════ */
+  /* VOITURE + FEUX D'ARTIFICE */
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = Utils.getElement('final-scene');
@@ -1383,9 +1457,7 @@
     window.addEventListener('resize', () => { resizeCanvas(); lastProgress = -1; });
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     CONFETTIS (lancés si réponse "Oui")
-  ═══════════════════════════════════════════════════════════ */
+  /* CONFETTIS */
   const Confetti = (function() {
     const canvas = Utils.getElement('confetti-canvas');
     if (!canvas) return { launch: function(){} };
@@ -1405,8 +1477,7 @@
 
     function createParticle(x, y) {
       return {
-        x: x,
-        y: y,
+        x: x, y: y,
         vx: (Math.random() - 0.5) * 16,
         vy: -(Math.random() * 12 + 4),
         gravity: 0.25 + Math.random() * 0.15,
@@ -1426,17 +1497,10 @@
 
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += p.gravity;
-        p.vx *= 0.99;
-        p.rotation += p.rotSpeed;
-        p.alpha -= p.decay;
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.99;
+        p.rotation += p.rotSpeed; p.alpha -= p.decay;
 
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
+        if (p.alpha <= 0) { particles.splice(i, 1); continue; }
 
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -1458,7 +1522,6 @@
     function launch() {
       if (launched) return;
       launched = true;
-
       const count = 150;
       const waves = 5;
       const perWave = Math.ceil(count / waves);
@@ -1470,10 +1533,7 @@
           for (let i = 0; i < perWave; i++) {
             particles.push(createParticle(cx, cy));
           }
-          if (!animating) {
-            animating = true;
-            requestAnimationFrame(animate);
-          }
+          if (!animating) { animating = true; requestAnimationFrame(animate); }
         }, w * 200);
       }
     }
@@ -1481,9 +1541,7 @@
     return { launch: launch };
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     PLUIE (lancée si réponse "Non")
-  ═══════════════════════════════════════════════════════════ */
+  /* PLUIE */
   const Rain = (function() {
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
@@ -1496,7 +1554,6 @@
 
     const RAIN_DURATION = 4000;
     const DROPS_PER_FRAME = 2;
-
     const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
 
     function resize() {
@@ -1521,8 +1578,7 @@
 
     function createSplash(x, y) {
       return {
-        x: x,
-        y: y,
+        x: x, y: y,
         radius: 1.5 + Math.random() * 2,
         alpha: 0.6 + Math.random() * 0.3,
         decay: 0.03 + Math.random() * 0.02,
@@ -1536,16 +1592,12 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (spawnActive) {
-        for (let i = 0; i < DROPS_PER_FRAME; i++) {
-          drops.push(createDrop());
-        }
+        for (let i = 0; i < DROPS_PER_FRAME; i++) { drops.push(createDrop()); }
       }
 
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
-        d.x += d.wind;
-        d.y += d.speed;
-
+        d.x += d.wind; d.y += d.speed;
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
         ctx.lineTo(d.x - d.wind * 0.4, d.y - d.length);
@@ -1554,11 +1606,8 @@
         ctx.lineWidth = d.width;
         ctx.lineCap = 'round';
         ctx.stroke();
-
         if (d.y >= canvas.height) {
-          if (Math.random() < 0.4) {
-            splashes.push(createSplash(d.x, canvas.height - 2));
-          }
+          if (Math.random() < 0.4) { splashes.push(createSplash(d.x, canvas.height - 2)); }
           drops.splice(i, 1);
         }
       }
@@ -1571,13 +1620,8 @@
         ctx.globalAlpha = s.alpha;
         ctx.lineWidth = 0.8;
         ctx.stroke();
-
-        s.radius += 0.3;
-        s.alpha -= s.decay;
-
-        if (s.alpha <= 0) {
-          splashes.splice(i, 1);
-        }
+        s.radius += 0.3; s.alpha -= s.decay;
+        if (s.alpha <= 0) { splashes.splice(i, 1); }
       }
 
       ctx.globalAlpha = 1;
@@ -1595,23 +1639,16 @@
       launched = true;
       spawnActive = true;
       animating = true;
-
       canvas.classList.remove('fade-out');
       canvas.classList.add('visible');
       requestAnimationFrame(animate);
-
-      setTimeout(() => {
-        spawnActive = false;
-        canvas.classList.add('fade-out');
-      }, RAIN_DURATION);
+      setTimeout(() => { spawnActive = false; canvas.classList.add('fade-out'); }, RAIN_DURATION);
     }
 
     return { launch: launch };
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     FIX iOS — CLAVIER VIRTUEL
-  ═══════════════════════════════════════════════════════════ */
+  /* FIX iOS CLAVIER */
   (function() {
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
@@ -1631,28 +1668,16 @@
     function waitAndCorrect(targetEl) {
       let lastScrollY = window.scrollY;
       let stableFrames = 0;
-      const requiredStable = 4;
       const startTime = Date.now();
-      const maxWait = 800;
 
       function check() {
-        if (Date.now() - startTime > maxWait) {
-          doCorrection(targetEl);
-          return;
-        }
+        if (Date.now() - startTime > 800) { doCorrection(targetEl); return; }
         const currentScrollY = window.scrollY;
-        if (Math.abs(currentScrollY - lastScrollY) < 2) {
-          stableFrames++;
-        } else {
-          stableFrames = 0;
-        }
+        if (Math.abs(currentScrollY - lastScrollY) < 2) stableFrames++;
+        else stableFrames = 0;
         lastScrollY = currentScrollY;
-
-        if (stableFrames >= requiredStable) {
-          doCorrection(targetEl);
-        } else {
-          requestAnimationFrame(check);
-        }
+        if (stableFrames >= 4) doCorrection(targetEl);
+        else requestAnimationFrame(check);
       }
       requestAnimationFrame(check);
     }
@@ -1660,61 +1685,20 @@
     function doCorrection(targetEl) {
       if (!targetEl) return;
       const idealY = getIdealScrollForInput(targetEl);
-      const currentY = window.scrollY;
-      if (Math.abs(currentY - idealY) > 10) {
-        window.scrollTo(0, idealY);
-      }
+      if (Math.abs(window.scrollY - idealY) > 10) window.scrollTo(0, idealY);
     }
 
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
-        isFocused = true;
-        activeInput = input;
+        isFocused = true; activeInput = input;
         document.documentElement.classList.add('ios-keyboard-open');
-
         const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
-        setTimeout(() => {
-          if (isFocused && activeInput === input) {
-            waitAndCorrect(input);
-          }
-        }, delay);
+        setTimeout(() => { if (isFocused && activeInput === input) waitAndCorrect(input); }, delay);
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        const blurredInput = activeInput;
-        isFocused = false;
-        activeInput = null;
-
-        setTimeout(() => {
-          document.documentElement.classList.remove('ios-keyboard-open');
-          if (blurredInput) {
-            const rsvpSection = document.getElementById('rsvp');
-            if (rsvpSection) {
-              const rect = rsvpSection.getBoundingClientRect();
-              const targetY = window.scrollY + rect.top - 40;
-              let lastY = window.scrollY;
-              let stable = 0;
-              const start = Date.now();
-
-              function waitStable() {
-                if (Date.now() - start > 800) {
-                  window.scrollTo(0, targetY);
-                  return;
-                }
-                const cur = window.scrollY;
-                if (Math.abs(cur - lastY) < 2) stable++;
-                else stable = 0;
-                lastY = cur;
-                if (stable >= 4) {
-                  window.scrollTo(0, targetY);
-                } else {
-                  requestAnimationFrame(waitStable);
-                }
-              }
-              requestAnimationFrame(waitStable);
-            }
-          }
-        }, 100);
+        isFocused = false; activeInput = null;
+        setTimeout(() => { document.documentElement.classList.remove('ios-keyboard-open'); }, 100);
       }, { passive: true });
     });
 
@@ -1723,19 +1707,13 @@
       window.visualViewport.addEventListener('resize', () => {
         if (isFocused && activeInput) {
           clearTimeout(vpResizeTimer);
-          vpResizeTimer = setTimeout(() => {
-            if (isFocused && activeInput) {
-              doCorrection(activeInput);
-            }
-          }, 150);
+          vpResizeTimer = setTimeout(() => { if (isFocused && activeInput) doCorrection(activeInput); }, 150);
         }
       });
     }
   })();
 
-  /* ═══════════════════════════════════════════════════════════
-     RADIO BUTTONS & RSVP SUBMIT
-  ═══════════════════════════════════════════════════════════ */
+  /* RADIO BUTTONS & RSVP SUBMIT */
   (function() {
     const form = Utils.getElement('rsvp-form');
     const btn = Utils.getElement('btn-submit');
@@ -1754,7 +1732,7 @@
       if (!submitted) return;
       form.style.display = 'none';
 
-      // Message conditionnel selon la réponse
+      // Message conditionnel
       if (selectedAnswer === 'Malheureusement non...') {
         successMsg.textContent = 'Dommage ! On a enregistré ta réponse 😞';
       } else {
@@ -1766,7 +1744,6 @@
       btn.textContent = 'Confirmer';
       submitted = false;
 
-      // Effet selon la réponse
       if (selectedAnswer === 'Oui, j\'y serai !') {
         Confetti.launch();
       } else if (selectedAnswer === 'Malheureusement non...') {
@@ -1796,7 +1773,6 @@
 
       if (!valid) { e.preventDefault(); return; }
 
-      // Stocker la réponse sélectionnée
       selectedAnswer = radioChecked.value;
       submitted = true;
       btn.disabled = true;
