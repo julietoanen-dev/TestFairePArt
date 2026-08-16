@@ -352,6 +352,77 @@
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
+    /* =============================================
+       INFOS PRATIQUES (Bout'chou + Cadeaux)
+       ============================================= */
+    #infos-pratiques {
+      padding: 80px 20px;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(to bottom, #ff9f72 0%, #ffb88c 40%, #ffd4b0 100%);
+    }
+
+    .infos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      max-width: 860px;
+      margin-inline: auto;
+    }
+
+    @media (max-width: 640px) {
+      .infos-grid { grid-template-columns: 1fr; }
+    }
+
+    .info-card {
+      background: rgba(255,255,255,0.88);
+      border-radius: 20px;
+      padding: 36px 32px;
+      border: 1.5px solid rgba(181,52,26,0.12);
+      box-shadow: 0 8px 36px rgba(46,18,0,0.08);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
+    }
+
+    .info-card:hover {
+      box-shadow: 0 14px 48px rgba(46,18,0,0.13);
+      transform: translateY(-3px);
+    }
+
+    .info-card-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+      display: block;
+    }
+
+    .info-card-title {
+      font-family: var(--font-titre);
+      font-size: 1.35rem;
+      color: var(--texte);
+      line-height: 1.2;
+    }
+
+    .info-card-text {
+      font-size: 0.88rem;
+      color: var(--texte-soft);
+      line-height: 1.75;
+    }
+
+    .info-card-text strong {
+      color: var(--texte);
+      font-weight: 600;
+    }
+
+    /* iOS perf : désactiver backdrop-filter */
+    .ios-perf .info-card {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      background: rgba(255,255,255,0.95) !important;
+    }
+
     /* CONFETTIS */
     #confetti-canvas {
       position: fixed;
@@ -722,6 +793,37 @@
   <!-- PLUIE -->
   <canvas id="rain-canvas" aria-hidden="true"></canvas>
 
+  <!-- =============================================
+       INFOS PRATIQUES : Bout'chou + Cadeaux
+       ============================================= -->
+  <section id="infos-pratiques" aria-label="Informations pratiques">
+    <div class="infos-grid">
+
+      <!-- Carte Bout'chou -->
+      <div class="info-card reveal-left">
+        <span class="info-card-icon" aria-hidden="true">🧸</span>
+        <h2 class="info-card-title">Bout'chou</h2>
+        <p class="info-card-text">
+          Pour des raisons pratiques et pour que tout le monde puisse profiter pleinement de la soirée,
+          nous ne pourrons accueillir que les <strong>enfants de la famille immédiate</strong> à notre mariage.
+          Nous comptons sur votre compréhension et vous remercions de tout cœur. 🤍
+        </p>
+      </div>
+
+      <!-- Carte Cadeaux -->
+      <div class="info-card reveal-right">
+        <span class="info-card-icon" aria-hidden="true">🎁</span>
+        <h2 class="info-card-title">Cadeaux pour les mariés</h2>
+        <p class="info-card-text">
+          Si vous le souhaitez, une <strong>cagnotte</strong> sera partagée en amont du mariage
+          et une <strong>urne</strong> sera disponible le jour J pour y glisser vos enveloppes.
+          Votre présence est déjà le plus beau des cadeaux. 💛
+        </p>
+      </div>
+
+    </div>
+  </section>
+
   <!-- FINAL SCENE -->
   <div id="final-scene" aria-label="Julie et Thomas en route pour Verfeil">
     <div class="final-sticky">
@@ -844,11 +946,11 @@
     const ctx = canvas.getContext('2d');
 
     const STAR_COLORS = [
-      { r: 255, g: 255, b: 255 },  // blanc
-      { r: 255, g: 240, b: 180 },  // jaune doré
-      { r: 255, g: 200, b: 220 },  // rose
-      { r: 255, g: 220, b: 140 },  // doré chaud
-      { r: 255, g: 180, b: 200 },  // rose plus vif
+      { r: 255, g: 255, b: 255 },
+      { r: 255, g: 240, b: 180 },
+      { r: 255, g: 200, b: 220 },
+      { r: 255, g: 220, b: 140 },
+      { r: 255, g: 180, b: 200 },
     ];
 
     let stars = [];
@@ -868,7 +970,7 @@
       const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 8000));
       for (let i = 0; i < count; i++) {
         const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
-        const layer = Math.random(); // 0 = far, 1 = close
+        const layer = Math.random();
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
@@ -878,7 +980,7 @@
           pulseAmp: 0.15 + Math.random() * 0.4,
           color: color,
           baseAlpha: 0.2 + layer * 0.5,
-          isCross: Math.random() < 0.12, // 12% sont des étoiles en croix
+          isCross: Math.random() < 0.12,
           crossSize: 3 + Math.random() * 5,
           layer: layer,
           twinkleSpeed: 1 + Math.random() * 2
@@ -890,39 +992,27 @@
       const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
       const startX = Math.random() * canvas.width * 0.8;
       const startY = Math.random() * canvas.height * 0.4;
-      const angle = (Math.PI / 6) + Math.random() * 0.2; // ~30° direction uniforme
+      const angle = (Math.PI / 6) + Math.random() * 0.2;
       const speed = 6 + Math.random() * 4;
-
       shootingStars.push({
-        x: startX,
-        y: startY,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        life: 1,
-        decay: 0.008 + Math.random() * 0.006,
-        radius: 2 + Math.random() * 1.5,
-        color: color,
-        trail: [],
-        maxTrail: 25 + Math.random() * 15,
-        dustTimer: 0
+        x: startX, y: startY,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        life: 1, decay: 0.008 + Math.random() * 0.006,
+        radius: 2 + Math.random() * 1.5, color: color,
+        trail: [], maxTrail: 25 + Math.random() * 15, dustTimer: 0
       });
     }
 
     function createDust(x, y, color) {
       dustParticles.push({
-        x: x + (Math.random() - 0.5) * 4,
-        y: y + (Math.random() - 0.5) * 4,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: 0.2 + Math.random() * 0.5,
-        life: 1,
-        decay: 0.015 + Math.random() * 0.01,
-        radius: 0.5 + Math.random() * 1.2,
-        color: color,
+        x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4,
+        vx: (Math.random() - 0.5) * 0.8, vy: 0.2 + Math.random() * 0.5,
+        life: 1, decay: 0.015 + Math.random() * 0.01,
+        radius: 0.5 + Math.random() * 1.2, color: color,
         twinkle: Math.random() * Math.PI * 2
       });
     }
 
-    // Lancer étoiles filantes régulièrement
     let shootingInterval = null;
     function startShootingSchedule() {
       function scheduleNext() {
@@ -941,159 +1031,89 @@
       const alpha = star.baseAlpha * (1 + pulse) * twinkle;
       const radius = star.baseRadius * (1 + pulse * 0.3);
       const { r, g, b } = star.color;
-
       if (star.isCross) {
-        // Étoile en croix à 4 branches
         const size = star.crossSize * (1 + pulse * 0.2);
         ctx.save();
         ctx.globalAlpha = alpha * 0.9;
         ctx.strokeStyle = `rgb(${r},${g},${b})`;
         ctx.lineWidth = 0.6;
         ctx.beginPath();
-        ctx.moveTo(star.x - size, star.y);
-        ctx.lineTo(star.x + size, star.y);
-        ctx.moveTo(star.x, star.y - size);
-        ctx.lineTo(star.x, star.y + size);
+        ctx.moveTo(star.x - size, star.y); ctx.lineTo(star.x + size, star.y);
+        ctx.moveTo(star.x, star.y - size); ctx.lineTo(star.x, star.y + size);
         ctx.stroke();
-        // Point central brillant
         ctx.globalAlpha = alpha;
         ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, radius * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-        // Halo
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 0.8, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = alpha * 0.2;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, size * 1.2, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(star.x, star.y, size * 1.2, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       } else {
-        // Étoile simple avec halo
         ctx.save();
-        // Halo externe
         ctx.globalAlpha = alpha * 0.15;
         ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, radius * 4, 0, Math.PI * 2);
-        ctx.fill();
-        // Halo moyen
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 4, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = alpha * 0.3;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2);
-        ctx.fill();
-        // Coeur
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, radius, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
     }
 
     function drawShootingStar(ss) {
       const { r, g, b } = ss.color;
-
-      // Traînée dégradée
       for (let i = 0; i < ss.trail.length; i++) {
         const t = ss.trail[i];
         const progress = i / ss.trail.length;
-        const trailAlpha = progress * ss.life * 0.6;
-        const trailRadius = ss.radius * progress * 0.6;
-
         ctx.save();
-        ctx.globalAlpha = trailAlpha;
+        ctx.globalAlpha = progress * ss.life * 0.6;
         ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.beginPath();
-        ctx.arc(t.x, t.y, trailRadius, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(t.x, t.y, ss.radius * progress * 0.6, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
-
-      // Cœur brillant
       ctx.save();
-      // Halo du cœur
       ctx.globalAlpha = ss.life * 0.4;
       ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.beginPath();
-      ctx.arc(ss.x, ss.y, ss.radius * 3, 0, Math.PI * 2);
-      ctx.fill();
-      // Point brillant
+      ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius * 3, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = ss.life;
       ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(ss.x, ss.y, ss.radius, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
 
     function drawDust(d, time) {
       const twinkle = Math.sin(time * 4 + d.twinkle) * 0.3 + 0.7;
       const { r, g, b } = d.color;
-
       ctx.save();
       ctx.globalAlpha = d.life * twinkle * 0.7;
       ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
 
     function animate() {
       if (!animating) return;
       requestAnimationFrame(animate);
-
       if (isHidden) return;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const time = Date.now() / 1000;
-
-      // Étoiles fixes
-      for (let i = 0; i < stars.length; i++) {
-        drawStar(stars[i], time);
-      }
-
-      // Étoiles filantes
+      for (let i = 0; i < stars.length; i++) { drawStar(stars[i], time); }
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
-
-        // Traînée
         ss.trail.push({ x: ss.x, y: ss.y });
         if (ss.trail.length > ss.maxTrail) ss.trail.shift();
-
-        // Mouvement
-        ss.x += ss.vx;
-        ss.y += ss.vy;
-
-        // Poussière de fée
+        ss.x += ss.vx; ss.y += ss.vy;
         ss.dustTimer++;
-        if (ss.dustTimer % 3 === 0 && ss.life > 0.3) {
-          createDust(ss.x, ss.y, ss.color);
-        }
-
-        // Disparition progressive
+        if (ss.dustTimer % 3 === 0 && ss.life > 0.3) createDust(ss.x, ss.y, ss.color);
         ss.life -= ss.decay;
-
         drawShootingStar(ss);
-
-        if (ss.life <= 0 || ss.x > canvas.width + 50 || ss.y > canvas.height + 50) {
-          shootingStars.splice(i, 1);
-        }
+        if (ss.life <= 0 || ss.x > canvas.width + 50 || ss.y > canvas.height + 50) shootingStars.splice(i, 1);
       }
-
-      // Poussière
       for (let i = dustParticles.length - 1; i >= 0; i--) {
         const d = dustParticles[i];
-        d.x += d.vx;
-        d.y += d.vy;
-        d.vy += 0.01;
-        d.life -= d.decay;
-
+        d.x += d.vx; d.y += d.vy; d.vy += 0.01; d.life -= d.decay;
         drawDust(d, time);
-
-        if (d.life <= 0) {
-          dustParticles.splice(i, 1);
-        }
+        if (d.life <= 0) dustParticles.splice(i, 1);
       }
     }
 
@@ -1102,18 +1122,12 @@
     startShootingSchedule();
     requestAnimationFrame(animate);
 
-    // Masquer quand on atteint le programme
     ScrollManager.register((scrollY) => {
       const timeline = Utils.getElement('timeline-desktop') || Utils.getElement('timeline-mobile');
       if (!timeline) return;
       const triggerPoint = timeline.offsetTop - window.innerHeight * 0.5;
-      if (scrollY > triggerPoint && !isHidden) {
-        isHidden = true;
-        canvas.classList.add('hidden');
-      } else if (scrollY <= triggerPoint && isHidden) {
-        isHidden = false;
-        canvas.classList.remove('hidden');
-      }
+      if (scrollY > triggerPoint && !isHidden) { isHidden = true; canvas.classList.add('hidden'); }
+      else if (scrollY <= triggerPoint && isHidden) { isHidden = false; canvas.classList.remove('hidden'); }
     });
   })();
 
@@ -1135,10 +1149,8 @@
     const done = Utils.getElement('countdown-done');
     const tag = Utils.getElement('countdown-tagline');
     const els = {
-      d: Utils.getElement('cd-days'),
-      h: Utils.getElement('cd-hours'),
-      m: Utils.getElement('cd-minutes'),
-      s: Utils.getElement('cd-seconds')
+      d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'),
+      m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds')
     };
     function tick() {
       const diff = target - Date.now();
@@ -1161,38 +1173,22 @@
   (function() {
     const btn = Utils.getElement('btn-calendar');
     if (!btn) return;
-
     btn.addEventListener('click', function() {
       const icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Julie&Thomas//Mariage//FR',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        'DTSTART:20270724T143000Z',
-        'DTEND:20270724T215900Z',
+        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Julie&Thomas//Mariage//FR',
+        'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
+        'DTSTART:20270724T143000Z', 'DTEND:20270724T215900Z',
         'SUMMARY:Mariage Julie & Thomas',
         'DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nVin d\'honneur à 18h00 au Domaine de Gailhaguet\\, Verfeil\\nRepas & Soirée à 20h',
         'LOCATION:Mairie de Pin-Balma\\, Pl. de la Mairie\\, 31130 Pin-Balma',
-        'STATUS:CONFIRMED',
-        'BEGIN:VALARM',
-        'TRIGGER:-P1D',
-        'ACTION:DISPLAY',
-        'DESCRIPTION:Mariage Julie & Thomas demain !',
-        'END:VALARM',
-        'END:VEVENT',
-        'END:VCALENDAR'
+        'STATUS:CONFIRMED', 'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY',
+        'DESCRIPTION:Mariage Julie & Thomas demain !', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'
       ].join('\r\n');
-
       const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
-      link.download = 'mariage-julie-thomas.ics';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      link.href = url; link.download = 'mariage-julie-thomas.ics';
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
   })();
@@ -1202,10 +1198,7 @@
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const obs = new IntersectionObserver((entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
       }
     }, { threshold: 0.12 });
     Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
@@ -1246,12 +1239,10 @@
       lineSvg.style.height = H + 'px';
       lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
       const d = wavyPath(svgW / 2, H);
-      pathBg.setAttribute('d', d);
-      pathDraw.setAttribute('d', d);
+      pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
       pathDraw.style.transition = 'none';
-      pathDraw.style.strokeDasharray = len;
-      pathDraw.style.strokeDashoffset = len;
+      pathDraw.style.strokeDasharray = len; pathDraw.style.strokeDashoffset = len;
       pathDraw._len = len;
       requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
       isSetup = true;
@@ -1301,8 +1292,7 @@
       lineSvg.style.height = H + 'px';
       lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
       const d = wavyPath(20, H);
-      pathBg.setAttribute('d', d);
-      pathDraw.setAttribute('d', d);
+      pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
       pathDraw.style.transition = 'none';
       pathDraw.style.strokeDasharray = len;
@@ -1334,15 +1324,12 @@
         const card = Utils.getElement(`tl-card-${i}`);
         const img = Utils.getElement(`tl-img-${i}`);
         if (entry.isIntersecting) {
-          day?.classList.add('show');
-          dot?.classList.add('show');
+          day?.classList.add('show'); dot?.classList.add('show');
           setTimeout(() => card?.classList.add('show'), 120);
           setTimeout(() => img?.classList.add('show'), 240);
         } else {
-          day?.classList.remove('show');
-          dot?.classList.remove('show');
-          card?.classList.remove('show');
-          img?.classList.remove('show');
+          day?.classList.remove('show'); dot?.classList.remove('show');
+          card?.classList.remove('show'); img?.classList.remove('show');
         }
       }
     }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
@@ -1465,80 +1452,55 @@
     const particles = [];
     let animating = false;
     let launched = false;
-
     const COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#8B5CF6', '#FFD166', '#ffffff', '#ff87a8', '#fbbf24'];
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
 
     function createParticle(x, y) {
       return {
-        x: x, y: y,
-        vx: (Math.random() - 0.5) * 16,
-        vy: -(Math.random() * 12 + 4),
-        gravity: 0.25 + Math.random() * 0.15,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 12,
-        width: 6 + Math.random() * 8,
-        height: 4 + Math.random() * 4,
-        color: COLORS[(Math.random() * COLORS.length) | 0],
-        alpha: 1,
-        decay: 0.008 + Math.random() * 0.006
+        x, y, vx: (Math.random() - 0.5) * 16, vy: -(Math.random() * 12 + 4),
+        gravity: 0.25 + Math.random() * 0.15, rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 12, width: 6 + Math.random() * 8,
+        height: 4 + Math.random() * 4, color: COLORS[(Math.random() * COLORS.length) | 0],
+        alpha: 1, decay: 0.008 + Math.random() * 0.006
       };
     }
 
     function animate() {
       if (!animating) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.99;
         p.rotation += p.rotSpeed; p.alpha -= p.decay;
-
         if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-
         ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
+        ctx.translate(p.x, p.y); ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
         ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
         ctx.restore();
       }
-
-      if (particles.length > 0) {
-        requestAnimationFrame(animate);
-      } else {
-        animating = false;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
+      if (particles.length > 0) { requestAnimationFrame(animate); }
+      else { animating = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
     }
 
     function launch() {
       if (launched) return;
       launched = true;
-      const count = 150;
-      const waves = 5;
-      const perWave = Math.ceil(count / waves);
-
+      const waves = 5, perWave = Math.ceil(150 / waves);
       for (let w = 0; w < waves; w++) {
         setTimeout(() => {
           const cx = canvas.width * (0.2 + Math.random() * 0.6);
           const cy = canvas.height * 0.3;
-          for (let i = 0; i < perWave; i++) {
-            particles.push(createParticle(cx, cy));
-          }
+          for (let i = 0; i < perWave; i++) particles.push(createParticle(cx, cy));
           if (!animating) { animating = true; requestAnimationFrame(animate); }
         }, w * 200);
       }
     }
 
-    return { launch: launch };
+    return { launch };
   })();
 
   /* PLUIE */
@@ -1546,43 +1508,29 @@
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    let launched = false;
-    let animating = false;
-    let drops = [];
-    let splashes = [];
-    let spawnActive = false;
-
+    let launched = false, animating = false;
+    let drops = [], splashes = [], spawnActive = false;
     const RAIN_DURATION = 4000;
     const DROPS_PER_FRAME = 2;
     const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
 
     function createDrop() {
       return {
-        x: Math.random() * canvas.width,
-        y: -10 - Math.random() * 60,
-        speed: 8 + Math.random() * 6,
-        length: 12 + Math.random() * 14,
-        width: 0.8 + Math.random() * 0.7,
-        wind: 0.3 + Math.random() * 0.2,
-        color: COLORS[(Math.random() * COLORS.length) | 0],
-        alpha: 0.4 + Math.random() * 0.4
+        x: Math.random() * canvas.width, y: -10 - Math.random() * 60,
+        speed: 8 + Math.random() * 6, length: 12 + Math.random() * 14,
+        width: 0.8 + Math.random() * 0.7, wind: 0.3 + Math.random() * 0.2,
+        color: COLORS[(Math.random() * COLORS.length) | 0], alpha: 0.4 + Math.random() * 0.4
       };
     }
 
     function createSplash(x, y) {
       return {
-        x: x, y: y,
-        radius: 1.5 + Math.random() * 2,
-        alpha: 0.6 + Math.random() * 0.3,
-        decay: 0.03 + Math.random() * 0.02,
-        color: COLORS[(Math.random() * COLORS.length) | 0]
+        x, y, radius: 1.5 + Math.random() * 2, alpha: 0.6 + Math.random() * 0.3,
+        decay: 0.03 + Math.random() * 0.02, color: COLORS[(Math.random() * COLORS.length) | 0]
       };
     }
 
@@ -1590,62 +1538,41 @@
       if (!animating) return;
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (spawnActive) {
-        for (let i = 0; i < DROPS_PER_FRAME; i++) { drops.push(createDrop()); }
-      }
-
+      if (spawnActive) { for (let i = 0; i < DROPS_PER_FRAME; i++) drops.push(createDrop()); }
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         d.x += d.wind; d.y += d.speed;
-        ctx.beginPath();
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x - d.wind * 0.4, d.y - d.length);
-        ctx.strokeStyle = d.color;
-        ctx.globalAlpha = d.alpha;
-        ctx.lineWidth = d.width;
-        ctx.lineCap = 'round';
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.wind * 0.4, d.y - d.length);
+        ctx.strokeStyle = d.color; ctx.globalAlpha = d.alpha; ctx.lineWidth = d.width; ctx.lineCap = 'round'; ctx.stroke();
         if (d.y >= canvas.height) {
-          if (Math.random() < 0.4) { splashes.push(createSplash(d.x, canvas.height - 2)); }
+          if (Math.random() < 0.4) splashes.push(createSplash(d.x, canvas.height - 2));
           drops.splice(i, 1);
         }
       }
-
       for (let i = splashes.length - 1; i >= 0; i--) {
         const s = splashes[i];
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI, true);
-        ctx.strokeStyle = s.color;
-        ctx.globalAlpha = s.alpha;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI, true);
+        ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha; ctx.lineWidth = 0.8; ctx.stroke();
         s.radius += 0.3; s.alpha -= s.decay;
-        if (s.alpha <= 0) { splashes.splice(i, 1); }
+        if (s.alpha <= 0) splashes.splice(i, 1);
       }
-
       ctx.globalAlpha = 1;
-
       if (!spawnActive && drops.length === 0 && splashes.length === 0) {
         animating = false;
-        canvas.classList.remove('visible');
-        canvas.classList.remove('fade-out');
+        canvas.classList.remove('visible'); canvas.classList.remove('fade-out');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
     function launch() {
       if (launched) return;
-      launched = true;
-      spawnActive = true;
-      animating = true;
-      canvas.classList.remove('fade-out');
-      canvas.classList.add('visible');
+      launched = true; spawnActive = true; animating = true;
+      canvas.classList.remove('fade-out'); canvas.classList.add('visible');
       requestAnimationFrame(animate);
       setTimeout(() => { spawnActive = false; canvas.classList.add('fade-out'); }, RAIN_DURATION);
     }
 
-    return { launch: launch };
+    return { launch };
   })();
 
   /* FIX iOS CLAVIER */
@@ -1653,23 +1580,18 @@
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
     if (!form) return;
-
     const inputs = form.querySelectorAll('input[type="text"], textarea');
-    let activeInput = null;
-    let isFocused = false;
+    let activeInput = null, isFocused = false;
 
     function getIdealScrollForInput(el) {
       const rect = el.getBoundingClientRect();
       const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      const targetOffset = viewH * 0.3;
-      return window.scrollY + rect.top - targetOffset;
+      return window.scrollY + rect.top - viewH * 0.3;
     }
 
     function waitAndCorrect(targetEl) {
-      let lastScrollY = window.scrollY;
-      let stableFrames = 0;
+      let lastScrollY = window.scrollY, stableFrames = 0;
       const startTime = Date.now();
-
       function check() {
         if (Date.now() - startTime > 800) { doCorrection(targetEl); return; }
         const currentScrollY = window.scrollY;
@@ -1695,7 +1617,6 @@
         const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
         setTimeout(() => { if (isFocused && activeInput === input) waitAndCorrect(input); }, delay);
       }, { passive: true });
-
       input.addEventListener('blur', () => {
         isFocused = false; activeInput = null;
         setTimeout(() => { document.documentElement.classList.remove('ios-keyboard-open'); }, 100);
@@ -1725,30 +1646,19 @@
     const nameInput = Utils.getElement('rsvp-name');
     const radioInputs = Utils.queryAll('input[name="entry.1684549153"]');
 
-    let submitted = false;
-    let selectedAnswer = '';
+    let submitted = false, selectedAnswer = '';
 
     iframe.addEventListener('load', () => {
       if (!submitted) return;
       form.style.display = 'none';
-
-      // Message conditionnel
-      if (selectedAnswer === 'Malheureusement non...') {
-        successMsg.textContent = 'Dommage ! On a enregistré ta réponse 😞';
-      } else {
-        successMsg.textContent = 'Merci ! On a bien enregistré ta réponse 🎉';
-      }
-
+      successMsg.textContent = selectedAnswer === 'Malheureusement non...'
+        ? 'Dommage ! On a enregistré ta réponse 😞'
+        : 'Merci ! On a bien enregistré ta réponse 🎉';
       success.classList.add('visible');
-      btn.disabled = false;
-      btn.textContent = 'Confirmer';
+      btn.disabled = false; btn.textContent = 'Confirmer';
       submitted = false;
-
-      if (selectedAnswer === 'Oui, j\'y serai !') {
-        Confetti.launch();
-      } else if (selectedAnswer === 'Malheureusement non...') {
-        Rain.launch();
-      }
+      if (selectedAnswer === 'Oui, j\'y serai !') Confetti.launch();
+      else if (selectedAnswer === 'Malheureusement non...') Rain.launch();
     });
 
     form.addEventListener('submit', (e) => {
@@ -1758,25 +1668,18 @@
         errorName.classList.add('visible');
         if (valid) nameInput.focus();
         valid = false;
-      } else {
-        errorName.classList.remove('visible');
-      }
+      } else { errorName.classList.remove('visible'); }
 
       const radioChecked = Array.from(radioInputs).find(r => r.checked);
       if (!radioChecked) {
         errorAtt.classList.add('visible');
         if (valid) radioInputs[0].focus();
         valid = false;
-      } else {
-        errorAtt.classList.remove('visible');
-      }
+      } else { errorAtt.classList.remove('visible'); }
 
       if (!valid) { e.preventDefault(); return; }
-
       selectedAnswer = radioChecked.value;
-      submitted = true;
-      btn.disabled = true;
-      btn.textContent = 'Envoi en cours...';
+      submitted = true; btn.disabled = true; btn.textContent = 'Envoi en cours...';
     });
 
     radioInputs.forEach(radio => {
