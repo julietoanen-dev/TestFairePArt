@@ -356,11 +356,10 @@
        INFOS PRATIQUES (Bout'chou + Cadeaux)
        ============================================= */
     #infos-pratiques {
-      padding: 80px 20px 90px;
+      padding: 80px 20px;
       position: relative;
       z-index: 2;
-      /* Transition douce depuis l'orange du RSVP vers un fond plus chaud */
-      background: linear-gradient(to bottom, #ff9f72 0%, #ffd4b0 50%, #ffe8cc 100%);
+      background: linear-gradient(to bottom, #ff9f72 0%, #ffb88c 40%, #ffd4b0 100%);
     }
 
     .infos-grid {
@@ -371,53 +370,57 @@
       margin-inline: auto;
     }
 
-    /* Sur mobile, les cartes s'empilent */
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .infos-grid { grid-template-columns: 1fr; }
     }
 
     .info-card {
-      background: rgba(255,255,255,0.85);
-      border-radius: var(--radius);
-      padding: 32px 28px;
-      border: 1px solid rgba(255,107,53,0.15);
-      box-shadow: 0 4px 24px rgba(46,18,0,0.08);
-      backdrop-filter: blur(10px);
-      transition: box-shadow var(--transition-base);
+      background: rgba(255,255,255,0.88);
+      border-radius: 20px;
+      padding: 36px 32px;
+      border: 1.5px solid rgba(181,52,26,0.12);
+      box-shadow: 0 8px 36px rgba(46,18,0,0.08);
+      backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
+      gap: 14px;
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
     }
 
-    .info-card:hover { box-shadow: 0 10px 40px rgba(46,18,0,0.14); }
+    .info-card:hover {
+      box-shadow: 0 14px 48px rgba(46,18,0,0.13);
+      transform: translateY(-3px);
+    }
 
     .info-card-icon {
-      font-size: 2rem;
+      font-size: 2.4rem;
       line-height: 1;
+      display: block;
     }
 
-    /* Titre aligné sur .event-title de la timeline */
     .info-card-title {
       font-family: var(--font-titre);
-      font-size: 1.15rem;
+      font-size: 1.35rem;
       color: var(--texte);
-      font-weight: 400; /* Playfair Display regular, comme les event-title */
       line-height: 1.2;
     }
 
     .info-card-text {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--texte-soft);
-      line-height: 1.7;
+      line-height: 1.75;
     }
 
-    /* iOS perf : pas de backdrop-filter */
+    .info-card-text strong {
+      color: var(--texte);
+      font-weight: 600;
+    }
+
+    /* iOS perf : désactiver backdrop-filter */
     .ios-perf .info-card {
       -webkit-backdrop-filter: none !important;
       backdrop-filter: none !important;
-      background: rgba(255,255,255,0.92) !important;
-      box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
+      background: rgba(255,255,255,0.95) !important;
     }
 
     /* CONFETTIS */
@@ -459,7 +462,7 @@
     .final-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
     .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
     #car-el { position: absolute; bottom: 1%; will-change: transform; z-index: 6; }
-    #car-el img { width: 100%; height: auto; display: block; }
+    #car-el img { width: 75%; height: auto; display: block; }
 
     /* RESPONSIVE */
     @media (max-width: 700px) {
@@ -792,7 +795,6 @@
 
   <!-- =============================================
        INFOS PRATIQUES : Bout'chou + Cadeaux
-       Placé entre le RSVP et la scène finale
        ============================================= -->
   <section id="infos-pratiques" aria-label="Informations pratiques">
     <div class="infos-grid">
@@ -810,7 +812,7 @@
       <!-- Carte Cadeaux -->
       <div class="info-card reveal-right">
         <span class="info-card-icon" aria-hidden="true">🎁</span>
-        <h2 class="info-card-title">Cadeaux</h2>
+        <h2 class="info-card-title">Cadeaux pour les mariés</h2>
         <p class="info-card-text">
           Si vous le souhaitez, une cagnotte sera partagée en amont du mariage
           et une urne sera disponible le jour J pour y glisser vos enveloppes.
@@ -1238,8 +1240,7 @@
       pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
       pathDraw.style.transition = 'none';
-      pathDraw.style.strokeDasharray = len;
-      pathDraw.style.strokeDashoffset = len;
+      pathDraw.style.strokeDasharray = len; pathDraw.style.strokeDashoffset = len;
       pathDraw._len = len;
       requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
       isSetup = true;
@@ -1348,7 +1349,7 @@
 
     const ctx = canvas.getContext('2d');
     const perfIOS = document.documentElement.classList.contains('ios-perf');
-    const carW = 200;
+    const carW = 150;
 
     function resizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
@@ -1505,7 +1506,8 @@
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    let launched = false, animating = false, drops = [], splashes = [], spawnActive = false;
+    let launched = false, animating = false;
+    let drops = [], splashes = [], spawnActive = false;
     const RAIN_DURATION = 4000;
     const DROPS_PER_FRAME = 2;
     const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
@@ -1648,10 +1650,11 @@
       if (!submitted) return;
       form.style.display = 'none';
       successMsg.textContent = selectedAnswer === 'Malheureusement non...'
-        ? 'Dommage ! On a enregistré ta réponse 😞'
-        : 'Merci ! On a bien enregistré ta réponse 🎉';
+        ? 'Dommage ! On a enregistré ta réponse'
+        : 'Merci ! On a bien enregistré ta réponse';
       success.classList.add('visible');
-      btn.disabled = false; btn.textContent = 'Confirmer'; submitted = false;
+      btn.disabled = false; btn.textContent = 'Confirmer';
+      submitted = false;
       if (selectedAnswer === 'Oui, j\'y serai !') Confetti.launch();
       else if (selectedAnswer === 'Malheureusement non...') Rain.launch();
     });
