@@ -495,8 +495,6 @@
       box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
-
-
   </style>
 </head>
 
@@ -1564,14 +1562,12 @@
   })();
 
   /* =========================================================
-     FIX iOS CLAVIER — Correction scroll au BLUR uniquement
-     On ne touche PAS au focus (Safari doit pouvoir scroller
-     pour afficher l'input au-dessus du clavier, c'est normal).
-     Le bug iOS = quand le clavier se FERME, Safari jump à une
-     position aléatoire. On corrige ça en :
-     1. Sauvegardant la position du RSVP section
-     2. Au blur, on restaure une position qui montre le formulaire
-     3. Un scroll guard de 600ms empêche Safari de re-jumper
+     FIX iOS CLAVIER — Technique "Blur-only"
+     On ne fait RIEN au focus (Safari peut librement scroller
+     pour montrer l'input au-dessus du clavier).
+     On capture scrollY au touchstart sur le formulaire, et
+     on corrige uniquement au blur (fermeture du clavier)
+     avec un scroll guard de 600ms via requestAnimationFrame.
      ========================================================= */
   (function() {
     if (!isIOS) return;
@@ -1580,54 +1576,30 @@
     const inputs = form.querySelectorAll('input[type="text"], textarea');
     if (!inputs.length) return;
 
-    let isFocused = false;
-    let scrollBeforeFocus = 0;
+    let scrollBeforeFocus = window.scrollY;
     let blurTimer = null;
 
-    // Sauvegarde le scroll AVANT que Safari ne bouge quoi que ce soit.
-    // On utilise touchstart car il fire avant focus sur iOS.
-    form.addEventListener('touchstart', () => {
-      if (!isFocused) {
-        scrollBeforeFocus = window.scrollY;
-      }
+    // Capturer la position de scroll AVANT que Safari ne bouge
+    // quoi que ce soit (le touchstart arrive avant le focus)
+    form.addEventListener('touchstart', function() {
+      scrollBeforeFocus = window.scrollY;
     }, { passive: true });
 
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => {
-        // Si c'est le premier focus (pas une transition entre champs)
-        // scrollBeforeFocus est déjà set par touchstart
+    inputs.forEach(function(input) {
+      // Au blur : après un délai de 120ms (pour ne pas fire si
+      // on passe simplement d'un champ à un autre), on restaure
+      // la position et on active un scroll guard de 600ms.
+      input.addEventListener('blur', function() {
         clearTimeout(blurTimer);
-        blurTimer = null;
-        isFocused = true;
-      }, { passive: true });
-
-      input.addEventListener('blur', () => {
-        // Délai 120ms : si on passe à un autre champ, focus re-fire
-        // et on annule le blur handler
-        clearTimeout(blurTimer);
-        blurTimer = setTimeout(() => {
-          isFocused = false;
-
-          // Calculer la position idéale : le haut de la section RSVP
-          // doit être visible (avec un petit offset)
-          const rsvpSection = document.getElementById('rsvp');
-          const rsvpTop = rsvpSection ? rsvpSection.offsetTop - 40 : scrollBeforeFocus;
-
-          // On prend la position la plus cohérente :
-          // - scrollBeforeFocus si on était déjà dans la zone RSVP
-          // - rsvpTop sinon
-          const target = (scrollBeforeFocus >= rsvpTop - 100)
-            ? scrollBeforeFocus
-            : rsvpTop;
-
-          // Restaurer immédiatement
+        blurTimer = setTimeout(function() {
+          var target = scrollBeforeFocus;
           window.scrollTo(0, target);
 
-          // Scroll guard : empêche Safari de re-jumper pendant 600ms
-          const guardStart = Date.now();
+          // Scroll guard : empêche Safari de jump pendant 600ms
+          var guardStart = Date.now();
           function guard() {
             if (Date.now() - guardStart > 600) return;
-            if (Math.abs(window.scrollY - target) > 3) {
+            if (Math.abs(window.scrollY - target) > 2) {
               window.scrollTo(0, target);
             }
             requestAnimationFrame(guard);
@@ -1635,9 +1607,13 @@
           requestAnimationFrame(guard);
         }, 120);
       }, { passive: true });
+
+      // Au focus : annuler un éventuel blur timer en cours
+      // (transition entre champs)
+      input.addEventListener('focus', function() {
+        clearTimeout(blurTimer);
+      }, { passive: true });
     });
-
-
   })();
 
   /* RADIO BUTTONS & RSVP SUBMIT */
