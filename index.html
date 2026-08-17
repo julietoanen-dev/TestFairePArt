@@ -59,14 +59,18 @@
     /* STARS CANVAS */
     #stars-canvas {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 1;
       opacity: 1;
       transition: opacity 0.8s ease;
     }
-    #stars-canvas.hidden { opacity: 0; }
+    #stars-canvas.hidden {
+      opacity: 0;
+    }
 
     /* LANTERNES */
     #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
@@ -86,7 +90,9 @@
       50% { color: var(--violet); text-shadow: 0 0 35px rgba(139, 92, 246, 0.9), 0 0 70px rgba(139, 92, 246, 0.5); }
       75% { color: rgba(139, 92, 246, 0.4); text-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
     }
+
     .highlight-blink { animation: blink-rose-violet 2.4s ease-in-out infinite; display: inline-block; }
+
     @media (prefers-reduced-motion: reduce) {
       .highlight-blink { animation: none; color: var(--blanc); text-shadow: 0 0 30px rgba(255, 60, 172, 0.8); }
     }
@@ -111,8 +117,13 @@
       border-radius: 14px;
       width: clamp(80px, 20vw, 130px);
       height: clamp(80px, 20vw, 130px);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      flex-shrink: 1; backdrop-filter: blur(8px); min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 1;
+      backdrop-filter: blur(8px);
+      min-width: 0;
     }
     .countdown-number { font-family: var(--font-titre); font-size: clamp(2rem, 7vw, 3.5rem); color: var(--violet); line-height: 1; display: block; width: 2.2ch; text-align: center; font-variant-numeric: tabular-nums; }
     .countdown-label { font-size: clamp(0.55rem, 1.8vw, 0.72rem); color: var(--texte-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; display: block; white-space: nowrap; }
@@ -120,13 +131,23 @@
     .countdown-done { font-family: var(--font-titre); font-style: italic; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--violet); margin-top: 20px; display: none; }
 
     .btn-calendar {
-      display: inline-flex; align-items: center; gap: 8px; margin-top: 24px;
-      padding: 12px 24px; background: rgba(255,255,255,0.15);
-      border: 1.5px solid rgba(255,255,255,0.4); border-radius: 50px;
-      color: var(--blanc); font-family: var(--font-texte); font-size: 0.82rem;
-      font-weight: 500; letter-spacing: 0.04em; cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 50px;
+      color: var(--blanc);
+      font-family: var(--font-texte);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
       transition: background var(--transition-base), border-color var(--transition-base), transform 0.2s;
-      backdrop-filter: blur(6px); text-decoration: none;
+      backdrop-filter: blur(6px);
+      text-decoration: none;
     }
     .btn-calendar:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7); transform: translateY(-2px); text-decoration: none; }
     .btn-calendar:active { transform: translateY(0); }
@@ -196,40 +217,128 @@
 
     /* RSVP */
     #rsvp {
-      text-align: center; padding: 80px 20px 100px; position: relative; z-index: 2;
+      text-align: center;
+      padding: 80px 20px 100px;
+      position: relative;
+      z-index: 2;
       background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,159,114,0.2) 30%, rgba(255,159,114,0.5) 60%, #ff9f72 100%);
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    #rsvp h2 { font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: var(--blanc); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+
+    #rsvp h2 {
+      font-weight: 600;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--blanc);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
     .rsvp-subtitle { color: rgba(255,255,255,0.9); margin-bottom: 50px; font-size: 0.9rem; }
+
     .rsvp-form-wrap {
-      background: rgba(250,247,243,0.96); border: 1.5px solid rgba(181,52,26,0.18);
-      border-radius: 20px; padding: clamp(24px, 5vw, 48px); max-width: 540px;
-      margin-inline: auto; text-align: left; box-shadow: 0 8px 40px rgba(46,18,0,0.07);
-      backdrop-filter: blur(12px); width: 100%;
+      background: rgba(250,247,243,0.96);
+      border: 1.5px solid rgba(181,52,26,0.18);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 48px);
+      max-width: 540px;
+      margin-inline: auto;
+      text-align: left;
+      box-shadow: 0 8px 40px rgba(46,18,0,0.07);
+      backdrop-filter: blur(12px);
+      width: 100%;
     }
+
     .form-group { margin-bottom: 26px; }
-    .form-group label, .form-group legend { display: block; font-weight: 600; font-size: 0.72rem; margin-bottom: 10px; color: var(--rouge); text-transform: uppercase; letter-spacing: 0.12em; }
-    .form-group input[type="text"], .form-group textarea {
-      width: 100%; padding: 14px 18px; border: 1.5px solid rgba(181,52,26,0.18);
-      border-radius: 50px; font-family: var(--font-texte); font-size: 16px;
-      color: var(--texte); background: rgba(255,255,255,0.9);
-      transition: border-color var(--transition-base), box-shadow var(--transition-base);
-      resize: none; -webkit-appearance: none; appearance: none;
+
+    .form-group label, .form-group legend {
+      display: block;
+      font-weight: 600;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+      color: var(--rouge);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
     }
+
+    .form-group input[type="text"], .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(181,52,26,0.18);
+      border-radius: 50px;
+      font-family: var(--font-texte);
+      font-size: 16px;
+      color: var(--texte);
+      background: rgba(255,255,255,0.9);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+      resize: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
     .form-group textarea { border-radius: 16px; min-height: 110px; resize: vertical; }
-    .form-group input[type="text"]:focus, .form-group textarea:focus { outline: none; border-color: var(--corail); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+
+    .form-group input[type="text"]:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--corail);
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+    }
+
     .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .radio-btn { display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 12px 8px; border: 1.5px solid rgba(181,52,26,0.22); border-radius: 12px; transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base); background: rgba(255,255,255,0.85); user-select: none; -webkit-user-select: none; min-width: 0; }
+
+    .radio-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 12px 8px;
+      border: 1.5px solid rgba(181,52,26,0.22);
+      border-radius: 12px;
+      transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base);
+      background: rgba(255,255,255,0.85);
+      user-select: none;
+      -webkit-user-select: none;
+      min-width: 0;
+    }
+
     .radio-btn input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
     .radio-btn:hover { border-color: var(--corail); background: rgba(255,107,53,0.04); }
     .radio-btn.selected { border-color: var(--corail); background: rgba(255,107,53,0.07); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
     .radio-btn-text { font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--texte); text-align: center; line-height: 1.3; word-break: break-word; }
+
     .field-error { color: var(--rouge); font-size: 0.78rem; margin-top: 6px; display: none; }
     .field-error.visible { display: block; }
-    .btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--corail)); color: var(--blanc); border: none; border-radius: 12px; padding: 17px 40px; font-family: var(--font-texte); font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base); box-shadow: 0 4px 20px rgba(255,60,172,0.28); width: 100%; margin-top: 8px; letter-spacing: 0.06em; -webkit-appearance: none; appearance: none; min-height: 44px; }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--rose), var(--corail));
+      color: var(--blanc);
+      border: none;
+      border-radius: 12px;
+      padding: 17px 40px;
+      font-family: var(--font-texte);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity var(--transition-base), transform 0.2s, box-shadow var(--transition-base);
+      box-shadow: 0 4px 20px rgba(255,60,172,0.28);
+      width: 100%;
+      margin-top: 8px;
+      letter-spacing: 0.06em;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 44px;
+    }
+
     .btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,60,172,0.38); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
     .rsvp-success { display: none; text-align: center; padding: 36px; background: rgba(255,107,53,0.06); border-radius: var(--radius); border: 1px solid rgba(255,107,53,0.2); margin-top: 20px; }
     .rsvp-success.visible { display: block; }
     .rsvp-success p { font-family: var(--font-titre); font-size: 1.3rem; color: var(--corail); }
@@ -237,62 +346,106 @@
     @supports (padding: max(0px)) {
       .rsvp-form-wrap { padding-bottom: max(48px, env(safe-area-inset-bottom)); }
     }
+
     @media (max-height: 600px) {
       #rsvp { padding: 40px 20px 60px; min-height: auto; }
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
-    /* INFOS PRATIQUES */
+    /* =============================================
+       INFOS PRATIQUES (Bout'chou + Cadeaux)
+       ============================================= */
     #infos-pratiques {
-      padding: 80px 20px 90px;
+      padding: 80px 20px;
       position: relative;
       z-index: 2;
-      background: linear-gradient(to bottom, #ff9f72 0%, #ffd4b0 100%);
+      background: linear-gradient(to bottom, #ff9f72 0%, #ffb88c 40%, #ffd4b0 100%);
     }
+
     .infos-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      max-width: 760px;
+      gap: 28px;
+      max-width: 860px;
       margin-inline: auto;
     }
-    @media (max-width: 600px) {
+
+    @media (max-width: 640px) {
       .infos-grid { grid-template-columns: 1fr; }
     }
+
     .info-card {
       background: rgba(255,255,255,0.88);
-      border: 1px solid rgba(255,107,53,0.18);
       border-radius: 20px;
-      padding: 32px 28px;
-      box-shadow: 0 4px 28px rgba(46,18,0,0.08);
-      backdrop-filter: blur(10px);
+      padding: 36px 32px;
+      border: 1.5px solid rgba(181,52,26,0.12);
+      box-shadow: 0 8px 36px rgba(46,18,0,0.08);
+      backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
       gap: 14px;
-      transition: box-shadow var(--transition-base);
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
     }
-    .info-card:hover { box-shadow: 0 10px 40px rgba(46,18,0,0.13); }
-    .info-card-icon { font-size: 2.4rem; line-height: 1; }
+
+    .info-card:hover {
+      box-shadow: 0 14px 48px rgba(46,18,0,0.13);
+      transform: translateY(-3px);
+    }
+
+    .info-card-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+      display: block;
+    }
+
     .info-card-title {
       font-family: var(--font-titre);
-      font-size: 1.15rem;
+      font-size: 1.35rem;
       color: var(--texte);
-      font-weight: 400;
-      margin-bottom: 0;
+      line-height: 1.2;
     }
+
     .info-card-text {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--texte-soft);
-      line-height: 1.7;
+      line-height: 1.75;
+    }
+
+    .info-card-text strong {
+      color: var(--texte);
+      font-weight: 600;
+    }
+
+    /* iOS perf : désactiver backdrop-filter */
+    .ios-perf .info-card {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      background: rgba(255,255,255,0.95) !important;
     }
 
     /* CONFETTIS */
-    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
 
     /* RAIN */
-    #rain-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; opacity: 0; transition: opacity 1s ease; }
+    #rain-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
     #rain-canvas.visible { opacity: 1; }
     #rain-canvas.fade-out { opacity: 0; }
 
@@ -309,11 +462,17 @@
     .final-date { font-weight: 400; font-size: clamp(0.85rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.85); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
     .final-tagline { font-family: var(--font-titre); font-style: italic; font-size: clamp(1rem, 2.2vw, 1.4rem); color: rgba(255,255,255,0.9); text-shadow: 0 2px 16px rgba(180,60,20,0.4); }
     #car-el { position: absolute; bottom: 1%; will-change: transform; z-index: 6; }
-    #car-el img { width: 150px; height: auto; display: block; }
+    #car-el img { width: 75%; height: auto; display: block; }
 
     /* RESPONSIVE */
-    @media (max-width: 700px) { #timeline-desktop { display: none; } #timeline-mobile { display: block; } }
-    @media (min-width: 701px) { #timeline-desktop { display: block; } #timeline-mobile { display: none; } }
+    @media (max-width: 700px) {
+      #timeline-desktop { display: none; }
+      #timeline-mobile { display: block; }
+    }
+    @media (min-width: 701px) {
+      #timeline-desktop { display: block; }
+      #timeline-mobile { display: none; }
+    }
 
     /* PRINT */
     @media print {
@@ -329,8 +488,7 @@
     .ios-perf #panorama { display: none !important; }
     .ios-perf body { background: linear-gradient(to bottom, #020159 0%, #5a7fc8 20%, #b78fdd 45%, #ff87a8 70%, #fbbf24 100%); }
     .ios-perf .countdown-unit, .ios-perf .event-card, .ios-perf .timeline-day-label,
-    .ios-perf .tl-step-day, .ios-perf .tl-step-card, .ios-perf .rsvp-form-wrap,
-    .ios-perf .info-card {
+    .ios-perf .tl-step-day, .ios-perf .tl-step-card, .ios-perf .rsvp-form-wrap {
       -webkit-backdrop-filter: none !important;
       backdrop-filter: none !important;
       background: rgba(255,255,255,0.92) !important;
@@ -338,9 +496,17 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    html.ios-perf.ios-keyboard-open .tl-step-sticky { position: relative !important; height: auto !important; }
-    html.ios-perf.ios-keyboard-open #rsvp { min-height: auto !important; justify-content: flex-start !important; }
-    html.ios-perf.ios-keyboard-open .final-sticky { position: relative !important; }
+    html.ios-perf.ios-keyboard-open .tl-step-sticky {
+      position: relative !important;
+      height: auto !important;
+    }
+    html.ios-perf.ios-keyboard-open #rsvp {
+      min-height: auto !important;
+      justify-content: flex-start !important;
+    }
+    html.ios-perf.ios-keyboard-open .final-sticky {
+      position: relative !important;
+    }
   </style>
 </head>
 
@@ -627,32 +793,32 @@
   <!-- PLUIE -->
   <canvas id="rain-canvas" aria-hidden="true"></canvas>
 
-  <!-- INFOS PRATIQUES -->
+  <!-- =============================================
+       INFOS PRATIQUES : Bout'chou + Cadeaux
+       ============================================= -->
   <section id="infos-pratiques" aria-label="Informations pratiques">
-    <div class="container">
-      <div class="infos-grid">
+    <div class="infos-grid">
 
-        <!-- Carte Bout'chou -->
-        <div class="info-card reveal-left">
-          <span class="info-card-icon" aria-hidden="true">🧸</span>
-          <h2 class="info-card-title">Bout'chou</h2>
-          <p class="info-card-text">
-            Pour des raisons pratiques et pour que tout le monde puisse profiter pleinement de la soirée,
-            nous ne pourrons accueillir que les enfants de la famille immédiate à notre mariage.
-          </p>
-        </div>
-
-        <!-- Carte Cadeaux -->
-        <div class="info-card reveal-right">
-          <span class="info-card-icon" aria-hidden="true">🎁</span>
-          <h2 class="info-card-title">Cadeaux</h2>
-          <p class="info-card-text">
-            Si vous le souhaitez, une cagnotte sera partagée en amont du mariage
-            et une urne sera disponible le jour J pour y glisser vos enveloppes.
-          </p>
-        </div>
-
+      <!-- Carte Bout'chou -->
+      <div class="info-card reveal-left">
+        <span class="info-card-icon" aria-hidden="true">🧸</span>
+        <h2 class="info-card-title">Bout'chou</h2>
+        <p class="info-card-text">
+          Pour des raisons pratiques et pour que tout le monde puisse profiter pleinement de la soirée,
+          nous ne pourrons accueillir que les enfants de la famille immédiate à notre mariage.
+        </p>
       </div>
+
+      <!-- Carte Cadeaux -->
+      <div class="info-card reveal-right">
+        <span class="info-card-icon" aria-hidden="true">🎁</span>
+        <h2 class="info-card-title">Cadeaux pour les mariés</h2>
+        <p class="info-card-text">
+          Si vous le souhaitez, une cagnotte sera partagée en amont du mariage
+          et une urne sera disponible le jour J pour y glisser vos enveloppes.
+        </p>
+      </div>
+
     </div>
   </section>
 
@@ -692,7 +858,10 @@
     pad: (n) => String(n).padStart(2, '0'),
     debounce: (fn, delay) => {
       let timeout;
-      return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); };
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
     },
     getElement: (id) => document.getElementById(id),
     queryAll: (selector) => document.querySelectorAll(selector)
@@ -712,11 +881,15 @@
     tick() {
       ScrollManager.rafId = null;
       const scrollY = window.scrollY;
-      for (let i = 0; i < ScrollManager.handlers.length; i++) ScrollManager.handlers[i](scrollY);
+      for (let i = 0; i < ScrollManager.handlers.length; i++) {
+        ScrollManager.handlers[i](scrollY);
+      }
     },
     init() {
       window.addEventListener('scroll', () => {
-        if (!ScrollManager.rafId) ScrollManager.rafId = requestAnimationFrame(ScrollManager.tick);
+        if (!ScrollManager.rafId) {
+          ScrollManager.rafId = requestAnimationFrame(ScrollManager.tick);
+        }
       }, { passive: true });
     }
   };
@@ -755,8 +928,8 @@
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
       svg.setAttribute('height', H);
       svg.style.height = H + 'px';
-      if (bgRect) bgRect.setAttribute('height', H);
-      if (grainRect) grainRect.setAttribute('height', H);
+      if (bgRect) { bgRect.setAttribute('height', H); }
+      if (grainRect) { grainRect.setAttribute('height', H); }
     }
 
     init();
@@ -769,14 +942,26 @@
     const canvas = Utils.getElement('stars-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const STAR_COLORS = [
-      { r: 255, g: 255, b: 255 }, { r: 255, g: 240, b: 180 },
-      { r: 255, g: 200, b: 220 }, { r: 255, g: 220, b: 140 }, { r: 255, g: 180, b: 200 }
-    ];
-    let stars = [], shootingStars = [], dustParticles = [];
-    let animating = true, isHidden = false;
 
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initStars(); }
+    const STAR_COLORS = [
+      { r: 255, g: 255, b: 255 },
+      { r: 255, g: 240, b: 180 },
+      { r: 255, g: 200, b: 220 },
+      { r: 255, g: 220, b: 140 },
+      { r: 255, g: 180, b: 200 },
+    ];
+
+    let stars = [];
+    let shootingStars = [];
+    let dustParticles = [];
+    let animating = true;
+    let isHidden = false;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initStars();
+    }
 
     function initStars() {
       stars = [];
@@ -784,26 +969,56 @@
       for (let i = 0; i < count; i++) {
         const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
         const layer = Math.random();
-        stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, baseRadius: 0.4 + layer * 1.8, phase: Math.random() * Math.PI * 2, speed: 0.3 + Math.random() * 0.8, pulseAmp: 0.15 + Math.random() * 0.4, color, baseAlpha: 0.2 + layer * 0.5, isCross: Math.random() < 0.12, crossSize: 3 + Math.random() * 5, layer, twinkleSpeed: 1 + Math.random() * 2 });
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          baseRadius: 0.4 + layer * 1.8,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.8,
+          pulseAmp: 0.15 + Math.random() * 0.4,
+          color: color,
+          baseAlpha: 0.2 + layer * 0.5,
+          isCross: Math.random() < 0.12,
+          crossSize: 3 + Math.random() * 5,
+          layer: layer,
+          twinkleSpeed: 1 + Math.random() * 2
+        });
       }
     }
 
     function createShootingStar() {
       const color = STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0];
+      const startX = Math.random() * canvas.width * 0.8;
+      const startY = Math.random() * canvas.height * 0.4;
       const angle = (Math.PI / 6) + Math.random() * 0.2;
       const speed = 6 + Math.random() * 4;
-      shootingStars.push({ x: Math.random() * canvas.width * 0.8, y: Math.random() * canvas.height * 0.4, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1, decay: 0.008 + Math.random() * 0.006, radius: 2 + Math.random() * 1.5, color, trail: [], maxTrail: 25 + Math.random() * 15, dustTimer: 0 });
+      shootingStars.push({
+        x: startX, y: startY,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2,
+        life: 1, decay: 0.008 + Math.random() * 0.006,
+        radius: 2 + Math.random() * 1.5, color: color,
+        trail: [], maxTrail: 25 + Math.random() * 15, dustTimer: 0
+      });
     }
 
     function createDust(x, y, color) {
-      dustParticles.push({ x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4, vx: (Math.random() - 0.5) * 0.8, vy: 0.2 + Math.random() * 0.5, life: 1, decay: 0.015 + Math.random() * 0.01, radius: 0.5 + Math.random() * 1.2, color, twinkle: Math.random() * Math.PI * 2 });
+      dustParticles.push({
+        x: x + (Math.random() - 0.5) * 4, y: y + (Math.random() - 0.5) * 4,
+        vx: (Math.random() - 0.5) * 0.8, vy: 0.2 + Math.random() * 0.5,
+        life: 1, decay: 0.015 + Math.random() * 0.01,
+        radius: 0.5 + Math.random() * 1.2, color: color,
+        twinkle: Math.random() * Math.PI * 2
+      });
     }
 
     let shootingInterval = null;
     function startShootingSchedule() {
       function scheduleNext() {
         const delay = 2500 + Math.random() * 2000;
-        shootingInterval = setTimeout(() => { if (!isHidden) createShootingStar(); scheduleNext(); }, delay);
+        shootingInterval = setTimeout(() => {
+          if (!isHidden) createShootingStar();
+          scheduleNext();
+        }, delay);
       }
       scheduleNext();
     }
@@ -816,32 +1031,62 @@
       const { r, g, b } = star.color;
       if (star.isCross) {
         const size = star.crossSize * (1 + pulse * 0.2);
-        ctx.save(); ctx.globalAlpha = alpha * 0.9; ctx.strokeStyle = `rgb(${r},${g},${b})`; ctx.lineWidth = 0.6;
-        ctx.beginPath(); ctx.moveTo(star.x - size, star.y); ctx.lineTo(star.x + size, star.y); ctx.moveTo(star.x, star.y - size); ctx.lineTo(star.x, star.y + size); ctx.stroke();
-        ctx.globalAlpha = alpha; ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.beginPath(); ctx.arc(star.x, star.y, radius * 0.8, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = alpha * 0.2; ctx.beginPath(); ctx.arc(star.x, star.y, size * 1.2, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.9;
+        ctx.strokeStyle = `rgb(${r},${g},${b})`;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(star.x - size, star.y); ctx.lineTo(star.x + size, star.y);
+        ctx.moveTo(star.x, star.y - size); ctx.lineTo(star.x, star.y + size);
+        ctx.stroke();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 0.8, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = alpha * 0.2;
+        ctx.beginPath(); ctx.arc(star.x, star.y, size * 1.2, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
       } else {
         ctx.save();
-        ctx.globalAlpha = alpha * 0.15; ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.beginPath(); ctx.arc(star.x, star.y, radius * 4, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = alpha * 0.3; ctx.beginPath(); ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(star.x, star.y, radius, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        ctx.globalAlpha = alpha * 0.15;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 4, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = alpha * 0.3;
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = alpha;
+        ctx.beginPath(); ctx.arc(star.x, star.y, radius, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
       }
     }
 
     function drawShootingStar(ss) {
       const { r, g, b } = ss.color;
       for (let i = 0; i < ss.trail.length; i++) {
-        const t = ss.trail[i]; const progress = i / ss.trail.length;
-        ctx.save(); ctx.globalAlpha = progress * ss.life * 0.6; ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.beginPath(); ctx.arc(t.x, t.y, ss.radius * progress * 0.6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        const t = ss.trail[i];
+        const progress = i / ss.trail.length;
+        ctx.save();
+        ctx.globalAlpha = progress * ss.life * 0.6;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.beginPath(); ctx.arc(t.x, t.y, ss.radius * progress * 0.6, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
       }
-      ctx.save(); ctx.globalAlpha = ss.life * 0.4; ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius * 3, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = ss.life; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.save();
+      ctx.globalAlpha = ss.life * 0.4;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius * 3, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = ss.life;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.radius, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
     }
 
     function drawDust(d, time) {
       const twinkle = Math.sin(time * 4 + d.twinkle) * 0.3 + 0.7;
       const { r, g, b } = d.color;
-      ctx.save(); ctx.globalAlpha = d.life * twinkle * 0.7; ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.beginPath(); ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.save();
+      ctx.globalAlpha = d.life * twinkle * 0.7;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
     }
 
     function animate() {
@@ -850,12 +1095,13 @@
       if (isHidden) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const time = Date.now() / 1000;
-      for (let i = 0; i < stars.length; i++) drawStar(stars[i], time);
+      for (let i = 0; i < stars.length; i++) { drawStar(stars[i], time); }
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
         ss.trail.push({ x: ss.x, y: ss.y });
         if (ss.trail.length > ss.maxTrail) ss.trail.shift();
-        ss.x += ss.vx; ss.y += ss.vy; ss.dustTimer++;
+        ss.x += ss.vx; ss.y += ss.vy;
+        ss.dustTimer++;
         if (ss.dustTimer % 3 === 0 && ss.life > 0.3) createDust(ss.x, ss.y, ss.color);
         ss.life -= ss.decay;
         drawShootingStar(ss);
@@ -889,7 +1135,9 @@
     const layer = Utils.getElement('lanterns-layer');
     if (!layer) return;
     layer.style.transform = 'translate3d(0, 0px, 0)';
-    ScrollManager.register((scrollY) => { layer.style.transform = `translate3d(0, -${scrollY * 0.32}px, 0)`; });
+    ScrollManager.register((scrollY) => {
+      layer.style.transform = `translate3d(0, -${scrollY * 0.32}px, 0)`;
+    });
   })();
 
   /* COUNTDOWN */
@@ -898,16 +1146,25 @@
     const grid = Utils.getElement('countdown-grid');
     const done = Utils.getElement('countdown-done');
     const tag = Utils.getElement('countdown-tagline');
-    const els = { d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'), m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds') };
+    const els = {
+      d: Utils.getElement('cd-days'), h: Utils.getElement('cd-hours'),
+      m: Utils.getElement('cd-minutes'), s: Utils.getElement('cd-seconds')
+    };
     function tick() {
       const diff = target - Date.now();
-      if (diff <= 0) { grid.style.display = 'none'; if (tag) tag.style.display = 'none'; done.style.display = 'block'; return; }
+      if (diff <= 0) {
+        grid.style.display = 'none';
+        if (tag) tag.style.display = 'none';
+        done.style.display = 'block';
+        return;
+      }
       els.d.textContent = Utils.pad(Math.floor(diff / 86400000));
       els.h.textContent = Utils.pad(Math.floor((diff % 86400000) / 3600000));
       els.m.textContent = Utils.pad(Math.floor((diff % 3600000) / 60000));
       els.s.textContent = Utils.pad(Math.floor((diff % 60000) / 1000));
     }
-    tick(); setInterval(tick, 1000);
+    tick();
+    setInterval(tick, 1000);
   })();
 
   /* BOUTON CALENDRIER */
@@ -915,7 +1172,16 @@
     const btn = Utils.getElement('btn-calendar');
     if (!btn) return;
     btn.addEventListener('click', function() {
-      const icsContent = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Julie&Thomas//Mariage//FR','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT','DTSTART:20270724T143000Z','DTEND:20270724T215900Z','SUMMARY:Mariage Julie & Thomas',"DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nVin d'honneur à 18h00 au Domaine de Gailhaguet\\, Verfeil\\nRepas & Soirée à 20h",'LOCATION:Mairie de Pin-Balma\\, Pl. de la Mairie\\, 31130 Pin-Balma','STATUS:CONFIRMED','BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:Mariage Julie & Thomas demain !','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+      const icsContent = [
+        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Julie&Thomas//Mariage//FR',
+        'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
+        'DTSTART:20270724T143000Z', 'DTEND:20270724T215900Z',
+        'SUMMARY:Mariage Julie & Thomas',
+        'DESCRIPTION:Cérémonie à 16h30 à la Mairie de Pin-Balma\\nVin d\'honneur à 18h00 au Domaine de Gailhaguet\\, Verfeil\\nRepas & Soirée à 20h',
+        'LOCATION:Mairie de Pin-Balma\\, Pl. de la Mairie\\, 31130 Pin-Balma',
+        'STATUS:CONFIRMED', 'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY',
+        'DESCRIPTION:Mariage Julie & Thomas demain !', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'
+      ].join('\r\n');
       const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -929,7 +1195,9 @@
   (function() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const obs = new IntersectionObserver((entries) => {
-      for (const e of entries) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      }
     }, { threshold: 0.12 });
     Utils.queryAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
   })();
@@ -945,8 +1213,13 @@
     if (!section || !wrapper || !lineSvg) return;
 
     function wavyPath(cx, H) {
-      const amp = 10, period = 100; let d = `M ${cx} 0`, y = 0, dir = 1;
-      while (y < H) { const nextY = Math.min(y + period, H); d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`; y = nextY; dir *= -1; }
+      const amp = 10, period = 100;
+      let d = `M ${cx} 0`, y = 0, dir = 1;
+      while (y < H) {
+        const nextY = Math.min(y + period, H);
+        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+        y = nextY; dir *= -1;
+      }
       return d;
     }
 
@@ -954,13 +1227,21 @@
     function setup() {
       const firstDot = wrapper.querySelector('.event-dot');
       if (!firstDot) return;
-      const wRect = wrapper.getBoundingClientRect(); const dRect = firstDot.getBoundingClientRect();
-      const cx = dRect.left + dRect.width / 2 - wRect.left; const H = wrapper.offsetHeight; const svgW = 40;
-      lineSvg.style.left = (cx - svgW / 2) + 'px'; lineSvg.style.width = svgW + 'px'; lineSvg.style.height = H + 'px';
+      const wRect = wrapper.getBoundingClientRect();
+      const dRect = firstDot.getBoundingClientRect();
+      const cx = dRect.left + dRect.width / 2 - wRect.left;
+      const H = wrapper.offsetHeight;
+      const svgW = 40;
+      lineSvg.style.left = (cx - svgW / 2) + 'px';
+      lineSvg.style.width = svgW + 'px';
+      lineSvg.style.height = H + 'px';
       lineSvg.setAttribute('viewBox', `0 0 ${svgW} ${H}`);
-      const d = wavyPath(svgW / 2, H); pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
+      const d = wavyPath(svgW / 2, H);
+      pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.2;
-      pathDraw.style.transition = 'none'; pathDraw.style.strokeDasharray = len; pathDraw.style.strokeDashoffset = len; pathDraw._len = len;
+      pathDraw.style.transition = 'none';
+      pathDraw.style.strokeDasharray = len; pathDraw.style.strokeDashoffset = len;
+      pathDraw._len = len;
       requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s ease-out'; });
       isSetup = true;
     }
@@ -969,7 +1250,8 @@
     window.addEventListener('resize', Utils.debounce(() => { isSetup = false; setup(); }, 300));
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300); return;
+      setTimeout(() => { if (pathDraw._len) pathDraw.style.strokeDashoffset = 0; }, 300);
+      return;
     }
 
     ScrollManager.register(() => {
@@ -993,16 +1275,25 @@
     if (!wrapper || !lineSvg || !pathBg || !pathDraw || !steps.length) return;
 
     function wavyPath(cx, H) {
-      const amp = 8, period = 80; let d = `M ${cx} 0`, y = 0, dir = 1;
-      while (y < H) { const nextY = Math.min(y + period, H); d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`; y = nextY; dir *= -1; }
+      const amp = 8, period = 80;
+      let d = `M ${cx} 0`, y = 0, dir = 1;
+      while (y < H) {
+        const nextY = Math.min(y + period, H);
+        d += ` Q ${cx + dir * amp} ${y + period / 2} ${cx} ${nextY}`;
+        y = nextY; dir *= -1;
+      }
       return d;
     }
 
     function setupLine() {
-      const H = wrapper.offsetHeight; lineSvg.style.height = H + 'px'; lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
-      const d = wavyPath(20, H); pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
+      const H = wrapper.offsetHeight;
+      lineSvg.style.height = H + 'px';
+      lineSvg.setAttribute('viewBox', `0 0 40 ${H}`);
+      const d = wavyPath(20, H);
+      pathBg.setAttribute('d', d); pathDraw.setAttribute('d', d);
       const len = pathDraw.getTotalLength ? pathDraw.getTotalLength() : H * 1.15;
-      pathDraw.style.transition = 'none'; pathDraw.style.strokeDasharray = len;
+      pathDraw.style.transition = 'none';
+      pathDraw.style.strokeDasharray = len;
       pathDraw.style.strokeDashoffset = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : len;
       pathDraw._len = len;
       requestAnimationFrame(() => { pathDraw.style.transition = 'stroke-dashoffset 0.12s linear'; });
@@ -1013,7 +1304,8 @@
 
     ScrollManager.register(() => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const wrapperRect = wrapper.getBoundingClientRect(); const wrapperH = wrapper.offsetHeight;
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const wrapperH = wrapper.offsetHeight;
       const totalScroll = Math.max(1, wrapperH - window.innerHeight);
       const scrolled = Math.max(0, -wrapperRect.top);
       const globalProg = Math.min(1, scrolled / totalScroll);
@@ -1023,9 +1315,12 @@
 
     const io = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        const step = entry.target; const i = step.dataset.i;
-        const day = Utils.getElement(`tl-day-${i}`); const dot = Utils.getElement(`tl-dot-${i}`);
-        const card = Utils.getElement(`tl-card-${i}`); const img = Utils.getElement(`tl-img-${i}`);
+        const step = entry.target;
+        const i = step.dataset.i;
+        const day = Utils.getElement(`tl-day-${i}`);
+        const dot = Utils.getElement(`tl-dot-${i}`);
+        const card = Utils.getElement(`tl-card-${i}`);
+        const img = Utils.getElement(`tl-img-${i}`);
         if (entry.isIntersecting) {
           day?.classList.add('show'); dot?.classList.add('show');
           setTimeout(() => card?.classList.add('show'), 120);
@@ -1051,13 +1346,15 @@
     const car = Utils.getElement('car-el');
     const canvas = Utils.getElement('fireworks-canvas');
     if (!section || !car || !canvas) return;
+
     const ctx = canvas.getContext('2d');
     const perfIOS = document.documentElement.classList.contains('ios-perf');
     const carW = 150;
 
     function resizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, perfIOS ? 1.25 : 2);
-      canvas.width = Math.floor(canvas.offsetWidth * dpr); canvas.height = Math.floor(canvas.offsetHeight * dpr);
+      canvas.width = Math.floor(canvas.offsetWidth * dpr);
+      canvas.height = Math.floor(canvas.offsetHeight * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
@@ -1071,10 +1368,17 @@
 
     function burst(x, y) {
       const count = (perfIOS ? 28 : 60) + (Math.random() * (perfIOS ? 18 : 40)) | 0;
-      const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0]; const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+      const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+      const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
       for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2; const speed = 2 + Math.random() * 5; const life = 60 + Math.random() * 60;
-        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2, alpha: 1, life, maxLife: life, radius: 1.5 + Math.random() * 2, color: Math.random() > 0.5 ? c1 : c2, trail: [], gravity: 0.06 + Math.random() * 0.06 });
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.2;
+        const speed = 2 + Math.random() * 5;
+        const life = 60 + Math.random() * 60;
+        particles.push({
+          x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2,
+          alpha: 1, life, maxLife: life, radius: 1.5 + Math.random() * 2,
+          color: Math.random() > 0.5 ? c1 : c2, trail: [], gravity: 0.06 + Math.random() * 0.06
+        });
       }
     }
 
@@ -1086,9 +1390,11 @@
         const p = particles[i];
         p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
         if (p.trail.length > 6) p.trail.shift();
-        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.life--; p.alpha = p.life / p.maxLife;
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98;
+        p.life--; p.alpha = p.life / p.maxLife;
         for (let t = 0; t < p.trail.length; t++) {
-          const tp = p.trail[t]; ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
+          const tp = p.trail[t];
+          ctx.beginPath(); ctx.arc(tp.x, tp.y, p.radius * 0.5, 0, Math.PI * 2);
           ctx.fillStyle = p.color; ctx.globalAlpha = tp.alpha * 0.3 * (t / p.trail.length); ctx.fill();
         }
         ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -1101,7 +1407,10 @@
     function launchFW() {
       burstTOs.forEach(clearTimeout); burstTOs = [];
       const W = canvas.width, H = canvas.height;
-      const pos = [{ x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 }, { x: W * 0.78, y: H * 0.2 }, { x: W * 0.35, y: H * 0.28 }, { x: W * 0.65, y: H * 0.25 }];
+      const pos = [
+        { x: W * 0.2, y: H * 0.18 }, { x: W * 0.5, y: H * 0.12 },
+        { x: W * 0.78, y: H * 0.2 }, { x: W * 0.35, y: H * 0.28 }, { x: W * 0.65, y: H * 0.25 }
+      ];
       pos.forEach((p, i) => { burstTOs.push(setTimeout(() => burst(p.x, p.y), i * 280)); });
       burstTOs.push(setTimeout(launchFW, pos.length * 280 + 1000));
     }
@@ -1116,7 +1425,8 @@
 
     let lastProgress = -1;
     ScrollManager.register(() => {
-      const rect = section.getBoundingClientRect(); const total = section.offsetHeight - window.innerHeight;
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
       if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
         if (lastProgress > 0 && lastProgress < 1) { car.style.transform = `translate3d(${-carW - 20}px, 0, 0)`; stopFW(); }
         lastProgress = -1; return;
@@ -1137,14 +1447,23 @@
     const canvas = Utils.getElement('confetti-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    const particles = []; let animating = false, launched = false;
+    const particles = [];
+    let animating = false;
+    let launched = false;
     const COLORS = ['#FF3CAC', '#FF6B35', '#FFB347', '#8B5CF6', '#FFD166', '#ffffff', '#ff87a8', '#fbbf24'];
 
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resize(); window.addEventListener('resize', resize);
+    resize();
+    window.addEventListener('resize', resize);
 
     function createParticle(x, y) {
-      return { x, y, vx: (Math.random() - 0.5) * 16, vy: -(Math.random() * 12 + 4), gravity: 0.25 + Math.random() * 0.15, rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 12, width: 6 + Math.random() * 8, height: 4 + Math.random() * 4, color: COLORS[(Math.random() * COLORS.length) | 0], alpha: 1, decay: 0.008 + Math.random() * 0.006 };
+      return {
+        x, y, vx: (Math.random() - 0.5) * 16, vy: -(Math.random() * 12 + 4),
+        gravity: 0.25 + Math.random() * 0.15, rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 12, width: 6 + Math.random() * 8,
+        height: 4 + Math.random() * 4, color: COLORS[(Math.random() * COLORS.length) | 0],
+        alpha: 1, decay: 0.008 + Math.random() * 0.006
+      };
     }
 
     function animate() {
@@ -1152,25 +1471,33 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.99; p.rotation += p.rotSpeed; p.alpha -= p.decay;
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.99;
+        p.rotation += p.rotSpeed; p.alpha -= p.decay;
         if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate((p.rotation * Math.PI) / 180); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height); ctx.restore();
+        ctx.save();
+        ctx.translate(p.x, p.y); ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
+        ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+        ctx.restore();
       }
-      if (particles.length > 0) requestAnimationFrame(animate);
+      if (particles.length > 0) { requestAnimationFrame(animate); }
       else { animating = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
     }
 
     function launch() {
-      if (launched) return; launched = true;
+      if (launched) return;
+      launched = true;
       const waves = 5, perWave = Math.ceil(150 / waves);
       for (let w = 0; w < waves; w++) {
         setTimeout(() => {
-          const cx = canvas.width * (0.2 + Math.random() * 0.6), cy = canvas.height * 0.3;
+          const cx = canvas.width * (0.2 + Math.random() * 0.6);
+          const cy = canvas.height * 0.3;
           for (let i = 0; i < perWave; i++) particles.push(createParticle(cx, cy));
           if (!animating) { animating = true; requestAnimationFrame(animate); }
         }, w * 200);
       }
     }
+
     return { launch };
   })();
 
@@ -1179,31 +1506,46 @@
     const canvas = Utils.getElement('rain-canvas');
     if (!canvas) return { launch: function(){} };
     const ctx = canvas.getContext('2d');
-    let launched = false, animating = false, drops = [], splashes = [], spawnActive = false;
+    let launched = false, animating = false;
+    let drops = [], splashes = [], spawnActive = false;
     const RAIN_DURATION = 4000;
+    const DROPS_PER_FRAME = 2;
     const COLORS = ['#ffffff', '#a8d8ff', '#7ec8e3', '#b8e4ff', '#d0f0ff'];
 
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resize(); window.addEventListener('resize', resize);
+    resize();
+    window.addEventListener('resize', resize);
 
     function createDrop() {
-      return { x: Math.random() * canvas.width, y: -10 - Math.random() * 60, speed: 8 + Math.random() * 6, length: 12 + Math.random() * 14, width: 0.8 + Math.random() * 0.7, wind: 0.3 + Math.random() * 0.2, color: COLORS[(Math.random() * COLORS.length) | 0], alpha: 0.4 + Math.random() * 0.4 };
+      return {
+        x: Math.random() * canvas.width, y: -10 - Math.random() * 60,
+        speed: 8 + Math.random() * 6, length: 12 + Math.random() * 14,
+        width: 0.8 + Math.random() * 0.7, wind: 0.3 + Math.random() * 0.2,
+        color: COLORS[(Math.random() * COLORS.length) | 0], alpha: 0.4 + Math.random() * 0.4
+      };
     }
 
     function createSplash(x, y) {
-      return { x, y, radius: 1.5 + Math.random() * 2, alpha: 0.6 + Math.random() * 0.3, decay: 0.03 + Math.random() * 0.02, color: COLORS[(Math.random() * COLORS.length) | 0] };
+      return {
+        x, y, radius: 1.5 + Math.random() * 2, alpha: 0.6 + Math.random() * 0.3,
+        decay: 0.03 + Math.random() * 0.02, color: COLORS[(Math.random() * COLORS.length) | 0]
+      };
     }
 
     function animate() {
       if (!animating) return;
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (spawnActive) { for (let i = 0; i < 2; i++) drops.push(createDrop()); }
+      if (spawnActive) { for (let i = 0; i < DROPS_PER_FRAME; i++) drops.push(createDrop()); }
       for (let i = drops.length - 1; i >= 0; i--) {
-        const d = drops[i]; d.x += d.wind; d.y += d.speed;
+        const d = drops[i];
+        d.x += d.wind; d.y += d.speed;
         ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.wind * 0.4, d.y - d.length);
         ctx.strokeStyle = d.color; ctx.globalAlpha = d.alpha; ctx.lineWidth = d.width; ctx.lineCap = 'round'; ctx.stroke();
-        if (d.y >= canvas.height) { if (Math.random() < 0.4) splashes.push(createSplash(d.x, canvas.height - 2)); drops.splice(i, 1); }
+        if (d.y >= canvas.height) {
+          if (Math.random() < 0.4) splashes.push(createSplash(d.x, canvas.height - 2));
+          drops.splice(i, 1);
+        }
       }
       for (let i = splashes.length - 1; i >= 0; i--) {
         const s = splashes[i];
@@ -1214,101 +1556,201 @@
       }
       ctx.globalAlpha = 1;
       if (!spawnActive && drops.length === 0 && splashes.length === 0) {
-        animating = false; canvas.classList.remove('visible'); canvas.classList.remove('fade-out'); ctx.clearRect(0, 0, canvas.width, canvas.height);
+        animating = false;
+        canvas.classList.remove('visible'); canvas.classList.remove('fade-out');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
     function launch() {
-      if (launched) return; launched = true; spawnActive = true; animating = true;
+      if (launched) return;
+      launched = true; spawnActive = true; animating = true;
       canvas.classList.remove('fade-out'); canvas.classList.add('visible');
       requestAnimationFrame(animate);
       setTimeout(() => { spawnActive = false; canvas.classList.add('fade-out'); }, RAIN_DURATION);
     }
+
     return { launch };
   })();
 
-  /* ============================================================
-     FIX iOS CLAVIER — VERSION CORRIGÉE
-     Principe : on ne scrolle QUE si le clavier est réellement
-     ouvert (visualViewport.height significativement réduit).
-     On ne scrolle JAMAIS au blur ni à la fermeture du clavier.
-  ============================================================ */
+  /* =========================================================
+     FIX iOS CLAVIER — Corrigé : sauvegarde/restauration du
+     scroll au blur pour empêcher le saut lors de la fermeture
+     du clavier Safari.
+     ========================================================= */
   (function() {
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
     if (!form) return;
-
     const inputs = form.querySelectorAll('input[type="text"], textarea');
 
-    // Hauteur de référence de la fenêtre sans clavier
-    const fullViewportHeight = window.innerHeight;
-
-    // Seuil : on considère le clavier ouvert si le viewport
-    // est réduit d'au moins 25% par rapport à la hauteur pleine
-    const KEYBOARD_THRESHOLD = 0.75;
-
     let activeInput = null;
-    let correctionTimer = null;
+    let isFocused = false;
+    // Position de scroll sauvegardée AVANT que Safari ne recalcule le viewport
+    let savedScrollY = null;
+    // Flag indiquant que le clavier est en train de se fermer
+    let isKeyboardDismissing = false;
 
-    function isKeyboardOpen() {
-      if (window.visualViewport) {
-        return window.visualViewport.height < fullViewportHeight * KEYBOARD_THRESHOLD;
-      }
-      // Fallback sans visualViewport
-      return false;
-    }
-
+    /**
+     * Calcule la position de scroll idéale pour centrer l'input
+     * dans le tiers supérieur du viewport visible.
+     */
     function getIdealScrollForInput(el) {
       const rect = el.getBoundingClientRect();
-      const vpH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      // On vise le tiers supérieur de la zone visible
-      const targetOffset = vpH * 0.3;
-      return window.scrollY + rect.top - targetOffset;
+      const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      return window.scrollY + rect.top - viewH * 0.3;
     }
 
-    function doCorrection(el) {
-      // Guard : on ne scrolle que si le clavier est vraiment ouvert
-      if (!isKeyboardOpen()) return;
-      if (!el) return;
-      const idealY = getIdealScrollForInput(el);
-      if (Math.abs(window.scrollY - idealY) > 20) {
-        window.scrollTo({ top: idealY, behavior: 'smooth' });
+    /**
+     * Attend que Safari ait stabilisé le scroll après l'ouverture
+     * du clavier, puis corrige la position.
+     */
+    function waitAndCorrect(targetEl) {
+      let lastScrollY = window.scrollY;
+      let stableFrames = 0;
+      const startTime = Date.now();
+
+      function check() {
+        if (Date.now() - startTime > 800) {
+          doCorrection(targetEl);
+          return;
+        }
+        const currentScrollY = window.scrollY;
+        if (Math.abs(currentScrollY - lastScrollY) < 2) {
+          stableFrames++;
+        } else {
+          stableFrames = 0;
+        }
+        lastScrollY = currentScrollY;
+        if (stableFrames >= 4) {
+          doCorrection(targetEl);
+        } else {
+          requestAnimationFrame(check);
+        }
+      }
+      requestAnimationFrame(check);
+    }
+
+    /**
+     * Applique la correction de scroll si nécessaire.
+     */
+    function doCorrection(targetEl) {
+      if (!targetEl) return;
+      const idealY = getIdealScrollForInput(targetEl);
+      if (Math.abs(window.scrollY - idealY) > 10) {
+        window.scrollTo(0, idealY);
       }
     }
 
+    /**
+     * Restaure la position de scroll sauvegardée au blur.
+     * Utilise un double-rAF pour laisser Safari terminer son
+     * repositionnement interne, puis force la position correcte.
+     */
+    function restoreScrollPosition() {
+      if (savedScrollY === null) return;
+      const target = savedScrollY;
+      savedScrollY = null;
+      isKeyboardDismissing = false;
+
+      // Double requestAnimationFrame : laisse Safari appliquer
+      // son propre repositionnement, puis on le corrige.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, target);
+        });
+      });
+    }
+
+    // --- Événements focus / blur sur les inputs ---
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
+        isFocused = true;
         activeInput = input;
+        isKeyboardDismissing = false;
+        savedScrollY = null;
         document.documentElement.classList.add('ios-keyboard-open');
 
-        // On attend que le clavier soit monté avant de corriger
-        clearTimeout(correctionTimer);
-        correctionTimer = setTimeout(() => {
-          doCorrection(input);
-        }, 400);
+        const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
+        setTimeout(() => {
+          if (isFocused && activeInput === input) {
+            waitAndCorrect(input);
+          }
+        }, delay);
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        // On annule toute correction en cours — pas de scroll au blur
-        clearTimeout(correctionTimer);
+        // CRITIQUE : on capture scrollY ICI, au moment du blur,
+        // AVANT que Safari ne redimensionne le viewport et ne
+        // provoque un scroll automatique vers le haut.
+        savedScrollY = window.scrollY;
+        isFocused = false;
         activeInput = null;
+        isKeyboardDismissing = true;
+
+        // On retire la classe avec un léger délai pour laisser
+        // la restauration de scroll se faire d'abord.
         setTimeout(() => {
           document.documentElement.classList.remove('ios-keyboard-open');
-        }, 100);
+        }, 300);
       }, { passive: true });
     });
 
-    // visualViewport resize : on ne corrige que si le clavier
-    // vient de s'ouvrir (viewport réduit), pas quand il se ferme
+    // --- Écoute du resize du visualViewport ---
+    // Quand le clavier se ferme, Safari augmente la hauteur du
+    // visualViewport. On détecte cette augmentation et on
+    // restaure la position sauvegardée.
     if (window.visualViewport) {
+      let previousVPHeight = window.visualViewport.height;
+      let vpResizeTimer = null;
+
       window.visualViewport.addEventListener('resize', () => {
-        if (isKeyboardOpen() && activeInput) {
-          clearTimeout(correctionTimer);
-          correctionTimer = setTimeout(() => {
-            doCorrection(activeInput);
+        const currentHeight = window.visualViewport.height;
+        const heightDiff = currentHeight - previousVPHeight;
+        previousVPHeight = currentHeight;
+
+        // Le viewport grandit = le clavier se ferme
+        if (heightDiff > 50 && isKeyboardDismissing) {
+          restoreScrollPosition();
+          return;
+        }
+
+        // Le viewport rétrécit = le clavier s'ouvre, on corrige
+        // la position de l'input actif
+        if (isFocused && activeInput && heightDiff < -50) {
+          clearTimeout(vpResizeTimer);
+          vpResizeTimer = setTimeout(() => {
+            if (isFocused && activeInput) {
+              doCorrection(activeInput);
+            }
           }, 150);
         }
-        // Si le clavier se ferme (viewport s'agrandit) → on ne fait rien
+      });
+
+      // Fallback : si le resize event ne se déclenche pas
+      // (rare mais possible sur certains iOS), on restaure
+      // après un timeout.
+      inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+          setTimeout(() => {
+            if (isKeyboardDismissing && savedScrollY !== null) {
+              restoreScrollPosition();
+            }
+          }, 400);
+        }, { passive: true });
+      });
+    } else {
+      // Pas de visualViewport : fallback pur avec timeout
+      inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+          setTimeout(() => {
+            if (savedScrollY !== null) {
+              window.scrollTo(0, savedScrollY);
+              savedScrollY = null;
+              isKeyboardDismissing = false;
+            }
+          }, 150);
+        }, { passive: true });
       });
     }
   })();
@@ -1331,25 +1773,34 @@
       if (!submitted) return;
       form.style.display = 'none';
       successMsg.textContent = selectedAnswer === 'Malheureusement non...'
-        ? 'Dommage ! On a enregistré ta réponse 😞'
-        : 'Merci ! On a bien enregistré ta réponse 🎉';
+        ? 'Dommage ! On a enregistré ta réponse'
+        : 'Merci ! On a bien enregistré ta réponse';
       success.classList.add('visible');
-      btn.disabled = false; btn.textContent = 'Confirmer'; submitted = false;
-      if (selectedAnswer === "Oui, j'y serai !") Confetti.launch();
+      btn.disabled = false; btn.textContent = 'Confirmer';
+      submitted = false;
+      if (selectedAnswer === 'Oui, j\'y serai !') Confetti.launch();
       else if (selectedAnswer === 'Malheureusement non...') Rain.launch();
     });
 
     form.addEventListener('submit', (e) => {
       let valid = true;
       const nameVal = nameInput.value.trim();
-      if (!nameVal) { errorName.classList.add('visible'); if (valid) nameInput.focus(); valid = false; }
-      else errorName.classList.remove('visible');
+      if (!nameVal) {
+        errorName.classList.add('visible');
+        if (valid) nameInput.focus();
+        valid = false;
+      } else { errorName.classList.remove('visible'); }
+
       const radioChecked = Array.from(radioInputs).find(r => r.checked);
-      if (!radioChecked) { errorAtt.classList.add('visible'); if (valid) radioInputs[0].focus(); valid = false; }
-      else errorAtt.classList.remove('visible');
+      if (!radioChecked) {
+        errorAtt.classList.add('visible');
+        if (valid) radioInputs[0].focus();
+        valid = false;
+      } else { errorAtt.classList.remove('visible'); }
+
       if (!valid) { e.preventDefault(); return; }
-      selectedAnswer = radioChecked.value; submitted = true;
-      btn.disabled = true; btn.textContent = 'Envoi en cours...';
+      selectedAnswer = radioChecked.value;
+      submitted = true; btn.disabled = true; btn.textContent = 'Envoi en cours...';
     });
 
     radioInputs.forEach(radio => {
