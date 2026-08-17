@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -495,6 +496,8 @@
       box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+
   </style>
 </head>
 
@@ -1562,13 +1565,18 @@
   })();
 
   /* =========================================================
-     FIX iOS CLAVIER — Technique "Blur-only + focus guard"
-     - Au touchstart sur le formulaire : capture scrollY
-     - Au focus : après un court délai (300ms pour laisser le
-       clavier s'ouvrir), on fait un scrollIntoView contrôlé
-       avec block:'nearest' pour empêcher Safari de surscroller.
-     - Au blur : on restaure scrollBeforeFocus + scroll guard
-       de 600ms via requestAnimationFrame.
+     FIX iOS CLAVIER — Correction scroll FOCUS + BLUR
+     
+     Problème 1 (FOCUS) : Quand on tape sur le textarea,
+     Safari scroll trop loin (souvent tout en bas de la page).
+     → On détecte si le scroll a dépassé la zone RSVP et on
+       ramène à une position qui montre le champ ciblé.
+     
+     Problème 2 (BLUR) : Quand le clavier se ferme, Safari
+     jump à une position aléatoire.
+     → On restaure une position cohérente dans la zone RSVP.
+     
+     Le "ping" sur le champ nom est minimisé (guard court).
      ========================================================= */
   (function() {
     if (!isIOS) return;
@@ -1577,62 +1585,110 @@
     const inputs = form.querySelectorAll('input[type="text"], textarea');
     if (!inputs.length) return;
 
-    let scrollBeforeFocus = window.scrollY;
+    const rsvpSection = document.getElementById('rsvp');
+    let isFocused = false;
+    let scrollBeforeFocus = 0;
     let blurTimer = null;
-    let focusTimer = null;
+    let focusGuardId = null;
 
-    // Capturer la position de scroll AVANT que Safari ne bouge
-    // quoi que ce soit (le touchstart arrive avant le focus)
-    form.addEventListener('touchstart', function() {
-      scrollBeforeFocus = window.scrollY;
+    // Sauvegarde le scroll AVANT que Safari ne bouge quoi que ce soit.
+    // touchstart fire avant focus sur iOS.
+    form.addEventListener('touchstart', () => {
+      if (!isFocused) {
+        scrollBeforeFocus = window.scrollY;
+      }
     }, { passive: true });
 
-    inputs.forEach(function(input) {
-      // Au focus : on corrige le scroll de Safari après un délai
-      // suffisant pour que le clavier soit ouvert (~300ms).
-      // On utilise scrollIntoView block:'nearest' qui ne scrolle
-      // QUE si le champ n'est pas déjà visible — empêche Safari
-      // de jump tout en bas.
-      input.addEventListener('focus', function() {
+    // Calcule la position idéale pour voir un champ donné
+    function getIdealScroll(inputEl) {
+      // On veut que le champ soit visible dans le viewport,
+      // idéalement à ~30-40% du haut de l'écran visible
+      // (la moitié basse est occupée par le clavier iOS)
+      const inputRect = inputEl.getBoundingClientRect();
+      const inputAbsoluteTop = inputRect.top + window.scrollY;
+      // Positionner le champ à ~25% du viewport depuis le haut
+      const idealOffset = window.innerHeight * 0.25;
+      return Math.max(0, inputAbsoluteTop - idealOffset);
+    }
+
+    // Vérifie si le scroll actuel est "raisonnable" pour le RSVP
+    function isScrollInRsvpZone(scrollPos) {
+      if (!rsvpSection) return true;
+      const rsvpTop = rsvpSection.offsetTop - 80;
+      const rsvpBottom = rsvpSection.offsetTop + rsvpSection.offsetHeight + 100;
+      return scrollPos >= rsvpTop && scrollPos <= rsvpBottom;
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
         clearTimeout(blurTimer);
-        clearTimeout(focusTimer);
-        var el = this;
-        focusTimer = setTimeout(function() {
-          // Calculer la position du formulaire wrapper
-          var formWrap = form.closest('.rsvp-form-wrap') || form;
-          var rect = el.getBoundingClientRect();
-          var vh = window.innerHeight;
-          // Si le champ est hors de la zone visible (Safari a surscrollé),
-          // on le ramène en douceur avec scrollIntoView
-          if (rect.top < 0 || rect.bottom > vh * 0.6) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        blurTimer = null;
+        isFocused = true;
+
+        // Annuler tout guard précédent
+        if (focusGuardId) cancelAnimationFrame(focusGuardId);
+
+        // Après un court délai, vérifier si Safari a overshoot
+        // On laisse Safari faire son scroll natif (50ms), puis on corrige
+        setTimeout(() => {
+          const currentScroll = window.scrollY;
+          
+          // Détecter un overshoot : si on est sorti de la zone RSVP
+          // ou si on est allé beaucoup trop loin du champ
+          if (!isScrollInRsvpZone(currentScroll)) {
+            // Safari a overshoot → corriger vers le champ
+            const target = getIdealScroll(input);
+            window.scrollTo(0, target);
+
+            // Mini guard pour empêcher Safari de re-jumper (300ms max)
+            const guardStart = Date.now();
+            function focusGuard() {
+              if (Date.now() - guardStart > 300) return;
+              if (Math.abs(window.scrollY - target) > 50) {
+                window.scrollTo(0, target);
+              }
+              focusGuardId = requestAnimationFrame(focusGuard);
+            }
+            focusGuardId = requestAnimationFrame(focusGuard);
+          } else {
+            // Même dans la zone RSVP, vérifier que c'est pas trop loin
+            // (ex: scrollé 500px+ au-delà de la position du champ)
+            const idealPos = getIdealScroll(input);
+            if (Math.abs(currentScroll - idealPos) > window.innerHeight * 0.6) {
+              window.scrollTo(0, idealPos);
+            }
           }
-        }, 350);
+        }, 60);
       }, { passive: true });
 
-      // Au blur : après un délai de 120ms (pour ne pas fire si
-      // on passe simplement d'un champ à un autre), on restaure
-      // la position et on active un scroll guard de 600ms.
-      input.addEventListener('blur', function() {
+      input.addEventListener('blur', () => {
         clearTimeout(blurTimer);
-        clearTimeout(focusTimer);
-        blurTimer = setTimeout(function() {
-          var target = scrollBeforeFocus;
+        if (focusGuardId) { cancelAnimationFrame(focusGuardId); focusGuardId = null; }
+
+        blurTimer = setTimeout(() => {
+          isFocused = false;
+
+          const rsvpTop = rsvpSection ? rsvpSection.offsetTop - 40 : scrollBeforeFocus;
+          const target = (scrollBeforeFocus >= rsvpTop - 100)
+            ? scrollBeforeFocus
+            : rsvpTop;
+
           window.scrollTo(0, target);
 
-          // Scroll guard : empêche Safari de jump pendant 600ms
-          var guardStart = Date.now();
+          // Guard court (400ms) pour empêcher le re-jump au blur
+          const guardStart = Date.now();
           function guard() {
-            if (Date.now() - guardStart > 600) return;
-            if (Math.abs(window.scrollY - target) > 2) {
+            if (Date.now() - guardStart > 400) return;
+            if (Math.abs(window.scrollY - target) > 3) {
               window.scrollTo(0, target);
             }
             requestAnimationFrame(guard);
           }
           requestAnimationFrame(guard);
-        }, 120);
+        }, 100);
       }, { passive: true });
     });
+
   })();
 
   /* RADIO BUTTONS & RSVP SUBMIT */
