@@ -496,17 +496,7 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    html.ios-perf.ios-keyboard-open .tl-step-sticky {
-      position: relative !important;
-      height: auto !important;
-    }
-    html.ios-perf.ios-keyboard-open #rsvp {
-      min-height: auto !important;
-      justify-content: flex-start !important;
-    }
-    html.ios-perf.ios-keyboard-open .final-sticky {
-      position: relative !important;
-    }
+
   </style>
 </head>
 
@@ -1574,79 +1564,81 @@
   })();
 
   /* =========================================================
-   FIX iOS CLAVIER — Body Lock (version épurée)
-   Au focus : on fige le body en position:fixed avec top:-scrollY.
-   Safari ne peut plus déplacer la page pendant la saisie.
-   Au blur : on déverrouille et on restaure la position exacte.
-   AUCUN garde-fou requestAnimationFrame (c'était lui qui
-   provoquait le saut vers le décor jaune au moment du tap).
-   ========================================================= */
-(function() {
-  if (!isIOS) return;
-  const form = document.getElementById('rsvp-form');
-  if (!form) return;
-  const inputs = form.querySelectorAll('input[type="text"], textarea');
-  if (!inputs.length) return;
+     FIX iOS CLAVIER — Correction scroll au BLUR uniquement
+     On ne touche PAS au focus (Safari doit pouvoir scroller
+     pour afficher l'input au-dessus du clavier, c'est normal).
+     Le bug iOS = quand le clavier se FERME, Safari jump à une
+     position aléatoire. On corrige ça en :
+     1. Sauvegardant la position du RSVP section
+     2. Au blur, on restaure une position qui montre le formulaire
+     3. Un scroll guard de 600ms empêche Safari de re-jumper
+     ========================================================= */
+  (function() {
+    if (!isIOS) return;
+    const form = document.getElementById('rsvp-form');
+    if (!form) return;
+    const inputs = form.querySelectorAll('input[type="text"], textarea');
+    if (!inputs.length) return;
 
-  let isLocked = false;
-  let savedScrollY = 0;
-  let unlockTimer = null;
+    let isFocused = false;
+    let scrollBeforeFocus = 0;
+    let blurTimer = null;
 
-  function lock() {
-    if (isLocked) return;
-    // Annule un unlock en attente (transition entre deux champs)
-    clearTimeout(unlockTimer);
-    unlockTimer = null;
-
-    savedScrollY = window.scrollY;
-    isLocked = true;
-
-    const body = document.body;
-    body.style.position = 'fixed';
-    body.style.top = `-${savedScrollY}px`;
-    body.style.left = '0';
-    body.style.right = '0';
-    body.style.width = '100%';
-
-    document.documentElement.classList.add('ios-keyboard-open');
-  }
-
-  function unlock() {
-    if (!isLocked) return;
-    isLocked = false;
-
-    const body = document.body;
-    const scrollTarget = savedScrollY;
-
-    // On retire les styles inline AVANT de restaurer le scroll
-    body.style.position = '';
-    body.style.top = '';
-    body.style.left = '';
-    body.style.right = '';
-    body.style.width = '';
-
-    document.documentElement.classList.remove('ios-keyboard-open');
-
-    // Restauration unique de la position (pas de boucle, pas de garde-fou)
-    window.scrollTo(0, scrollTarget);
-  }
-
-  inputs.forEach(input => {
-    input.addEventListener('focus', () => {
-      // Transition entre champs : on annule le unlock programmé
-      clearTimeout(unlockTimer);
-      unlockTimer = null;
-      lock();
+    // Sauvegarde le scroll AVANT que Safari ne bouge quoi que ce soit.
+    // On utilise touchstart car il fire avant focus sur iOS.
+    form.addEventListener('touchstart', () => {
+      if (!isFocused) {
+        scrollBeforeFocus = window.scrollY;
+      }
     }, { passive: true });
 
-    input.addEventListener('blur', () => {
-      // Petit délai pour gérer le passage direct d'un champ à l'autre
-      // (le focus du champ suivant arrive juste après le blur du précédent)
-      clearTimeout(unlockTimer);
-      unlockTimer = setTimeout(unlock, 120);
-    }, { passive: true });
-  });
-})();
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        // Si c'est le premier focus (pas une transition entre champs)
+        // scrollBeforeFocus est déjà set par touchstart
+        clearTimeout(blurTimer);
+        blurTimer = null;
+        isFocused = true;
+      }, { passive: true });
+
+      input.addEventListener('blur', () => {
+        // Délai 120ms : si on passe à un autre champ, focus re-fire
+        // et on annule le blur handler
+        clearTimeout(blurTimer);
+        blurTimer = setTimeout(() => {
+          isFocused = false;
+
+          // Calculer la position idéale : le haut de la section RSVP
+          // doit être visible (avec un petit offset)
+          const rsvpSection = document.getElementById('rsvp');
+          const rsvpTop = rsvpSection ? rsvpSection.offsetTop - 40 : scrollBeforeFocus;
+
+          // On prend la position la plus cohérente :
+          // - scrollBeforeFocus si on était déjà dans la zone RSVP
+          // - rsvpTop sinon
+          const target = (scrollBeforeFocus >= rsvpTop - 100)
+            ? scrollBeforeFocus
+            : rsvpTop;
+
+          // Restaurer immédiatement
+          window.scrollTo(0, target);
+
+          // Scroll guard : empêche Safari de re-jumper pendant 600ms
+          const guardStart = Date.now();
+          function guard() {
+            if (Date.now() - guardStart > 600) return;
+            if (Math.abs(window.scrollY - target) > 3) {
+              window.scrollTo(0, target);
+            }
+            requestAnimationFrame(guard);
+          }
+          requestAnimationFrame(guard);
+        }, 120);
+      }, { passive: true });
+    });
+
+
+  })();
 
   /* RADIO BUTTONS & RSVP SUBMIT */
   (function() {
