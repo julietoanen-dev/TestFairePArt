@@ -1574,184 +1574,140 @@
   })();
 
   /* =========================================================
-     FIX iOS CLAVIER — Corrigé : sauvegarde/restauration du
-     scroll au blur pour empêcher le saut lors de la fermeture
-     du clavier Safari.
+     FIX iOS CLAVIER — Technique "Body Lock"
+     Quand un input reçoit le focus, on fige le body en
+     position:fixed avec top:-scrollY. Safari ne peut plus
+     bouger la page. Au blur, on déverrouille et on restaure
+     la position exacte. Technique utilisée par Stripe, Shopify, etc.
      ========================================================= */
   (function() {
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
     if (!form) return;
     const inputs = form.querySelectorAll('input[type="text"], textarea');
+    if (!inputs.length) return;
 
-    let activeInput = null;
-    let isFocused = false;
-    // Position de scroll sauvegardée AVANT que Safari ne recalcule le viewport
-    let savedScrollY = null;
-    // Flag indiquant que le clavier est en train de se fermer
-    let isKeyboardDismissing = false;
+    let isLocked = false;
+    let savedScrollY = 0;
+    let unlockTimer = null;
+    // Empêche Safari de forcer un scroll pendant le unlock
+    let blockScrollUntil = 0;
 
     /**
-     * Calcule la position de scroll idéale pour centrer l'input
-     * dans le tiers supérieur du viewport visible.
+     * Verrouille le body : applique position:fixed pour empêcher
+     * tout scroll natif de Safari pendant que le clavier est ouvert.
      */
-    function getIdealScrollForInput(el) {
-      const rect = el.getBoundingClientRect();
-      const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      return window.scrollY + rect.top - viewH * 0.3;
+    function lock() {
+      if (isLocked) return;
+      // Annule un éventuel unlock en attente (transition entre champs)
+      clearTimeout(unlockTimer);
+      unlockTimer = null;
+
+      savedScrollY = window.scrollY;
+      isLocked = true;
+
+      const body = document.body;
+      body.style.position = 'fixed';
+      body.style.top = `-${savedScrollY}px`;
+      body.style.left = '0';
+      body.style.right = '0';
+      body.style.width = '100%';
+      // Empêche le contenu de changer de largeur
+      body.style.overflow = 'hidden';
+
+      document.documentElement.classList.add('ios-keyboard-open');
     }
 
     /**
-     * Attend que Safari ait stabilisé le scroll après l'ouverture
-     * du clavier, puis corrige la position.
+     * Déverrouille le body : retire position:fixed et restaure
+     * le scroll à la position sauvegardée.
      */
-    function waitAndCorrect(targetEl) {
-      let lastScrollY = window.scrollY;
-      let stableFrames = 0;
-      const startTime = Date.now();
+    function unlock() {
+      if (!isLocked) return;
+      isLocked = false;
 
-      function check() {
-        if (Date.now() - startTime > 800) {
-          doCorrection(targetEl);
+      const body = document.body;
+      const scrollTarget = savedScrollY;
+
+      // Retirer les styles inline
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.overflow = '';
+
+      // Restaurer immédiatement la position de scroll
+      window.scrollTo(0, scrollTarget);
+
+      // Bloquer les tentatives de scroll de Safari pendant 800ms
+      blockScrollUntil = Date.now() + 800;
+
+      document.documentElement.classList.remove('ios-keyboard-open');
+    }
+
+    // --- Bloqueur de scroll Safari post-unlock ---
+    // Safari tente de repositionner le scroll après la fermeture
+    // du clavier. On intercepte ces tentatives pendant 800ms.
+    let scrollGuardActive = false;
+    function activateScrollGuard() {
+      if (scrollGuardActive) return;
+      scrollGuardActive = true;
+
+      const guardTarget = savedScrollY;
+      let guardRAF = null;
+      let guardStart = Date.now();
+
+      function guard() {
+        if (Date.now() - guardStart > 800) {
+          scrollGuardActive = false;
           return;
         }
-        const currentScrollY = window.scrollY;
-        if (Math.abs(currentScrollY - lastScrollY) < 2) {
-          stableFrames++;
-        } else {
-          stableFrames = 0;
+        // Si Safari a bougé le scroll, on le remet en place
+        if (Math.abs(window.scrollY - guardTarget) > 2) {
+          window.scrollTo(0, guardTarget);
         }
-        lastScrollY = currentScrollY;
-        if (stableFrames >= 4) {
-          doCorrection(targetEl);
-        } else {
-          requestAnimationFrame(check);
-        }
+        guardRAF = requestAnimationFrame(guard);
       }
-      requestAnimationFrame(check);
+      guardRAF = requestAnimationFrame(guard);
     }
 
-    /**
-     * Applique la correction de scroll si nécessaire.
-     */
-    function doCorrection(targetEl) {
-      if (!targetEl) return;
-      const idealY = getIdealScrollForInput(targetEl);
-      if (Math.abs(window.scrollY - idealY) > 10) {
-        window.scrollTo(0, idealY);
-      }
-    }
-
-    /**
-     * Restaure la position de scroll sauvegardée au blur.
-     * Utilise un double-rAF pour laisser Safari terminer son
-     * repositionnement interne, puis force la position correcte.
-     */
-    function restoreScrollPosition() {
-      if (savedScrollY === null) return;
-      const target = savedScrollY;
-      savedScrollY = null;
-      isKeyboardDismissing = false;
-
-      // Double requestAnimationFrame : laisse Safari appliquer
-      // son propre repositionnement, puis on le corrige.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          window.scrollTo(0, target);
-        });
-      });
-    }
-
-    // --- Événements focus / blur sur les inputs ---
+    // --- Événements ---
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
-        isFocused = true;
-        activeInput = input;
-        isKeyboardDismissing = false;
-        savedScrollY = null;
-        document.documentElement.classList.add('ios-keyboard-open');
-
-        const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
-        setTimeout(() => {
-          if (isFocused && activeInput === input) {
-            waitAndCorrect(input);
-          }
-        }, delay);
+        // Si on passe d'un champ à un autre, annuler le unlock
+        clearTimeout(unlockTimer);
+        unlockTimer = null;
+        lock();
       }, { passive: true });
 
       input.addEventListener('blur', () => {
-        // CRITIQUE : on capture scrollY ICI, au moment du blur,
-        // AVANT que Safari ne redimensionne le viewport et ne
-        // provoque un scroll automatique vers le haut.
-        savedScrollY = window.scrollY;
-        isFocused = false;
-        activeInput = null;
-        isKeyboardDismissing = true;
-
-        // On retire la classe avec un léger délai pour laisser
-        // la restauration de scroll se faire d'abord.
-        setTimeout(() => {
-          document.documentElement.classList.remove('ios-keyboard-open');
-        }, 300);
+        // Délai de 120ms avant unlock pour gérer les transitions
+        // entre champs (focus se déclenche ~80ms après blur)
+        clearTimeout(unlockTimer);
+        unlockTimer = setTimeout(() => {
+          const scrollTarget = savedScrollY;
+          unlock();
+          // Active le garde-fou de scroll
+          activateScrollGuardForTarget(scrollTarget);
+        }, 120);
       }, { passive: true });
     });
 
-    // --- Écoute du resize du visualViewport ---
-    // Quand le clavier se ferme, Safari augmente la hauteur du
-    // visualViewport. On détecte cette augmentation et on
-    // restaure la position sauvegardée.
-    if (window.visualViewport) {
-      let previousVPHeight = window.visualViewport.height;
-      let vpResizeTimer = null;
-
-      window.visualViewport.addEventListener('resize', () => {
-        const currentHeight = window.visualViewport.height;
-        const heightDiff = currentHeight - previousVPHeight;
-        previousVPHeight = currentHeight;
-
-        // Le viewport grandit = le clavier se ferme
-        if (heightDiff > 50 && isKeyboardDismissing) {
-          restoreScrollPosition();
-          return;
+    /**
+     * Garde-fou actif : empêche Safari de bouger le scroll
+     * pendant les ~800ms qui suivent la fermeture du clavier.
+     */
+    function activateScrollGuardForTarget(target) {
+      let guardStart = Date.now();
+      function guard() {
+        if (Date.now() - guardStart > 800) return;
+        if (Math.abs(window.scrollY - target) > 2) {
+          window.scrollTo(0, target);
         }
-
-        // Le viewport rétrécit = le clavier s'ouvre, on corrige
-        // la position de l'input actif
-        if (isFocused && activeInput && heightDiff < -50) {
-          clearTimeout(vpResizeTimer);
-          vpResizeTimer = setTimeout(() => {
-            if (isFocused && activeInput) {
-              doCorrection(activeInput);
-            }
-          }, 150);
-        }
-      });
-
-      // Fallback : si le resize event ne se déclenche pas
-      // (rare mais possible sur certains iOS), on restaure
-      // après un timeout.
-      inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-          setTimeout(() => {
-            if (isKeyboardDismissing && savedScrollY !== null) {
-              restoreScrollPosition();
-            }
-          }, 400);
-        }, { passive: true });
-      });
-    } else {
-      // Pas de visualViewport : fallback pur avec timeout
-      inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-          setTimeout(() => {
-            if (savedScrollY !== null) {
-              window.scrollTo(0, savedScrollY);
-              savedScrollY = null;
-              isKeyboardDismissing = false;
-            }
-          }, 150);
-        }, { passive: true });
-      });
+        requestAnimationFrame(guard);
+      }
+      requestAnimationFrame(guard);
     }
   })();
 
