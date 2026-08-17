@@ -496,6 +496,7 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
+    /* ❌ À SUPPRIMER — ces règles effondrent le layout et causent le saut de scroll
     html.ios-perf.ios-keyboard-open .tl-step-sticky {
       position: relative !important;
       height: auto !important;
@@ -506,6 +507,14 @@
     }
     html.ios-perf.ios-keyboard-open .final-sticky {
       position: relative !important;
+    }
+    */
+
+    /* ✅ Remplacement : on neutralise seulement l'ancrage de scroll de Safari,
+      sans jamais toucher à la hauteur des blocs sticky */
+    html.ios-perf.ios-keyboard-open,
+    html.ios-perf.ios-keyboard-open body {
+      overflow-anchor: none;
     }
   </style>
 </head>
@@ -994,7 +1003,7 @@
       const speed = 6 + Math.random() * 4;
       shootingStars.push({
         x: startX, y: startY,
-        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - Math.random() * 2,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
         life: 1, decay: 0.008 + Math.random() * 0.006,
         radius: 2 + Math.random() * 1.5, color: color,
         trail: [], maxTrail: 25 + Math.random() * 15, dustTimer: 0
@@ -1572,144 +1581,79 @@
 
     return { launch };
   })();
+/* FIX iOS CLAVIER — version corrigée
+   Principe : on ne modifie JAMAIS la hauteur des blocs sticky pendant la saisie
+   (c'était la cause du saut vers le haut). On corrige le scroll uniquement
+   si le champ actif est réellement masqué par le clavier. */
+(function() {
+  if (!isIOS) return;
+  const form = document.getElementById('rsvp-form');
+  if (!form) return;
 
-  /* =========================================================
-     FIX iOS CLAVIER — Technique "Body Lock"
-     Quand un input reçoit le focus, on fige le body en
-     position:fixed avec top:-scrollY. Safari ne peut plus
-     bouger la page. Au blur, on déverrouille et on restaure
-     la position exacte. Technique utilisée par Stripe, Shopify, etc.
-     ========================================================= */
-  (function() {
-    if (!isIOS) return;
-    const form = document.getElementById('rsvp-form');
-    if (!form) return;
-    const inputs = form.querySelectorAll('input[type="text"], textarea');
-    if (!inputs.length) return;
+  const inputs = form.querySelectorAll('input[type="text"], textarea');
+  let activeInput = null;
+  let isFocused = false;
 
-    let isLocked = false;
-    let savedScrollY = 0;
-    let unlockTimer = null;
-    // Empêche Safari de forcer un scroll pendant le unlock
-    let blockScrollUntil = 0;
+  // Calcule la position de scroll idéale pour placer le champ dans la zone visible,
+  // au-dessus du clavier (~35 % de la hauteur visible depuis le haut).
+  function getIdealScrollForInput(el) {
+    const rect = el.getBoundingClientRect();
+    const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    return window.scrollY + rect.top - viewH * 0.35;
+  }
 
-    /**
-     * Verrouille le body : applique position:fixed pour empêcher
-     * tout scroll natif de Safari pendant que le clavier est ouvert.
-     */
-    function lock() {
-      if (isLocked) return;
-      // Annule un éventuel unlock en attente (transition entre champs)
-      clearTimeout(unlockTimer);
-      unlockTimer = null;
+  // Détermine si le champ est réellement caché : sorti par le haut,
+  // ou masqué par le clavier (sous la zone visible du visualViewport).
+  function isInputObscured(el) {
+    const rect = el.getBoundingClientRect();
+    const viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const marge = 8; // petite tolérance en pixels
+    const cacheEnHaut = rect.top < marge;
+    const cacheEnBas = rect.bottom > viewH - marge;
+    return cacheEnHaut || cacheEnBas;
+  }
 
-      savedScrollY = window.scrollY;
-      isLocked = true;
+  // Corrige le scroll UNIQUEMENT si nécessaire.
+  function correctIfNeeded(targetEl) {
+    if (!targetEl || !isFocused || activeInput !== targetEl) return;
+    if (!isInputObscured(targetEl)) return; // champ déjà visible → on ne bouge pas
+    const idealY = getIdealScrollForInput(targetEl);
+    if (Math.abs(window.scrollY - idealY) > 10) {
+      window.scrollTo(0, idealY);
+    }
+  }
 
-      const body = document.body;
-      body.style.position = 'fixed';
-      body.style.top = `-${savedScrollY}px`;
-      body.style.left = '0';
-      body.style.right = '0';
-      body.style.width = '100%';
-      // Empêche le contenu de changer de largeur
-      body.style.overflow = 'hidden';
-
+  inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      isFocused = true;
+      activeInput = input;
       document.documentElement.classList.add('ios-keyboard-open');
-    }
+      // On laisse le clavier s'ouvrir, puis on corrige seulement si besoin.
+      const delay = input.tagName === 'TEXTAREA' ? 350 : 250;
+      setTimeout(() => correctIfNeeded(input), delay);
+    }, { passive: true });
 
-    /**
-     * Déverrouille le body : retire position:fixed et restaure
-     * le scroll à la position sauvegardée.
-     */
-    function unlock() {
-      if (!isLocked) return;
-      isLocked = false;
+    input.addEventListener('blur', () => {
+      isFocused = false;
+      activeInput = null;
+      setTimeout(() => {
+        // On ne retire la classe que si aucun autre champ n'a pris le focus entre-temps.
+        if (!isFocused) document.documentElement.classList.remove('ios-keyboard-open');
+      }, 100);
+    }, { passive: true });
+  });
 
-      const body = document.body;
-      const scrollTarget = savedScrollY;
-
-      // Retirer les styles inline
-      body.style.position = '';
-      body.style.top = '';
-      body.style.left = '';
-      body.style.right = '';
-      body.style.width = '';
-      body.style.overflow = '';
-
-      // Restaurer immédiatement la position de scroll
-      window.scrollTo(0, scrollTarget);
-
-      // Bloquer les tentatives de scroll de Safari pendant 800ms
-      blockScrollUntil = Date.now() + 800;
-
-      document.documentElement.classList.remove('ios-keyboard-open');
-    }
-
-    // --- Bloqueur de scroll Safari post-unlock ---
-    // Safari tente de repositionner le scroll après la fermeture
-    // du clavier. On intercepte ces tentatives pendant 800ms.
-    let scrollGuardActive = false;
-    function activateScrollGuard() {
-      if (scrollGuardActive) return;
-      scrollGuardActive = true;
-
-      const guardTarget = savedScrollY;
-      let guardRAF = null;
-      let guardStart = Date.now();
-
-      function guard() {
-        if (Date.now() - guardStart > 800) {
-          scrollGuardActive = false;
-          return;
-        }
-        // Si Safari a bougé le scroll, on le remet en place
-        if (Math.abs(window.scrollY - guardTarget) > 2) {
-          window.scrollTo(0, guardTarget);
-        }
-        guardRAF = requestAnimationFrame(guard);
-      }
-      guardRAF = requestAnimationFrame(guard);
-    }
-
-    // --- Événements ---
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => {
-        // Si on passe d'un champ à un autre, annuler le unlock
-        clearTimeout(unlockTimer);
-        unlockTimer = null;
-        lock();
-      }, { passive: true });
-
-      input.addEventListener('blur', () => {
-        // Délai de 120ms avant unlock pour gérer les transitions
-        // entre champs (focus se déclenche ~80ms après blur)
-        clearTimeout(unlockTimer);
-        unlockTimer = setTimeout(() => {
-          const scrollTarget = savedScrollY;
-          unlock();
-          // Active le garde-fou de scroll
-          activateScrollGuardForTarget(scrollTarget);
-        }, 120);
-      }, { passive: true });
+  // Le redimensionnement du visualViewport survient à l'ouverture/fermeture du clavier.
+  // On corrige seulement si le champ actif est masqué.
+  if (window.visualViewport) {
+    let vpResizeTimer = null;
+    window.visualViewport.addEventListener('resize', () => {
+      if (!isFocused || !activeInput) return;
+      clearTimeout(vpResizeTimer);
+      vpResizeTimer = setTimeout(() => correctIfNeeded(activeInput), 150);
     });
-
-    /**
-     * Garde-fou actif : empêche Safari de bouger le scroll
-     * pendant les ~800ms qui suivent la fermeture du clavier.
-     */
-    function activateScrollGuardForTarget(target) {
-      let guardStart = Date.now();
-      function guard() {
-        if (Date.now() - guardStart > 800) return;
-        if (Math.abs(window.scrollY - target) > 2) {
-          window.scrollTo(0, target);
-        }
-        requestAnimationFrame(guard);
-      }
-      requestAnimationFrame(guard);
-    }
-  })();
+  }
+})();
 
   /* RADIO BUTTONS & RSVP SUBMIT */
   (function() {
