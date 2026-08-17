@@ -1562,12 +1562,13 @@
   })();
 
   /* =========================================================
-     FIX iOS CLAVIER — Technique "Blur-only"
-     On ne fait RIEN au focus (Safari peut librement scroller
-     pour montrer l'input au-dessus du clavier).
-     On capture scrollY au touchstart sur le formulaire, et
-     on corrige uniquement au blur (fermeture du clavier)
-     avec un scroll guard de 600ms via requestAnimationFrame.
+     FIX iOS CLAVIER — Technique "Blur-only + focus guard"
+     - Au touchstart sur le formulaire : capture scrollY
+     - Au focus : après un court délai (300ms pour laisser le
+       clavier s'ouvrir), on fait un scrollIntoView contrôlé
+       avec block:'nearest' pour empêcher Safari de surscroller.
+     - Au blur : on restaure scrollBeforeFocus + scroll guard
+       de 600ms via requestAnimationFrame.
      ========================================================= */
   (function() {
     if (!isIOS) return;
@@ -1578,6 +1579,7 @@
 
     let scrollBeforeFocus = window.scrollY;
     let blurTimer = null;
+    let focusTimer = null;
 
     // Capturer la position de scroll AVANT que Safari ne bouge
     // quoi que ce soit (le touchstart arrive avant le focus)
@@ -1586,11 +1588,34 @@
     }, { passive: true });
 
     inputs.forEach(function(input) {
+      // Au focus : on corrige le scroll de Safari après un délai
+      // suffisant pour que le clavier soit ouvert (~300ms).
+      // On utilise scrollIntoView block:'nearest' qui ne scrolle
+      // QUE si le champ n'est pas déjà visible — empêche Safari
+      // de jump tout en bas.
+      input.addEventListener('focus', function() {
+        clearTimeout(blurTimer);
+        clearTimeout(focusTimer);
+        var el = this;
+        focusTimer = setTimeout(function() {
+          // Calculer la position du formulaire wrapper
+          var formWrap = form.closest('.rsvp-form-wrap') || form;
+          var rect = el.getBoundingClientRect();
+          var vh = window.innerHeight;
+          // Si le champ est hors de la zone visible (Safari a surscrollé),
+          // on le ramène en douceur avec scrollIntoView
+          if (rect.top < 0 || rect.bottom > vh * 0.6) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 350);
+      }, { passive: true });
+
       // Au blur : après un délai de 120ms (pour ne pas fire si
       // on passe simplement d'un champ à un autre), on restaure
       // la position et on active un scroll guard de 600ms.
       input.addEventListener('blur', function() {
         clearTimeout(blurTimer);
+        clearTimeout(focusTimer);
         blurTimer = setTimeout(function() {
           var target = scrollBeforeFocus;
           window.scrollTo(0, target);
@@ -1606,12 +1631,6 @@
           }
           requestAnimationFrame(guard);
         }, 120);
-      }, { passive: true });
-
-      // Au focus : annuler un éventuel blur timer en cours
-      // (transition entre champs)
-      input.addEventListener('focus', function() {
-        clearTimeout(blurTimer);
       }, { passive: true });
     });
   })();
