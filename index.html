@@ -496,13 +496,17 @@
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
 
-    /* Pendant la saisie : on neutralise seulement l'ancrage de scroll,
-       sans toucher à la hauteur des blocs sticky ni au body */
-    html.ios-perf.ios-keyboard-open,
-    html.ios-perf.ios-keyboard-open body {
-      overflow-anchor: none;
+    html.ios-perf.ios-keyboard-open .tl-step-sticky {
+      position: relative !important;
+      height: auto !important;
     }
-  </style>
+    html.ios-perf.ios-keyboard-open #rsvp {
+      min-height: auto !important;
+      justify-content: flex-start !important;
+    }
+    html.ios-perf.ios-keyboard-open .final-sticky {
+      position: relative !important;
+    }
   </style>
 </head>
 
@@ -1569,13 +1573,13 @@
     return { launch };
   })();
 
-/* =========================================================
-   FIX iOS CLAVIER — Garde-fou de scroll (sans body lock)
-   Principe : on ne modifie JAMAIS le body ni la mise en page
-   (cela cassait les couches fixed/sticky → saut vers le décor jaune).
-   On mémorise la position de scroll au focus, puis un "garde-fou"
-   en requestAnimationFrame empêche Safari de la modifier, aussi bien
-   à l'ouverture du clavier qu'à sa fermeture (bouton "OK").
+  /* =========================================================
+   FIX iOS CLAVIER — Body Lock (version épurée)
+   Au focus : on fige le body en position:fixed avec top:-scrollY.
+   Safari ne peut plus déplacer la page pendant la saisie.
+   Au blur : on déverrouille et on restaure la position exacte.
+   AUCUN garde-fou requestAnimationFrame (c'était lui qui
+   provoquait le saut vers le décor jaune au moment du tap).
    ========================================================= */
 (function() {
   if (!isIOS) return;
@@ -1584,49 +1588,62 @@
   const inputs = form.querySelectorAll('input[type="text"], textarea');
   if (!inputs.length) return;
 
-  let guardTarget = 0;      // position de scroll à préserver
-  let guardEnd = 0;         // horodatage de fin du garde-fou
-  let guardRunning = false; // évite plusieurs boucles simultanées
+  let isLocked = false;
+  let savedScrollY = 0;
+  let unlockTimer = null;
 
-  // Empêche Safari de déplacer le scroll tant que guardEnd n'est pas atteint.
-  function runGuard() {
-    if (guardRunning) return;
-    guardRunning = true;
-    (function loop() {
-      if (Date.now() > guardEnd) { guardRunning = false; return; }
-      if (Math.abs(window.scrollY - guardTarget) > 2) {
-        window.scrollTo(0, guardTarget);
-      }
-      requestAnimationFrame(loop);
-    })();
+  function lock() {
+    if (isLocked) return;
+    // Annule un unlock en attente (transition entre deux champs)
+    clearTimeout(unlockTimer);
+    unlockTimer = null;
+
+    savedScrollY = window.scrollY;
+    isLocked = true;
+
+    const body = document.body;
+    body.style.position = 'fixed';
+    body.style.top = `-${savedScrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+
+    document.documentElement.classList.add('ios-keyboard-open');
   }
 
-  // (Re)lance le garde-fou pour une durée donnée, en préservant la position actuelle.
-  function armGuard(duration) {
-    guardTarget = window.scrollY;
-    guardEnd = Date.now() + duration;
-    document.documentElement.classList.add('ios-keyboard-open');
-    runGuard();
+  function unlock() {
+    if (!isLocked) return;
+    isLocked = false;
+
+    const body = document.body;
+    const scrollTarget = savedScrollY;
+
+    // On retire les styles inline AVANT de restaurer le scroll
+    body.style.position = '';
+    body.style.top = '';
+    body.style.left = '';
+    body.style.right = '';
+    body.style.width = '';
+
+    document.documentElement.classList.remove('ios-keyboard-open');
+
+    // Restauration unique de la position (pas de boucle, pas de garde-fou)
+    window.scrollTo(0, scrollTarget);
   }
 
   inputs.forEach(input => {
-    // Au focus : on fige la position AVANT que le clavier ne pousse la page.
     input.addEventListener('focus', () => {
-      // On capture la position juste avant l'ouverture du clavier
-      guardTarget = window.scrollY;
-      guardEnd = Date.now() + 700;
-      document.documentElement.classList.add('ios-keyboard-open');
-      runGuard();
+      // Transition entre champs : on annule le unlock programmé
+      clearTimeout(unlockTimer);
+      unlockTimer = null;
+      lock();
     }, { passive: true });
 
-    // Au blur (clic sur "OK") : on prolonge le garde-fou pour absorber
-    // le repositionnement que Safari tente après la fermeture du clavier.
     input.addEventListener('blur', () => {
-      armGuard(700);
-      // On retire la classe une fois le garde-fou terminé
-      setTimeout(() => {
-        document.documentElement.classList.remove('ios-keyboard-open');
-      }, 750);
+      // Petit délai pour gérer le passage direct d'un champ à l'autre
+      // (le focus du champ suivant arrive juste après le blur du précédent)
+      clearTimeout(unlockTimer);
+      unlockTimer = setTimeout(unlock, 120);
     }, { passive: true });
   });
 })();
