@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,31 +29,8 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* =============================================
-       FIX SCROLL HORIZONTAL
-       - overflow-x: hidden sur html ET body pour
-         bloquer tout débordement latéral.
-       - max-width: 100% pour éviter tout élément
-         plus large que le viewport.
-       ============================================= */
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-      background-color: #020159;
-      overflow-x: hidden; /* ← FIX : empêche le fond bleu d'apparaître */
-    }
-    body {
-      font-family: var(--font-texte);
-      color: var(--texte);
-      overflow-x: hidden; /* ← FIX : double verrou côté body */
-      background: transparent;
-      background-color: #020159;
-      /* FIX : touch-action pan-y bloque le swipe horizontal
-         tout en conservant le scroll vertical natif */
-      touch-action: pan-y;
-    }
-
+    html { scroll-behavior: smooth; font-size: 16px; background-color: #020159; }
+    body { font-family: var(--font-texte); color: var(--texte); overflow-x: hidden; background: transparent; background-color: #020159; }
     img, svg { display: block; max-width: 100%; }
     a { color: var(--corail); text-decoration: none; transition: color var(--transition-base), border-color var(--transition-base); }
     a:hover { text-decoration: underline; }
@@ -76,18 +54,7 @@
       .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
     }
 
-    /* =============================================
-       FIX SCROLL HORIZONTAL — page-wrapper
-       max-width: 100vw + overflow: hidden pour
-       contenir tous les enfants dans la largeur.
-       ============================================= */
-    #page-wrapper {
-      position: relative;
-      min-height: 100vh;
-      max-width: 100vw;   /* ← FIX : aucun enfant ne peut dépasser */
-      overflow-x: hidden; /* ← FIX : filet de sécurité supplémentaire */
-    }
-
+    #page-wrapper { position: relative; min-height: 100vh; }
     #panorama { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
 
     /* STARS CANVAS */
@@ -101,29 +68,13 @@
       z-index: 1;
       opacity: 1;
       transition: opacity 0.8s ease;
-      /* FIX : max-width pour éviter tout débordement sur mobile */
-      max-width: 100vw;
     }
     #stars-canvas.hidden {
       opacity: 0;
     }
 
     /* LANTERNES */
-    /* FIX : max-width: 100vw pour que la couche fixed
-       ne dépasse pas la largeur du viewport */
-    #lanterns-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
-      will-change: transform;
-      transform: translate3d(0,0,0);
-      max-width: 100vw; /* ← FIX */
-      overflow: hidden; /* ← FIX */
-    }
+    #lanterns-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; will-change: transform; transform: translate3d(0,0,0); }
     #lanterns-layer svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
     .lantern { animation-fill-mode: both; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
     .lantern image { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.18)); }
@@ -402,7 +353,9 @@
       .rsvp-form-wrap { padding: clamp(16px, 3vw, 32px); }
     }
 
-    /* INFOS PRATIQUES */
+    /* =============================================
+       INFOS PRATIQUES (Bout'chou + Cadeaux)
+       ============================================= */
     #infos-pratiques {
       padding: 80px 20px;
       position: relative;
@@ -440,11 +393,31 @@
       transform: translateY(-3px);
     }
 
-    .info-card-icon { font-size: 2.4rem; line-height: 1; display: block; }
-    .info-card-title { font-family: var(--font-titre); font-size: 1.35rem; color: var(--texte); line-height: 1.2; }
-    .info-card-text { font-size: 0.88rem; color: var(--texte-soft); line-height: 1.75; }
-    .info-card-text strong { color: var(--texte); font-weight: 600; }
+    .info-card-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+      display: block;
+    }
 
+    .info-card-title {
+      font-family: var(--font-titre);
+      font-size: 1.35rem;
+      color: var(--texte);
+      line-height: 1.2;
+    }
+
+    .info-card-text {
+      font-size: 0.88rem;
+      color: var(--texte-soft);
+      line-height: 1.75;
+    }
+
+    .info-card-text strong {
+      color: var(--texte);
+      font-weight: 600;
+    }
+
+    /* iOS perf : désactiver backdrop-filter */
     .ios-perf .info-card {
       -webkit-backdrop-filter: none !important;
       backdrop-filter: none !important;
@@ -460,7 +433,6 @@
       height: 100%;
       pointer-events: none;
       z-index: 9999;
-      max-width: 100vw; /* ← FIX */
     }
 
     /* RAIN */
@@ -474,7 +446,6 @@
       z-index: 9999;
       opacity: 0;
       transition: opacity 1s ease;
-      max-width: 100vw; /* ← FIX */
     }
     #rain-canvas.visible { opacity: 1; }
     #rain-canvas.fade-out { opacity: 0; }
@@ -525,6 +496,8 @@
       box-shadow: 0 2px 14px rgba(46,18,0,0.08) !important;
     }
     .ios-perf #lanterns-layer, .ios-perf #car-el { transform: translate3d(0,0,0); will-change: transform; }
+
+
   </style>
 </head>
 
@@ -811,9 +784,13 @@
   <!-- PLUIE -->
   <canvas id="rain-canvas" aria-hidden="true"></canvas>
 
-  <!-- INFOS PRATIQUES -->
+  <!-- =============================================
+       INFOS PRATIQUES : Bout'chou + Cadeaux
+       ============================================= -->
   <section id="infos-pratiques" aria-label="Informations pratiques">
     <div class="infos-grid">
+
+      <!-- Carte Bout'chou -->
       <div class="info-card reveal-left">
         <span class="info-card-icon" aria-hidden="true">🧸</span>
         <h2 class="info-card-title">Bout'chou</h2>
@@ -822,6 +799,8 @@
           nous ne pourrons accueillir que les enfants de la famille immédiate à notre mariage.
         </p>
       </div>
+
+      <!-- Carte Cadeaux -->
       <div class="info-card reveal-right">
         <span class="info-card-icon" aria-hidden="true">🎁</span>
         <h2 class="info-card-title">Cadeaux pour les mariés</h2>
@@ -830,6 +809,7 @@
           et une urne sera disponible le jour J pour y glisser vos enveloppes.
         </p>
       </div>
+
     </div>
   </section>
 
@@ -883,34 +863,6 @@
     || (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('-webkit-touch-callout', 'none'));
 
   if (isIOS) document.documentElement.classList.add('ios-perf');
-
-  /* =============================================
-     FIX SCROLL HORIZONTAL — JavaScript
-     Sur certains navigateurs mobiles (notamment
-     Chrome Android), overflow-x: hidden seul ne
-     suffit pas à bloquer le swipe horizontal.
-     On intercepte les événements touch pour
-     annuler tout mouvement principalement horizontal.
-     ============================================= */
-  (function() {
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    document.addEventListener('touchstart', function(e) {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', function(e) {
-      const dx = Math.abs(e.touches[0].clientX - touchStartX);
-      const dy = Math.abs(e.touches[0].clientY - touchStartY);
-
-      // Si le geste est plus horizontal que vertical → on le bloque
-      if (dx > dy && dx > 8) {
-        e.preventDefault();
-      }
-    }, { passive: false }); // passive: false obligatoire pour pouvoir appeler preventDefault
-  })();
 
   /* SCROLL MANAGER */
   const ScrollManager = {
@@ -1612,7 +1564,20 @@
     return { launch };
   })();
 
-  /* FIX iOS CLAVIER */
+  /* =========================================================
+     FIX iOS CLAVIER — Correction scroll FOCUS + BLUR
+     
+     Problème 1 (FOCUS) : Quand on tape sur le textarea,
+     Safari scroll trop loin (souvent tout en bas de la page).
+     → On détecte si le scroll a dépassé la zone RSVP et on
+       ramène à une position qui montre le champ ciblé.
+     
+     Problème 2 (BLUR) : Quand le clavier se ferme, Safari
+     jump à une position aléatoire.
+     → On restaure une position cohérente dans la zone RSVP.
+     
+     Le "ping" sur le champ nom est minimisé (guard court).
+     ========================================================= */
   (function() {
     if (!isIOS) return;
     const form = document.getElementById('rsvp-form');
@@ -1626,17 +1591,27 @@
     let blurTimer = null;
     let focusGuardId = null;
 
+    // Sauvegarde le scroll AVANT que Safari ne bouge quoi que ce soit.
+    // touchstart fire avant focus sur iOS.
     form.addEventListener('touchstart', () => {
-      if (!isFocused) { scrollBeforeFocus = window.scrollY; }
+      if (!isFocused) {
+        scrollBeforeFocus = window.scrollY;
+      }
     }, { passive: true });
 
+    // Calcule la position idéale pour voir un champ donné
     function getIdealScroll(inputEl) {
+      // On veut que le champ soit visible dans le viewport,
+      // idéalement à ~30-40% du haut de l'écran visible
+      // (la moitié basse est occupée par le clavier iOS)
       const inputRect = inputEl.getBoundingClientRect();
       const inputAbsoluteTop = inputRect.top + window.scrollY;
+      // Positionner le champ à ~25% du viewport depuis le haut
       const idealOffset = window.innerHeight * 0.25;
       return Math.max(0, inputAbsoluteTop - idealOffset);
     }
 
+    // Vérifie si le scroll actuel est "raisonnable" pour le RSVP
     function isScrollInRsvpZone(scrollPos) {
       if (!rsvpSection) return true;
       const rsvpTop = rsvpSection.offsetTop - 80;
@@ -1649,20 +1624,35 @@
         clearTimeout(blurTimer);
         blurTimer = null;
         isFocused = true;
+
+        // Annuler tout guard précédent
         if (focusGuardId) cancelAnimationFrame(focusGuardId);
+
+        // Après un court délai, vérifier si Safari a overshoot
+        // On laisse Safari faire son scroll natif (50ms), puis on corrige
         setTimeout(() => {
           const currentScroll = window.scrollY;
+          
+          // Détecter un overshoot : si on est sorti de la zone RSVP
+          // ou si on est allé beaucoup trop loin du champ
           if (!isScrollInRsvpZone(currentScroll)) {
+            // Safari a overshoot → corriger vers le champ
             const target = getIdealScroll(input);
             window.scrollTo(0, target);
+
+            // Mini guard pour empêcher Safari de re-jumper (300ms max)
             const guardStart = Date.now();
             function focusGuard() {
               if (Date.now() - guardStart > 300) return;
-              if (Math.abs(window.scrollY - target) > 50) { window.scrollTo(0, target); }
+              if (Math.abs(window.scrollY - target) > 50) {
+                window.scrollTo(0, target);
+              }
               focusGuardId = requestAnimationFrame(focusGuard);
             }
             focusGuardId = requestAnimationFrame(focusGuard);
           } else {
+            // Même dans la zone RSVP, vérifier que c'est pas trop loin
+            // (ex: scrollé 500px+ au-delà de la position du champ)
             const idealPos = getIdealScroll(input);
             if (Math.abs(currentScroll - idealPos) > window.innerHeight * 0.6) {
               window.scrollTo(0, idealPos);
@@ -1674,21 +1664,31 @@
       input.addEventListener('blur', () => {
         clearTimeout(blurTimer);
         if (focusGuardId) { cancelAnimationFrame(focusGuardId); focusGuardId = null; }
+
         blurTimer = setTimeout(() => {
           isFocused = false;
+
           const rsvpTop = rsvpSection ? rsvpSection.offsetTop - 40 : scrollBeforeFocus;
-          const target = (scrollBeforeFocus >= rsvpTop - 100) ? scrollBeforeFocus : rsvpTop;
+          const target = (scrollBeforeFocus >= rsvpTop - 100)
+            ? scrollBeforeFocus
+            : rsvpTop;
+
           window.scrollTo(0, target);
+
+          // Guard court (400ms) pour empêcher le re-jump au blur
           const guardStart = Date.now();
           function guard() {
             if (Date.now() - guardStart > 400) return;
-            if (Math.abs(window.scrollY - target) > 3) { window.scrollTo(0, target); }
+            if (Math.abs(window.scrollY - target) > 3) {
+              window.scrollTo(0, target);
+            }
             requestAnimationFrame(guard);
           }
           requestAnimationFrame(guard);
         }, 100);
       }, { passive: true });
     });
+
   })();
 
   /* RADIO BUTTONS & RSVP SUBMIT */
